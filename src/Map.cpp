@@ -1,20 +1,52 @@
 #include "Map.h"
 #include "File.h"
-#include "string"
+#include "ColorTools.h"
+#include <map>
+#include <cmath>
+#include <string>
+#include <sys/time.h>
 #include <malloc.h>
 
 // Map type
 Map::Map(int width, int height, Color* data) {
     this->width = width;
     this->height = height;
-    this->data = data;
+    this->data = (MapUnit*)malloc(width*height*sizeof(MapUnit));
+    std::map<Tile_t, uint32_t> tile_costs = {
+        {Tile::ROAD, 1},
+        {Tile::START, 1},
+        {Tile::FINISH, 1},
+        {Tile::TOUREL, 100},
+        {Tile::GRASS, 100}
+    };
+    for (int i = 0; i < width*height; i++) {
+        uint32_t cost = 1;
+        Tile_t current;
+        if (CT::colorCompare(data[i], Color{255, 255, 0, 255})) {
+            current = Tile::ROAD;
+        } else if (CT::colorCompare(data[i], Color{255, 255, 255, 255})) {
+            current = Tile::TOUREL;
+            this->placeholders.push_back(MapUnit{data[i], Vector2{1.f*(i%width), (float)floor(((float)i)/width)}, cost});
+        } else if (CT::colorCompare(data[i], Color{0, 0, 255, 255})) {
+            current = Tile::START;
+            this->spawns.push_back(MapUnit{data[i], Vector2{1.f*(i%width), (float)floor(((float)i)/width)}, cost});
+        } else if (CT::colorCompare(data[i], Color{255, 0, 0, 255})) {
+            current = Tile::FINISH;
+            this->goals.push_back(MapUnit{data[i], Vector2{1.f*(i%width), (float)floor(((float)i)/width)}, cost});
+        } else {
+            current = Tile::GRASS;
+        }
+        cost = tile_costs.find(current)->second; // getting enum value
+        this->data[i] = MapUnit{data[i], Vector2{1.f*(i%width), (float)floor(((float)i)/width)}, cost};
+    }
+    free(data);
 }
 
 Map::~Map() {
     free(this->data);
 }
 
-Map Map::load(const char* filename) {
+Map Map::loadFromFile(const char* filename) {
     File map_file("map.ppm");
     std::string map_text = map_file.getText();
     int width, height;
@@ -93,7 +125,28 @@ Vector2 Map::getSize() {
     return Vector2{1.f*this->width, 1.f*this->height};
 }
 
-Color* Map::operator[](int index) {
+MapUnit* Map::operator[](int index) {
     if (index >= this->height) return nullptr;
     return &this->data[index*this->width];
+}
+
+/**
+ * @return MapUnit value if at least one spawn point exists,
+ * MapUnit with cost = 0 otherwise
+*/
+MapUnit Map::getAny(Tile_t type) {
+    std::vector<MapUnit> temp;
+    switch (type) {
+        case Tile::FINISH:
+            temp = goals;
+            break;
+        default:
+            temp = spawns;
+            break;
+    }
+    if (temp.size() <= 0) return MapUnit{{0, 0, 0}, {0.f, 0.f}, 0};
+    timeval time;
+    gettimeofday(&time, nullptr);
+    srand(time.tv_usec);
+    return temp[rand() % temp.size()];
 }

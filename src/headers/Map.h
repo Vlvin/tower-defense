@@ -1,14 +1,34 @@
 #pragma once
 #include <raylib.h>
+#include <vector>
+#include <random>
+
+typedef struct MapUnit {
+    Color color;
+    Vector2 position;
+    unsigned int cost;
+} MapUnit;
+
+typedef enum Tile {
+    GRASS,
+    ROAD,
+    TOUREL,
+    START,
+    FINISH
+} Tile_t;
 
 class Map {
 protected:
     int width, height;
-public:
-    Color *data;
-    static Map load(const char* filename);
+    MapUnit *data;
+    std::vector<MapUnit> spawns;
+    std::vector<MapUnit> goals;
+    std::vector<MapUnit> placeholders;
     Map(int width, int height, Color* data);
+public:
     ~Map();
-    Color* operator[] (int index);
+    static Map loadFromFile(const char* filename);
+    MapUnit* operator[] (int index);
+    MapUnit getAny(Tile_t type);
     Vector2 getSize();
 };
