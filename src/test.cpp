@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <cstdarg>
+#include <sys/time.h>
 #include <fstream>
 #include <algorithm>
 
@@ -90,10 +91,11 @@ int main(int argc, char *argv[]) {
         }
     }
     if (invalid_counter) {
-        log("Test passed OK: %d of %d passed", valid_counter, valid_counter+invalid_counter);
+        log("Test not passed: %d of %d passed", valid_counter, valid_counter+invalid_counter);
     } else {
         log("Test passed OK: %d of %d passed", valid_counter, valid_counter+invalid_counter);
     }
+
     log("\nBegin end point test");
     invalid_counter = 0, valid_counter = 0;
     for (int i = 0; i < 1000; i++) {
@@ -109,10 +111,75 @@ int main(int argc, char *argv[]) {
         }
     }
     if (invalid_counter) {
-        log("Test passed OK: %d of %d passed", valid_counter, valid_counter+invalid_counter);
+        log("Test not passed: %d of %d passed", valid_counter, valid_counter+invalid_counter);
     } else {
         log("Test passed OK: %d of %d passed", valid_counter, valid_counter+invalid_counter);
     }
+
+
+
+    log("\nBegin Path speed test");
+    MapUnit start = map.getAny(Tile::START);
+    if (!start.cost) {
+        log("Are you serious? No spawnpoints on Test? Now go and add them");
+        MapUnit start = map[0][0];
+    }
+    timeval beg, end;
+    // getting resource for length count
+    Path *cell = new Path(start.position, start.cost);
+    std::vector<std::vector<Path*>> pathPaths = {cell->getNeighbours(&map)};
+    std::vector<Path*> temp;
+
+    gettimeofday(&beg, NULL);
+    pathPaths.push_back({new Path(start.position, start.cost)});
+    for (int i = 0; i < 5; i++) {
+        pathPaths.push_back({});
+        for (int j = 0; j < pathPaths[i].size(); j++) {
+            temp = pathPaths[i][j]->getNeighbours(&map);
+            for (int k = 0; k < temp.size(); k++) 
+                pathPaths[i+1].push_back(temp[k]);
+        }
+    }
+    pathPaths.pop_back();
+
+
+    log("Path speed test: create Path test");
+
+    gettimeofday(&end, NULL);
+
+    int last_level = pathPaths.size() - 1;
+    log("5 level of path depth created for %f seconds with %d paths", (end.tv_sec-beg.tv_sec)+(end.tv_usec-beg.tv_usec)*0.000001f, pathPaths[last_level].size());
+
+    log("Last level pointer %p\n", pathPaths[last_level][pathPaths[last_level].size() - 1]->allocator());
+
+    log("Path speed test: Length count test");
+
+    gettimeofday(&beg, NULL);
+
+    log("Path length is: %d", pathPaths[pathPaths.size() - 1][pathPaths[pathPaths.size() - 1].size() - 1]->getFullCost());
+
+    gettimeofday(&end, NULL);
+
+    log("Path length calculated for %f seconds\n", (end.tv_sec-beg.tv_sec)+(end.tv_usec-beg.tv_usec)*0.000001f);
+
+
+    log("Path speed test: Path finding test");
+
+    MapUnit finnish = map.getAny(Tile::FINISH);
+    log("searching for %f:%f", finnish.position.x, finnish.position.y);
+    
+    gettimeofday(&beg, NULL);
+
+    Path *last = cell->findPath(&map, finnish); 
+
+    gettimeofday(&end, NULL);
+
+    log("Found in %f seconds", (end.tv_sec-beg.tv_sec)+(end.tv_usec-beg.tv_usec)*0.000001f);
+
+    log("Last Path is: %p on %fx%f coordinates", last->allocator(), last->getPosition().x, last->getPosition().y); 
+
+    // gettimeofday(&end, NULL);
+
     Path::cleanUp();
     return 0;
 }

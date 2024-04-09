@@ -2,6 +2,7 @@
 #include "ColorTools.h"
 #include "Map.h"
 #include <cstdio>
+#include <algorithm>
 
 std::vector<Path*> Path::all = {};
 
@@ -10,7 +11,7 @@ Path::Path(Vector2 position, int cost, Path* prev) {
     this->prev = prev;
     this->position = position;
     Path::all.push_back(this);
-    printf("new Path on %p\n", this);
+    // printf("new Path on %p\n", this);
 }
 
 /**
@@ -30,7 +31,7 @@ void Path::cleanUp() {
  * */
 bool Path::isAlreadyPassed(unsigned int max_depth) {
     Path* i = prev;
-    for (int depth = 0; (depth < max_depth) && (i != nullptr); ++depth) {
+    for (int depth = 0; (depth < max_depth) && (i != nullptr); depth++) {
         if (CT::vec2Compare(i->position, this->position)) return true;
         i = i->prev;
     }
@@ -46,12 +47,40 @@ Vector2 Path::getPosition() {
     return this->position;
 }
 
-int Path::getSize() {
+int Path::getCost() {
     return this->cost;
+}
+
+int Path::getFullCost() {
+    int fullCost = this->cost;
+    Path* i = prev;
+    while(i != nullptr) {
+        fullCost += i->cost;
+        i = i->prev;
+    }
+    return fullCost;
 }
 
 Path* Path::getPrevious() {
     return this->prev;
+}
+
+std::vector<Path*> Path::sortByLength(std::vector<Path*> paths) {
+    int index = -1, maxLength = 0, fullCost;
+    std::vector<Path*> neopaths;
+    while (!paths.empty()) {
+        for (int i = 0; i < paths.size(); i++) {
+            fullCost = paths[i]->getFullCost();
+            if (fullCost > maxLength) {
+                maxLength = fullCost;
+                index = i;
+            }
+            neopaths.push_back(paths[i]);
+            paths[i] = paths[paths.size() - 1];
+            paths.pop_back();
+        }
+    }
+    return neopaths;
 }
 
 std::vector<Path*> Path::getNeighbours(Map* map) {
@@ -83,7 +112,38 @@ std::vector<Path*> Path::getNeighbours(Map* map) {
     return neighbours;
 }
 
+int Path::manhattenDistance(Vector2 position) {
+    return abs(position.x - this->position.x) + abs(position.x - this->position.x);
+}
 
 Path* Path::findPath(Map *map, MapUnit goal) {
-    
+    std::vector<Path*> mainPaths, tempPaths;
+    Path* currentPath = this;
+    while(!CT::vec2Compare(currentPath->getPosition(), goal.position)) {
+        tempPaths = currentPath->getNeighbours(map);
+        for (int i = 0; i < tempPaths.size(); i++)
+            if (!tempPaths[i]->isAlreadyPassed(10))
+                mainPaths.push_back(tempPaths[i]);
+        
+        std::sort(
+            mainPaths.begin(), 
+            mainPaths.end(), 
+            [=] (Path* a, Path* b) {
+                if (a == nullptr) return false;
+                if (b == nullptr) return true;
+                return (a->getFullCost() > b->getFullCost()) <=
+                        (a->manhattenDistance(goal.position) > b->manhattenDistance(goal.position));
+            }
+        );
+        currentPath = mainPaths[mainPaths.size() - 1];
+        mainPaths.pop_back();
+        // printf("%d:%d x %d on %p\n", 
+        //     (int)(currentPath->getPosition().x), 
+        //     (int)(currentPath->getPosition().y), 
+        //     currentPath->getFullCost(),
+        //     currentPath->allocator()
+        // );
+    }   
+    return currentPath;
+
 }
