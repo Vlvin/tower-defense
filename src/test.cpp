@@ -162,7 +162,6 @@ int main(int argc, char *argv[]) {
 
     log("Path length calculated for %f seconds\n", (end.tv_sec-beg.tv_sec)+(end.tv_usec-beg.tv_usec)*0.000001f);
 
-
     log("Path speed test: Path finding test");
 
     MapUnit finnish = map.getAny(Tile::FINISH);
