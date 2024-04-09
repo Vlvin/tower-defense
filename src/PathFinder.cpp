@@ -9,6 +9,7 @@ std::vector<Path*> Path::all = {};
 Path::Path(Vector2 position, int cost, Path* prev) {
     this->cost = cost;
     this->prev = prev;
+    this->next = nullptr;
     this->position = position;
     Path::all.push_back(this);
     // printf("new Path on %p\n", this);
@@ -47,16 +48,20 @@ Vector2 Path::getPosition() {
     return this->position;
 }
 
+Path* Path::getNext() {
+    return this->next;
+}
+
 int Path::getCost() {
     return this->cost;
 }
 
 int Path::getFullCost() {
-    int fullCost = this->cost;
-    Path* i = prev;
+    int fullCost = 0;
+    Path* i = this;
     while(i != nullptr) {
-        fullCost += i->cost;
-        i = i->prev;
+        fullCost += i->getCost();
+        i = i->getPrevious();
     }
     return fullCost;
 }
@@ -137,13 +142,20 @@ Path* Path::findPath(Map *map, MapUnit goal) {
         );
         currentPath = mainPaths[mainPaths.size() - 1];
         mainPaths.pop_back();
-        // printf("%d:%d x %d on %p\n", 
-        //     (int)(currentPath->getPosition().x), 
-        //     (int)(currentPath->getPosition().y), 
-        //     currentPath->getFullCost(),
-        //     currentPath->allocator()
-        // );
     }   
     return currentPath;
 
+}
+
+Path* Path::setRouteFromStart() {
+    Path *i = this;
+    while (i->prev != nullptr) {
+        i->prev->next = i; // in i-1 setting up pointer to i
+        i = i->prev; // setting i to i-1
+    }
+    return i;
+}
+
+Path* Path::findPathAndBuild(Map* map, MapUnit goal) {
+    return this->findPath(map, goal)->setRouteFromStart();
 }

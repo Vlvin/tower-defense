@@ -28,26 +28,13 @@ int main() {
 
     Window win(SCALE*width, SCALE*height, "PathFinder");
 
-    MapUnit start = map.getAny(Tile::START);
-    if (!start.cost) 
-        start = map[1][1];
+    MapUnit startUnit = map.getAny(Tile::START);
+    if (!startUnit.cost) 
+        startUnit = map[1][1];
 
-    
-    vector<Path*> paths = {new Path(start.position, start.cost)};
-    Path* current = paths.at(0);
-    printf("main: start_node at %d:%d has prev == %p\n", (int)(current->getPosition().x), (int)(current->getPosition().y), current->getPrevious());
-    paths.pop_back();
-    vector<Path*> temp = current->getNeighbours(&map);
+    Path* first = (new Path(startUnit.position, startUnit.cost))->findPathAndBuild(&map, map.getAny(Tile::FINISH));
 
-    for (int i = 0; i < temp.size(); i++) {
-        paths.push_back(temp.at(i));
-    }
-    while(!temp.empty()) 
-        temp.pop_back();
-
-    for (int i = 0; i < paths.size(); i++) {
-        printf("main: Path at %p has prev == %p\n", paths.at(i), paths.at(i)->getPrevious());
-    }
+    Path* temp = first;
 
     while (!WindowShouldClose()) {
         BeginDrawing();
@@ -56,8 +43,13 @@ int main() {
                     DrawRectangle(j*SCALE, i*SCALE, SCALE, SCALE, map[i][j].color);
                 }
             }
+            for (temp = first; temp != nullptr; temp = temp->getNext()) {
+                Vector2 pos = temp->getPosition();
+                DrawRectangle(pos.x*SCALE, pos.y*SCALE, SCALE, SCALE, PURPLE);
+            }
         EndDrawing();
     }
+    
     Path::cleanUp();
     return 0;
 }

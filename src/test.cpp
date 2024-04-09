@@ -14,7 +14,7 @@
 using namespace std;
 
 
-fstream fout("./build/log.txt", ios::out);
+fstream fout;
 
 int vec2count(vector<Vector2> where, Vector2 target) {
     int counter = 0;
@@ -46,6 +46,7 @@ int main(int argc, char *argv[]) {
         "-e <x> <y> : add end point\n"
         "every point requires 2 int values as arguments\n"
     );
+    fout = fstream("./build/log.txt", ios::out);
     std::vector<Vector2> starts, goals;
     // // image parsing
     Vector2 point;
@@ -126,11 +127,13 @@ int main(int argc, char *argv[]) {
     }
     timeval beg, end;
     // getting resource for length count
-    Path *cell = new Path(start.position, start.cost);
-    std::vector<std::vector<Path*>> pathPaths = {cell->getNeighbours(&map)};
+    Path *first = new Path(start.position, start.cost);
+    std::vector<std::vector<Path*>> pathPaths = {first->getNeighbours(&map)};
     std::vector<Path*> temp;
 
+    log("\nPath speed test: create Path test");
     gettimeofday(&beg, NULL);
+
     pathPaths.push_back({new Path(start.position, start.cost)});
     for (int i = 0; i < 5; i++) {
         pathPaths.push_back({});
@@ -142,43 +145,54 @@ int main(int argc, char *argv[]) {
     }
     pathPaths.pop_back();
 
-
-    log("Path speed test: create Path test");
-
     gettimeofday(&end, NULL);
-
     int last_level = pathPaths.size() - 1;
     log("5 level of path depth created for %f seconds with %d paths", (end.tv_sec-beg.tv_sec)+(end.tv_usec-beg.tv_usec)*0.000001f, pathPaths[last_level].size());
-
     log("Last level pointer %p\n", pathPaths[last_level][pathPaths[last_level].size() - 1]->allocator());
 
     log("Path speed test: Length count test");
-
     gettimeofday(&beg, NULL);
 
     log("Path length is: %d", pathPaths[pathPaths.size() - 1][pathPaths[pathPaths.size() - 1].size() - 1]->getFullCost());
 
     gettimeofday(&end, NULL);
-
     log("Path length calculated for %f seconds\n", (end.tv_sec-beg.tv_sec)+(end.tv_usec-beg.tv_usec)*0.000001f);
 
     log("Path speed test: Path finding test");
-
     MapUnit finnish = map.getAny(Tile::FINISH);
     log("searching for %f:%f", finnish.position.x, finnish.position.y);
-    
     gettimeofday(&beg, NULL);
 
-    Path *last = cell->findPath(&map, finnish); 
+    Path *last = first->findPath(&map, finnish); 
+
+    gettimeofday(&end, NULL);
+    log("Found in %f seconds", (end.tv_sec-beg.tv_sec)+(end.tv_usec-beg.tv_usec)*0.000001f);
+    log("Last Path is: %p on %fx%f coordinates\n", last->allocator(), last->getPosition().x, last->getPosition().y); 
+
+    log("Path speed test: Path Setting up test");
+    log("Setting route back to %p", first);
+    gettimeofday(&beg, NULL);
+
+    Path *first_copy = last->setRouteFromStart(); 
 
     gettimeofday(&end, NULL);
 
-    log("Found in %f seconds", (end.tv_sec-beg.tv_sec)+(end.tv_usec-beg.tv_usec)*0.000001f);
+    Path *last_copy = first_copy; 
+    
+    while(last_copy->getNext() != nullptr) {
+        last_copy = last_copy->getNext();
+    }
 
-    log("Last Path is: %p on %fx%f coordinates", last->allocator(), last->getPosition().x, last->getPosition().y); 
 
-    // gettimeofday(&end, NULL);
+    if (first_copy != first) {
+        log("Test not passed: first cell %p is not same %p", first_copy, first);
+    } else if (last_copy != last) {
+        log("Test not passed: last cell %p is not same %p", last_copy, last);
+    } else  {
+        log("Test passed OK: route set up in %f sec", (end.tv_sec-beg.tv_sec)+(end.tv_usec-beg.tv_usec)*0.000001f);
+    }
 
     Path::cleanUp();
+    fout.close();
     return 0;
 }
