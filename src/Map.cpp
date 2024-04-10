@@ -52,7 +52,7 @@ Map Map::loadFromFile(const char* filename) {
     int width, height;
     int previous_pos, channels = 3, nowChannel = 0, actual_size = 0;
     char *colorByte;
-    Image im;
+    // Image im;
     Color *map;
     char current;
 

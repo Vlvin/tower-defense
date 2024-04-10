@@ -53,7 +53,7 @@ Path* Path::getNext() {
 }
 
 int Path::getCost() {
-    return this->cost;
+    return this->cost; 
 }
 
 int Path::getFullCost() {
@@ -131,14 +131,20 @@ Path* Path::findPath(Map *map, MapUnit goal) {
                 mainPaths.push_back(tempPaths[i]);
         
         std::sort(
-            mainPaths.begin(), 
+            mainPaths.begin(),
             mainPaths.end(), 
             [=] (Path* a, Path* b) {
                 if (a == nullptr) return false;
                 if (b == nullptr) return true;
-                return (a->getFullCost() > b->getFullCost()) <=
-                        (a->manhattenDistance(goal.position) > b->manhattenDistance(goal.position));
+                return 
+                // (a->getFullCost() > b->getFullCost()) &&
+                        ((a->manhattenDistance(goal.position)+a->getFullCost()) > (b->manhattenDistance(goal.position)+b->getFullCost()));
             }
+        );
+        std::remove_if(
+            mainPaths.begin(), 
+            mainPaths.end(), 
+            [] (Path *current) { return current == nullptr; }
         );
         currentPath = mainPaths[mainPaths.size() - 1];
         mainPaths.pop_back();
@@ -157,5 +163,5 @@ Path* Path::setRouteFromStart() {
 }
 
 Path* Path::findPathAndBuild(Map* map, MapUnit goal) {
-    return this->findPath(map, goal)->setRouteFromStart();
+    return (this->findPath(map, goal))->setRouteFromStart();
 }
