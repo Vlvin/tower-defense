@@ -1,6 +1,7 @@
 #pragma once
 #include <raylib.h>
 #include <vector>
+#include <list>
 
 class Map;
 class MapUnit;
@@ -12,7 +13,7 @@ class MapUnit;
 */
 class Path {
 protected:
-    static std::vector<Path*> all;
+    static std::list<Path*> all;
     Path* prev;
     Path* next;
     int cost;

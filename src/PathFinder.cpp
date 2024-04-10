@@ -4,7 +4,7 @@
 #include <cstdio>
 #include <algorithm>
 
-std::vector<Path*> Path::all = {};
+std::list<Path*> Path::all = {};
 
 Path::Path(Vector2 position, int cost, Path* prev) {
     this->cost = cost;
@@ -20,9 +20,8 @@ Path::Path(Vector2 position, int cost, Path* prev) {
  * WARNING: CALL ONLY BEFORE PROGRAM EXIT ONCE
 */
 void Path::cleanUp() {
-    for (int i = 0; i < Path::all.size(); i++) {
-        delete (Path::all.at(Path::all.size() - 1));
-        Path::all.pop_back();
+    for (auto i = Path::all.begin(); i != Path::all.end(); i++) {
+        delete (*i);
     }
 }
 
@@ -122,17 +121,27 @@ int Path::manhattenDistance(Vector2 position) {
 }
 
 Path* Path::findPath(Map *map, MapUnit goal) {
-    std::vector<Path*> mainPaths, tempPaths;
+    std::list<Path*> mainPaths;
+    std::vector<Path*> tempPaths;
     Path* currentPath = this;
     while(!CT::vec2Compare(currentPath->getPosition(), goal.position)) {
         tempPaths = currentPath->getNeighbours(map);
         for (int i = 0; i < tempPaths.size(); i++)
-            if (!tempPaths[i]->isAlreadyPassed(10))
-                mainPaths.push_back(tempPaths[i]);
+            // if (!tempPaths[i]->isAlreadyPassed(10))
+            {
+                    printf("b4 %d\n", mainPaths.size());
+                    mainPaths.remove_if(
+                            [&] (Path *current) { 
+                                return (
+                                    (current->getFullCost() >= tempPaths[i]->getFullCost()) && 
+                                    ( CT::vec2Compare(current->getPosition(), tempPaths[i]->getPosition()) )
+                                ); }
+                        );
+                    printf("after %d\n", mainPaths.size());
+                    mainPaths.push_back(tempPaths[i]);
+            }
         
-        std::sort(
-            mainPaths.begin(),
-            mainPaths.end(), 
+        mainPaths.sort(
             [=] (Path* a, Path* b) {
                 if (a == nullptr) return false;
                 if (b == nullptr) return true;
@@ -141,12 +150,10 @@ Path* Path::findPath(Map *map, MapUnit goal) {
                         ((a->manhattenDistance(goal.position)+a->getFullCost()) > (b->manhattenDistance(goal.position)+b->getFullCost()));
             }
         );
-        std::remove_if(
-            mainPaths.begin(), 
-            mainPaths.end(), 
-            [] (Path *current) { return current == nullptr; }
+        mainPaths.remove_if(
+                [] (Path *current) { return current->isAlreadyPassed(5); }
         );
-        currentPath = mainPaths[mainPaths.size() - 1];
+        currentPath = mainPaths.back();
         mainPaths.pop_back();
     }   
     return currentPath;
