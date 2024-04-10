@@ -3,6 +3,8 @@
 #include "Map.h"
 #include <cstdio>
 #include <algorithm>
+#include <queue>
+
 
 std::list<Path*> Path::all = {};
 
@@ -12,6 +14,7 @@ Path::Path(Vector2 position, int cost, Path* prev) {
     this->next = nullptr;
     this->position = position;
     Path::all.push_back(this);
+
     // printf("new Path on %p\n", this);
 }
 
@@ -129,7 +132,7 @@ Path* Path::findPath(Map *map, MapUnit goal) {
         for (int i = 0; i < tempPaths.size(); i++)
             // if (!tempPaths[i]->isAlreadyPassed(10))
             {
-                    printf("b4 %d\n", mainPaths.size());
+                    // printf("b4 %d\n", mainPaths.size());
                     mainPaths.remove_if(
                             [&] (Path *current) { 
                                 return (
@@ -137,7 +140,7 @@ Path* Path::findPath(Map *map, MapUnit goal) {
                                     ( CT::vec2Compare(current->getPosition(), tempPaths[i]->getPosition()) )
                                 ); }
                         );
-                    printf("after %d\n", mainPaths.size());
+                    // printf("after %d\n", mainPaths.size());
                     mainPaths.push_back(tempPaths[i]);
             }
         

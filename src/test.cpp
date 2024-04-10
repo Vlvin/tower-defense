@@ -168,7 +168,7 @@ int main(int argc, char *argv[]) {
     gettimeofday(&end, NULL);
     log("Found in %f seconds", (end.tv_sec-beg.tv_sec)+(end.tv_usec-beg.tv_usec)*0.000001f);
     log("Last Path is: %p on %fx%f coordinates\n", last->allocator(), last->getPosition().x, last->getPosition().y); 
-
+ 
     log("Path speed test: Path Setting up test");
     log("Setting route back to %p", first);
     gettimeofday(&beg, NULL);
