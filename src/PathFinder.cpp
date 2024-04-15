@@ -170,8 +170,8 @@ unsigned int Path::manhattenDistance(Vector2 position) {
 Path* Path::findPath(Map *map, MapUnit goal) {
     auto cmp = [&] (Path* a, Path* b) {
                     return (
-                        ((a->manhattenDistance(goal.position))*(a->getFullCost())) 
-                      > ((b->manhattenDistance(goal.position))*(b->getFullCost())));
+                        ((a->manhattenDistance(goal.position))+(a->getFullCost())) 
+                      > ((b->manhattenDistance(goal.position))+(b->getFullCost())));
                 };
     std::priority_queue<Path*, std::vector<Path*>, decltype(cmp)> mainPaths(cmp);
 
@@ -217,8 +217,8 @@ Path* Path::findPath(Map *map, MapUnit goal) {
 Path* Path::_findPathVisual(Map *map, MapUnit goal) {
     auto cmp = [&] (Path* a, Path* b) {
                     return (
-                        ((a->manhattenDistance(goal.position))*(a->getFullCost())) 
-                      > ((b->manhattenDistance(goal.position))*(b->getFullCost())));
+                        ((a->manhattenDistance(goal.position))+(a->getFullCost())) 
+                      > ((b->manhattenDistance(goal.position))+(b->getFullCost())));
                 };
     std::priority_queue<Path*, std::vector<Path*>, decltype(cmp)> mainPaths(cmp);
 
