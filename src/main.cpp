@@ -1,10 +1,12 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <unistd.h>
 
 #include "Map.h"
 #include "PathFinder.h"
 #include "Window.h"
+#include "Creep.h"
 #include "raylib.h"
 
 #define SCALE 20
@@ -36,14 +38,45 @@ int main() {
 
     Path* temp = first;
 
+    std::vector<Creep> creeps;
+
+    double lastSpawned = GetTime() - 1, lastFrame = GetTime(), delta, tFPS = 60, tDelta = 1000/tFPS;
     while (!WindowShouldClose()) {
 
-        BeginDrawing();
-            map.draw(SCALE);
-            for (temp = first; temp != nullptr; temp = temp->getNext()) {
-                Vector2 pos = temp->getPosition();
-                DrawRectangle(pos.x*SCALE, pos.y*SCALE, SCALE, SCALE, PURPLE);
+        delta = (GetTime() - lastFrame) * 1000.f;
+        lastFrame = GetTime();
+        if (delta < tDelta) {
+            usleep((tDelta - delta)*1000);
+        }
+
+        if (GetTime() - lastSpawned > 0.1f) {
+            startUnit = map.getAny(Tile::START);
+            creeps.push_back(
+                Creep(
+                    {startUnit.position.x - 1, startUnit.position.y}, 
+                    (new Path(startUnit.position, startUnit.cost))->findPathAndBuild(&map, map.getAny(Tile::FINISH)),
+                    5.f
+                )
+            );
+            Path::cleanUp();
+            for (int i = 0; i < creeps.size() && creeps.size() > 0; i++) {
+                if (creeps[i].isAtEnd()) {
+                    creeps[i] = creeps.back();
+                    creeps.pop_back();
+                }
             }
+            lastSpawned = GetTime();
+        } 
+
+        for (int i = 0; i < creeps.size(); i++)
+            creeps[i].update(delta);
+        
+
+        BeginDrawing();
+            ClearBackground(BLACK);
+            map.draw(SCALE);
+            for (int i = 0; i < creeps.size(); i++)
+                creeps[i].draw(SCALE);
         EndDrawing();
     }
     

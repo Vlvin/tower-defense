@@ -12,6 +12,7 @@
 #include "Window.h"
 #include "PathFinder.h"
 #include "ColorTools.h"
+#include "Creep.h"
 
 using namespace std;
 
@@ -168,12 +169,11 @@ int main(int argc, char *argv[]) {
     MapUnit finnish = map.getAny(Tile::FINISH);
     Path::cleanUp();
     first = new Path(start.position, start.cost);
-    Window win(20*width, 20*height, "PathFinderTest");
 
     log("searching for %f:%f", finnish.position.x, finnish.position.y);
     gettimeofday(&beg, NULL);
 
-    Path *last = first->_findPathVisual(&map, finnish); 
+    Path *last = first->findPath(&map, finnish); 
 
     gettimeofday(&end, NULL);
     log("Found in %f seconds", (end.tv_sec-beg.tv_sec)+(end.tv_usec-beg.tv_usec)*0.000001f);
@@ -201,6 +201,35 @@ int main(int argc, char *argv[]) {
     } else  {
         log("Test passed OK: route set up in %f sec", (end.tv_sec-beg.tv_sec)+(end.tv_usec-beg.tv_usec)*0.000001f);
     }
+
+    log("Begin Creep test");
+    log("Creep test: movements");
+
+    // Window win(20*width, 20*height, "PathFinderTest");
+
+    // Creep creep(start.position, first);
+    
+    // gettimeofday(&beg, NULL);
+
+    // SetTargetFPS(60);
+    // while (!CT::vec2Compare(creep.getPosition(), last->getPosition(), 1.1f))
+    // {   
+    //     creep.update(0.10f);
+    //     BeginDrawing();
+    //         ClearBackground(BLACK);
+    //         map.draw(20.f);
+    //         creep.draw(20.f);
+    //     EndDrawing(); 
+    //     log("%f:%f  ->  %f:%f  : %d\n", creep.getPosition().x, creep.getPosition().y, creep.getTarget().x, creep.getTarget().y, creep.getIndex());
+    // }
+
+
+    log("Creep test: movements - skipped");
+    
+
+    // gettimeofday(&end, NULL);
+
+
 
     Path::cleanUp();
     fout.close();

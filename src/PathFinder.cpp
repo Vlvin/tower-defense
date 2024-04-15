@@ -5,8 +5,6 @@
 #include <cstdio>
 #include <algorithm>
 #include <queue>
-#include <cstring>
-#include <csignal>
 
 
 
@@ -238,33 +236,35 @@ Path* Path::_findPathVisual(Map *map, MapUnit goal) {
     Path* currentPath = this;
     unsigned int actual_size;
     while(!CT::vec2Compare(currentPath->getPosition(), goal.position)) {
-        // printf("%f:%f\n", currentPath->position.x, currentPath->position.y);
-        tempPaths = currentPath->getNeighboursPositions(map);
 
+        tempPaths = currentPath->getNeighboursPositions(map);
         actual_size = mainPaths.size();
+
         for (int i = 0; i < tempPaths.size(); i++) {
             Vector2 pos = tempPaths[i];
             unsigned int cellCost = currentPath->cost + (*map)[int(pos.y)][int(pos.x)].cost;
             if ((!currentPath->isAlreadyPassed(pos, 5)) && (costMap[int(pos.y)*width+int(pos.x)].cost > cellCost)) {   
                 costMap[int(pos.y)*width+int(pos.x)] = {cellCost, makeStep(pos, cellCost, currentPath)};
                 mainPaths.push(costMap[int(pos.y)*width+int(pos.x)].point);
-                // printf("%u::%f %f\n", currentPath->cost + cellCost, pos.x, pos.y);
             }
         }
-        // if (mainPaths.size() <= actual_size) mainPaths.pop();
+
         currentPath = mainPaths.top();
         mainPaths.pop(); 
+
+        // important moment: if cost of top path is more/equals than shortest from map then we using shortest from map and loosing actual 
         locX = currentPath->getPosition().x, locY = currentPath->getPosition().y;
-        if (costMap[locY*width+locX].cost <= currentPath->getFullCost()) currentPath = costMap[locY*width+locX].point;
-        // usleep(9000);
-    BeginDrawing();
-        ClearBackground(BLACK);
-        map->draw(20.f);
-        currentPath->drawReverse(20.f);
-    EndDrawing();
+        if (costMap[locY*width+locX].cost <= currentPath->getFullCost()) 
+            currentPath = costMap[locY*width+locX].point;
+
+        // Clear back; Draw map; Draw path;
+        BeginDrawing();
+            ClearBackground(BLACK);
+            map->draw(20.f);
+            currentPath->drawReverse(20.f);
+        EndDrawing();
     }   
     return currentPath;
-
 }
 
 void Path::drawReverse(float scale) {

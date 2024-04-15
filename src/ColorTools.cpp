@@ -1,5 +1,5 @@
 #include "ColorTools.h"
-
+#include <cmath>
 
 
 
@@ -14,7 +14,7 @@ bool CT::colorCompare(Color a, Color b, bool useAlpha) {
 
 bool CT::vec2Compare(Vector2 a, Vector2 b, float precition) {
     return (
-        (int(precition*a.x) == int(precition*b.x)) &&
-        (int(precition*a.y) == int(precition*b.y))
+        (round(precition*a.x) == round(precition*b.x)) &&
+        (round(precition*a.y) == round(precition*b.y))
     );
 }
