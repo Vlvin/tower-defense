@@ -16,8 +16,8 @@ Map::Map(int width, int height, Color* data) {
         {Tile::ROAD, 1},
         {Tile::START, 1},
         {Tile::FINISH, 1},
-        {Tile::TOUREL, 100},
-        {Tile::GRASS, 100}
+        {Tile::TOUREL, 100000000},
+        {Tile::GRASS, 100000000}
     };
     for (int i = 0; i < width*height; i++) {
         uint32_t cost = 1;
@@ -128,6 +128,15 @@ Vector2 Map::getSize() {
 MapUnit* Map::operator[](int index) {
     if (index >= this->height) return nullptr;
     return &this->data[index*this->width];
+}
+
+void Map::draw(float scale) {
+    int wid = this->getSize().x, hei = this->getSize().y;
+    for (int i = 0; i < hei; i++) {
+        for (int j = 0; j < wid; j++) {
+            DrawRectangle(j*scale, i*scale, scale, scale, (*this)[i][j].color);
+        }
+    }
 }
 
 /**

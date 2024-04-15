@@ -16,30 +16,34 @@ protected:
     static std::list<Path*> all;
     Path* prev;
     Path* next;
-    int cost;
+    unsigned int cost;
     Vector2 position;
+    Path* makeStep(Vector2 position, unsigned int cost, Path* prev);
+    std::vector<Vector2> getNeighboursPositions(Map* map);
+    static std::vector<Path*> sortByLength(std::vector<Path*> paths);
 public:
-    Path(Vector2 position, int cost, Path* prev = nullptr);
+    std::vector<Path*> getNeighbours(Map* map);
+    Path* setRouteFromStart();
+    Path(Vector2 position, unsigned int cost, Path* prev = nullptr);
 
     Path* getPrevious();
     Path* getNext();
     Vector2 getPosition();
-    int getCost();
-    int getFullCost();
+    unsigned int getCost();
+    unsigned int getFullCost();
 
-    int manhattenDistance(Vector2 position);
+    unsigned int manhattenDistance(Vector2 position);
 
     bool isAlreadyPassed(unsigned int max_depth);
+    bool isAlreadyPassed(Vector2 position, unsigned int max_depth);
 
     Path* allocator();
     Path* findPath(Map* map, MapUnit goal);
+    Path* _findPathVisual(Map* map, MapUnit goal);
 
-    std::vector<Path*> getNeighbours(Map* map);
+    static void cleanUp(int signum = 0);
+    void drawReverse(float scale = 20);
 
-    static std::vector<Path*> sortByLength(std::vector<Path*> paths);
-    static void cleanUp();
-
-    Path* setRouteFromStart();
     // for clean writing
     Path* findPathAndBuild(Map* map, MapUnit goal);
 };

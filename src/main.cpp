@@ -37,12 +37,9 @@ int main() {
     Path* temp = first;
 
     while (!WindowShouldClose()) {
+
         BeginDrawing();
-            for (int i = 0; i < height; i++) {
-                for (int j = 0; j < width; j++) {
-                    DrawRectangle(j*SCALE, i*SCALE, SCALE, SCALE, map[i][j].color);
-                }
-            }
+            map.draw(SCALE);
             for (temp = first; temp != nullptr; temp = temp->getNext()) {
                 Vector2 pos = temp->getPosition();
                 DrawRectangle(pos.x*SCALE, pos.y*SCALE, SCALE, SCALE, PURPLE);

@@ -6,8 +6,10 @@
 #include <sys/time.h>
 #include <fstream>
 #include <algorithm>
+#include <csignal>
 
 #include "Map.h"
+#include "Window.h"
 #include "PathFinder.h"
 #include "ColorTools.h"
 
@@ -37,6 +39,10 @@ void log(const char* format, ...) {
 }
 
 int main(int argc, char *argv[]) {
+
+    signal(SIGEV_SIGNAL, Path::cleanUp);
+
+
     char help_msg[300];
     strcat(help_msg, "tests");
     strcat(help_msg, 
@@ -160,10 +166,14 @@ int main(int argc, char *argv[]) {
 
     log("Path speed test: Path finding test");
     MapUnit finnish = map.getAny(Tile::FINISH);
+    Path::cleanUp();
+    first = new Path(start.position, start.cost);
+    Window win(20*width, 20*height, "PathFinderTest");
+
     log("searching for %f:%f", finnish.position.x, finnish.position.y);
     gettimeofday(&beg, NULL);
 
-    Path *last = first->findPath(&map, finnish); 
+    Path *last = first->_findPathVisual(&map, finnish); 
 
     gettimeofday(&end, NULL);
     log("Found in %f seconds", (end.tv_sec-beg.tv_sec)+(end.tv_usec-beg.tv_usec)*0.000001f);

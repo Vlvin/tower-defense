@@ -1,14 +1,18 @@
 #include "PathFinder.h"
 #include "ColorTools.h"
+#include "OpenQueue.h"
 #include "Map.h"
 #include <cstdio>
 #include <algorithm>
 #include <queue>
+#include <cstring>
+#include <csignal>
+
 
 
 std::list<Path*> Path::all = {};
 
-Path::Path(Vector2 position, int cost, Path* prev) {
+Path::Path(Vector2 position, unsigned int cost, Path* prev) {
     this->cost = cost;
     this->prev = prev;
     this->next = nullptr;
@@ -22,10 +26,11 @@ Path::Path(Vector2 position, int cost, Path* prev) {
  * delete all Path objects
  * WARNING: CALL ONLY BEFORE PROGRAM EXIT ONCE
 */
-void Path::cleanUp() {
+void Path::cleanUp(int signum) {
     for (auto i = Path::all.begin(); i != Path::all.end(); i++) {
         delete (*i);
     }
+    while(!Path::all.empty()) Path::all.pop_back();
 }
 
 /** 
@@ -36,6 +41,15 @@ bool Path::isAlreadyPassed(unsigned int max_depth) {
     Path* i = prev;
     for (int depth = 0; (depth < max_depth) && (i != nullptr); depth++) {
         if (CT::vec2Compare(i->position, this->position)) return true;
+        i = i->prev;
+    }
+    return false;
+}
+
+bool Path::isAlreadyPassed(Vector2 pos, unsigned int max_depth) {
+    Path* i = prev;
+    for (int depth = 0; (depth < max_depth) && (i != nullptr); depth++) {
+        if (CT::vec2Compare(i->position, pos)) return true;
         i = i->prev;
     }
     return false;
@@ -54,18 +68,19 @@ Path* Path::getNext() {
     return this->next;
 }
 
-int Path::getCost() {
+unsigned int Path::getCost() {
     return this->cost; 
 }
 
-int Path::getFullCost() {
-    int fullCost = 0;
-    Path* i = this;
-    while(i != nullptr) {
-        fullCost += i->getCost();
-        i = i->getPrevious();
-    }
-    return fullCost;
+unsigned int Path::getFullCost() {
+    // int fullCost = 0;
+    // Path* i = this;
+    // while(i != nullptr) {
+    //     fullCost += i->getCost();
+    //     i = i->getPrevious();
+    // }
+    // return fullCost;
+    return this->getCost();
 }
 
 Path* Path::getPrevious() {
@@ -90,13 +105,18 @@ std::vector<Path*> Path::sortByLength(std::vector<Path*> paths) {
     return neopaths;
 }
 
+Path* Path::makeStep(Vector2 position, unsigned int cost, Path* prev) {
+    return new Path(position, cost, prev);
+}
+
 std::vector<Path*> Path::getNeighbours(Map* map) {
     Vector2 size = map->getSize();
+    float x = position.x, y = position.y;
     std::vector<Vector2> neighbourCells = {
-        {position.x + 1, position.y},
-        {position.x, position.y + 1},
-        {position.x - 1, position.y},
-        {position.x, position.y - 1}
+        {x + 1, y    },
+        {x    , y + 1},
+        {x - 1, y    },
+        {x    , y - 1}
     };
     std::vector<Path*> neighbours;
     if (position.y <= 0) neighbourCells.pop_back();
@@ -104,7 +124,7 @@ std::vector<Path*> Path::getNeighbours(Map* map) {
         neighbourCells[2] = neighbourCells[neighbourCells.size() - 1];
         neighbourCells.pop_back();
     }
-    if (position.y >= (size.x - 1)) {
+    if (position.y >= (size.y - 1)) {
         neighbourCells[1] = neighbourCells[neighbourCells.size() - 1];
         neighbourCells.pop_back();
     }
@@ -114,53 +134,145 @@ std::vector<Path*> Path::getNeighbours(Map* map) {
     }
     for (char i = 0; i < neighbourCells.size(); i++) {
         int x = neighbourCells[i].x, y = neighbourCells[i].y;
-        neighbours.push_back(new Path(neighbourCells[i], (*map)[y][x].cost, this));
+        neighbours.push_back(makeStep(neighbourCells[i], this->cost+(*map)[y][x].cost, this));
     }
     return neighbours;
 }
+std::vector<Vector2> Path::getNeighboursPositions(Map* map) {
+    Vector2 size = map->getSize();
+    float x = position.x, y = position.y;
+    std::vector<Vector2> neighbourCells = {
+        {x + 1, y    },
+        {x    , y + 1},
+        {x - 1, y    },
+        {x    , y - 1}
+    };
+    if (position.y <= 0) neighbourCells.pop_back();
+    if (position.x <= 0) {
+        neighbourCells[2] = neighbourCells[neighbourCells.size() - 1];
+        neighbourCells.pop_back();
+    }
+    if (position.y >= (size.y - 1)) {
+        neighbourCells[1] = neighbourCells[neighbourCells.size() - 1];
+        neighbourCells.pop_back();
+    }
+    if (position.x >= (size.x - 1)) {
+        neighbourCells[0] = neighbourCells[neighbourCells.size() - 1];
+        neighbourCells.pop_back();
+    }
+    return neighbourCells;
+}
 
-int Path::manhattenDistance(Vector2 position) {
-    return abs(position.x - this->position.x) + abs(position.x - this->position.x);
+unsigned int Path::manhattenDistance(Vector2 position) {
+    return abs(position.x - (this->position.x)) + abs(position.y - (this->position.y));
 }
 
 Path* Path::findPath(Map *map, MapUnit goal) {
-    std::list<Path*> mainPaths;
-    std::vector<Path*> tempPaths;
+    auto cmp = [&] (Path* a, Path* b) {
+                    return (
+                        ((a->manhattenDistance(goal.position))*(a->getFullCost())) 
+                      > ((b->manhattenDistance(goal.position))*(b->getFullCost())));
+                };
+    std::priority_queue<Path*, std::vector<Path*>, decltype(cmp)> mainPaths(cmp);
+
+    std::vector<Vector2> tempPaths;
+
+    int width = map->getSize().x, height = map->getSize().y;
+    int locX, locY;
+    typedef struct shortunit {
+        unsigned int cost;
+        Path* point;
+    } shortunit;
+
+    shortunit costMap[width*height];
+
+    for (int i = 0; i < width*height; i++) costMap[i] = { uint32_t(-1), nullptr};
+
     Path* currentPath = this;
+    unsigned int actual_size;
     while(!CT::vec2Compare(currentPath->getPosition(), goal.position)) {
-        tempPaths = currentPath->getNeighbours(map);
-        for (int i = 0; i < tempPaths.size(); i++)
-            // if (!tempPaths[i]->isAlreadyPassed(10))
-            {
-                    // printf("b4 %d\n", mainPaths.size());
-                    mainPaths.remove_if(
-                            [&] (Path *current) { 
-                                return (
-                                    (current->getFullCost() >= tempPaths[i]->getFullCost()) && 
-                                    ( CT::vec2Compare(current->getPosition(), tempPaths[i]->getPosition()) )
-                                ); }
-                        );
-                    // printf("after %d\n", mainPaths.size());
-                    mainPaths.push_back(tempPaths[i]);
+        // printf("%f:%f\n", currentPath->position.x, currentPath->position.y);
+        tempPaths = currentPath->getNeighboursPositions(map);
+
+        actual_size = mainPaths.size();
+        for (int i = 0; i < tempPaths.size(); i++) {
+            Vector2 pos = tempPaths[i];
+            unsigned int cellCost = currentPath->cost + (*map)[int(pos.y)][int(pos.x)].cost;
+            if ((!currentPath->isAlreadyPassed(pos, 5)) && (costMap[int(pos.y)*width+int(pos.x)].cost > cellCost)) {   
+                costMap[int(pos.y)*width+int(pos.x)] = {cellCost, makeStep(pos, cellCost, currentPath)};
+                mainPaths.push(costMap[int(pos.y)*width+int(pos.x)].point);
+                // printf("%u::%f %f\n", currentPath->cost + cellCost, pos.x, pos.y);
             }
-        
-        mainPaths.sort(
-            [=] (Path* a, Path* b) {
-                if (a == nullptr) return false;
-                if (b == nullptr) return true;
-                return 
-                // (a->getFullCost() > b->getFullCost()) &&
-                        ((a->manhattenDistance(goal.position)+a->getFullCost()) > (b->manhattenDistance(goal.position)+b->getFullCost()));
-            }
-        );
-        mainPaths.remove_if(
-                [] (Path *current) { return current->isAlreadyPassed(5); }
-        );
-        currentPath = mainPaths.back();
-        mainPaths.pop_back();
+        }
+        // if (mainPaths.size() <= actual_size) mainPaths.pop();
+        currentPath = mainPaths.top();
+        mainPaths.pop(); 
+        locX = currentPath->getPosition().x, locY = currentPath->getPosition().y;
+        if (costMap[locY*width+locX].cost <= currentPath->getFullCost()) currentPath = costMap[locY*width+locX].point;
     }   
     return currentPath;
 
+}
+
+Path* Path::_findPathVisual(Map *map, MapUnit goal) {
+    auto cmp = [&] (Path* a, Path* b) {
+                    return (
+                        ((a->manhattenDistance(goal.position))*(a->getFullCost())) 
+                      > ((b->manhattenDistance(goal.position))*(b->getFullCost())));
+                };
+    std::priority_queue<Path*, std::vector<Path*>, decltype(cmp)> mainPaths(cmp);
+
+    std::vector<Vector2> tempPaths;
+
+    int width = map->getSize().x, height = map->getSize().y;
+    int locX, locY;
+    typedef struct shortunit {
+        unsigned int cost;
+        Path* point;
+    } shortunit;
+
+    shortunit costMap[width*height];
+
+    for (int i = 0; i < width*height; i++) costMap[i] = { uint32_t(-1), nullptr};
+
+    Path* currentPath = this;
+    unsigned int actual_size;
+    while(!CT::vec2Compare(currentPath->getPosition(), goal.position)) {
+        // printf("%f:%f\n", currentPath->position.x, currentPath->position.y);
+        tempPaths = currentPath->getNeighboursPositions(map);
+
+        actual_size = mainPaths.size();
+        for (int i = 0; i < tempPaths.size(); i++) {
+            Vector2 pos = tempPaths[i];
+            unsigned int cellCost = currentPath->cost + (*map)[int(pos.y)][int(pos.x)].cost;
+            if ((!currentPath->isAlreadyPassed(pos, 5)) && (costMap[int(pos.y)*width+int(pos.x)].cost > cellCost)) {   
+                costMap[int(pos.y)*width+int(pos.x)] = {cellCost, makeStep(pos, cellCost, currentPath)};
+                mainPaths.push(costMap[int(pos.y)*width+int(pos.x)].point);
+                // printf("%u::%f %f\n", currentPath->cost + cellCost, pos.x, pos.y);
+            }
+        }
+        // if (mainPaths.size() <= actual_size) mainPaths.pop();
+        currentPath = mainPaths.top();
+        mainPaths.pop(); 
+        locX = currentPath->getPosition().x, locY = currentPath->getPosition().y;
+        if (costMap[locY*width+locX].cost <= currentPath->getFullCost()) currentPath = costMap[locY*width+locX].point;
+        // usleep(9000);
+    BeginDrawing();
+        ClearBackground(BLACK);
+        map->draw(20.f);
+        currentPath->drawReverse(20.f);
+    EndDrawing();
+    }   
+    return currentPath;
+
+}
+
+void Path::drawReverse(float scale) {
+    Path *i = this;
+    while(i != nullptr) {
+        DrawRectangle(i->getPosition().x*scale, i->getPosition().y*scale, scale, scale, PINK);
+        i = i->getPrevious();
+    }
 }
 
 Path* Path::setRouteFromStart() {
