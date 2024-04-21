@@ -20,9 +20,9 @@ bool CT::vec2Compare(Vector2 a, Vector2 b, float precition) {
 }
 
 float CT::vec2Length(Vector2 a) {
-    return pow(a.x*a.x + a.y*a.y, 0.5);
+    return sqrt((a.x*a.x) + (a.y*a.y));
 }
 
 float CT::vec2Distance(Vector2 a, Vector2 b) {
-    return abs(vec2Length(a) - vec2Length(b));
+    return vec2Length({a.x-b.x, a.y-b.y});
 }

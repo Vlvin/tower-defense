@@ -19,8 +19,8 @@ void Tourel::update(float delta) {
        this->target = nullptr;
         for (int i = 0; i < Creep::count(); i++) {
             std::shared_ptr<Creep> creep = Creep::get(i);
-            if (CT::vec2Distance(this->getPosition(), creep->getPosition()) <= 1) {
-               this->target = std::shared_ptr<Creep>(creep);
+            if (CT::vec2Distance(this->getPosition(), creep->getPosition()) < 4.f) {
+                this->target = std::shared_ptr<Creep>(creep);
                 break;
             }
         }
@@ -32,52 +32,50 @@ void Tourel::update(float delta) {
 
     angle = atan2(deltaY, deltaX);
     // algebra
-    float a, b, c, D, t1, t2,
-    tSpeed =this->target->getSpeed(),
-    tVelX = cos(angle) * delta * tSpeed * 0.001f,
-    tVelY = sin(angle) * delta * tSpeed * 0.001f,
-    tStartX =this->target->getPosition().x,
-    tStartY =this->target->getPosition().y,
-    cannonX =this->target->getPosition().x,
-    cannonY =this->target->getPosition().y;
-
-    a = pow(tVelX, 2) + pow(tVelY, 2) - pow(projSpeed, 2);
-    b = 2 * (
-        tVelX * (tStartX - cannonX)
-        + tVelY * (tStartY - cannonY));
-    c = pow(tStartX - cannonX, 2) + pow(tStartY - cannonY, 2);
-    D = sqrt(b) - 4*a*c;
-    t1 = (-b + sqrt(D))/(2*a);
-    t2 = (-b - sqrt(D))/(2*a);
-    actual_time = t1 > t2? t2: t1;
-    if (0. == D) actual_time = t1;
-    if (0. > t1) actual_time = t2;
-    if (0. > t2) actual_time = t1;
-
-
-
-    float predX, predY;
-    predX = tStartX + (tVelX * actual_time);
-    predY = tStartY + (tVelY * actual_time);
-
-    deltaX = predX - this->getPosition().x, 
-    deltaY = predY - this->getPosition().y;
-
-    angle = atan2(deltaY, deltaX);
-
     if (GetTime() - lastShot > shootFreq) {
-        new Bullet(getPosition(), 0.2, projSpeed, angle);
+        float a, b, c, D, t1, t2, predX, predY,
+              tSpeed = this->target->getSpeed(),
+              tVelX = cos(angle) * delta * tSpeed * 0.001f,
+              tVelY = sin(angle) * delta * tSpeed * 0.001f,
+              tStartX = this->target->getPosition().x,
+              tStartY = this->target->getPosition().y,
+              cannonX = this->target->getPosition().x,
+              cannonY = this->target->getPosition().y;
+
+        a = pow(tVelX, 2) + pow(tVelY, 2) - pow(projSpeed, 2);
+        b = 2 * (
+                    tVelX * (tStartX - cannonX)
+                    + tVelY * (tStartY - cannonY)
+                );
+        c = pow(tStartX - cannonX, 2) + pow(tStartY - cannonY, 2);
+        D = pow(b, 2) - 4*a*c;
+        t1 = (-b + sqrt(D))/(2*a);
+        t2 = (-b - sqrt(D))/(2*a);
+        actual_time = t1 > t2 ? t2 : t1;
+        if (0. > t1) actual_time = t2;
+        if (0. > t2) actual_time = t1;
+
+        predX = tStartX - (tVelX * actual_time);
+        predY = tStartY - (tVelY * actual_time);
+
+        deltaX = this->getPosition().x - predX, 
+        deltaY = this->getPosition().y - predY;
+
+        angle = atan2(deltaY, deltaX);
+
+        new Bullet(getPosition(), 0.1, projSpeed, angle);
         lastShot = GetTime();
     }
 }
 
 void Tourel::draw(float scale) {
     IGameObject::draw(scale);
+    DrawCircleLines(this->getPosition().x*scale,this->getPosition().y*scale, 4.f*scale, PINK);
     if (!target) return;
     DrawRectanglePro(
-        {target->getPosition().x*scale,this->target->getPosition().y*scale, 0.25f*scale, 0.25f*scale},
-        {0.5f*scale, 0.5f*scale},
-       this->target->getAngle(),
+        {this->target->getPosition().x*scale, this->target->getPosition().y*scale, 0.25f*scale, 0.25f*scale},
+        {0.2f*0.5f*scale, 0.2f*0.5f*scale},
+        this->target->getAngle(),
         RED
     );
 }

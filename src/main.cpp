@@ -66,6 +66,7 @@ int main() {
             Creep::clearAtEnd();
             lastSpawned = GetTime();
         } 
+        lastSpawned = GetTime();
 
         tourel->update(delta);
 
@@ -76,9 +77,9 @@ int main() {
         BeginDrawing();
             ClearBackground(BLACK);
             map.draw(SCALE);
+            Creep::drawAll(SCALE);
             tourel->draw(SCALE);
             Bullet::drawAll(SCALE);
-            Creep::drawAll(SCALE);
         EndDrawing();
     
         // BeginDrawing();
