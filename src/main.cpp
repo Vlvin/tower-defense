@@ -1,12 +1,16 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <memory>
 #include <unistd.h>
 
 #include "Map.h"
 #include "PathFinder.h"
 #include "Window.h"
 #include "Creep.h"
+#include "Bullet.h"
+#include "IGameObject.h"
+#include "Tourel.h"
 #include "raylib.h"
 
 #define SCALE 20
@@ -28,7 +32,7 @@ int main() {
     int width = map.getSize().x;
     int height = map.getSize().y;
 
-    Window win(SCALE*width, SCALE*height, "PathFinder");
+    Window::getInstance(SCALE*width, SCALE*height, "PathFinder");
 
     MapUnit startUnit = map.getAny(Tile::START);
     if (!startUnit.cost) 
@@ -38,7 +42,9 @@ int main() {
 
     Path* temp = first;
 
-    std::vector<Creep> creeps;
+    IGameObject* tourel = new Tourel({20.f, 10.f, 1.f, 1.f}, 10.f, .1f);
+
+    // std::vector<std::shared_ptr<IGameObject>> objects;
 
     double lastSpawned = GetTime() - 1, lastFrame = GetTime(), delta, tFPS = 60, tDelta = 1000/tFPS;
     while (!WindowShouldClose()) {
@@ -51,35 +57,41 @@ int main() {
 
         if (GetTime() - lastSpawned > 0.1f) {
             startUnit = map.getAny(Tile::START);
-            creeps.push_back(
-                Creep(
-                    {startUnit.position.x - 1, startUnit.position.y}, 
-                    (new Path(startUnit.position, startUnit.cost))->findPathAndBuild(&map, map.getAny(Tile::FINISH)),
-                    5.f
-                )
-            );
+            new Creep(
+                        {startUnit.position.x, startUnit.position.y + 0.5f}, 
+                        (new Path(startUnit.position, startUnit.cost))->findPathAndBuild(&map, map.getAny(Tile::FINISH)),
+                        5.f
+                    );
             Path::cleanUp();
-            for (int i = 0; i < creeps.size() && creeps.size() > 0; i++) {
-                if (creeps[i].isAtEnd()) {
-                    creeps[i] = creeps.back();
-                    creeps.pop_back();
-                }
-            }
+            Creep::clearAtEnd();
             lastSpawned = GetTime();
         } 
 
-        for (int i = 0; i < creeps.size(); i++)
-            creeps[i].update(delta);
+        tourel->update(delta);
+
+        Creep::updateAll(delta);
+        Bullet::updateAll(delta);
         
 
         BeginDrawing();
             ClearBackground(BLACK);
             map.draw(SCALE);
-            for (int i = 0; i < creeps.size(); i++)
-                creeps[i].draw(SCALE);
+            tourel->draw(SCALE);
+            Bullet::drawAll(SCALE);
+            Creep::drawAll(SCALE);
         EndDrawing();
-    }
     
+        // BeginDrawing();
+        //     ClearBackground(BLACK);
+        //     map.draw(SCALE);
+        //     ((new Path(startUnit.position, startUnit.cost))->findPathAndBuild(&map, map.getAny(Tile::FINISH)))->draw(SCALE);
+        //     for (int i = 0; i < map.getSize().y; i++)
+        //         for (int j = 0; j < map.getSize().x; j++)
+        //             DrawText(map[i][j].cost < 10 ? to_string(map[i][j].cost).c_str() : "inf", j*SCALE, i*SCALE, 17, BLACK);
+        // EndDrawing();
+        // Path::cleanUp();
+    }
+    Creep::cleanUp();
     Path::cleanUp();
     return 0;
 }

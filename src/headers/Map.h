@@ -3,11 +3,6 @@
 #include <vector>
 #include <random>
 
-typedef struct MapUnit {
-    Color color;
-    Vector2 position;
-    unsigned int cost;
-} MapUnit;
 
 typedef enum Tile {
     GRASS,
@@ -16,6 +11,13 @@ typedef enum Tile {
     START,
     FINISH
 } Tile_t;
+
+typedef struct MapUnit {
+    Color color;
+    Vector2 position;
+    unsigned int cost;
+    Tile_t type;
+} MapUnit;
 
 class Map {
 protected:
@@ -32,4 +34,5 @@ public:
     MapUnit getAny(Tile_t type);
     void draw(float scale);
     Vector2 getSize();
+    void clear();
 };

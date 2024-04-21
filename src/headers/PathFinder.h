@@ -23,7 +23,7 @@ protected:
     static std::vector<Path*> sortByLength(std::vector<Path*> paths);
 public:
     std::vector<Path*> getNeighbours(Map* map);
-    Path* setRouteFromStart();
+    Path* setRouteFromStart(Map &map);
     Path(Vector2 position, unsigned int cost, Path* prev = nullptr);
 
     Path* getPrevious();
@@ -43,6 +43,7 @@ public:
 
     static void cleanUp(int signum = 0);
     void drawReverse(float scale = 20);
+    void draw(float scale = 20);
 
     // for clean writing
     Path* findPathAndBuild(Map* map, MapUnit goal);

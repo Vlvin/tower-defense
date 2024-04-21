@@ -13,11 +13,11 @@ Map::Map(int width, int height, Color* data) {
     this->height = height;
     this->data = (MapUnit*)malloc(width*height*sizeof(MapUnit));
     std::map<Tile_t, uint32_t> tile_costs = {
-        {Tile::ROAD, 1},
-        {Tile::START, 1},
-        {Tile::FINISH, 1},
-        {Tile::TOUREL, 100000000},
-        {Tile::GRASS, 100000000}
+        {Tile::ROAD, uint32_t(1)},
+        {Tile::START, uint32_t(1)},
+        {Tile::FINISH, uint32_t(1)},
+        {Tile::TOUREL, 2147000000},
+        {Tile::GRASS, 2147000000}
     };
     for (int i = 0; i < width*height; i++) {
         uint32_t cost = 1;
@@ -26,18 +26,18 @@ Map::Map(int width, int height, Color* data) {
             current = Tile::ROAD;
         } else if (CT::colorCompare(data[i], Color{255, 255, 255, 255})) {
             current = Tile::TOUREL;
-            this->placeholders.push_back(MapUnit{data[i], Vector2{1.f*(i%width), (float)floor(((float)i)/width)}, cost});
+            this->placeholders.push_back(MapUnit{data[i], Vector2{1.f*(i%width), (float)floor(((float)i)/width)}, cost, current});
         } else if (CT::colorCompare(data[i], Color{0, 0, 255, 255})) {
             current = Tile::START;
-            this->spawns.push_back(MapUnit{data[i], Vector2{1.f*(i%width), (float)floor(((float)i)/width)}, cost});
+            this->spawns.push_back(MapUnit{data[i], Vector2{1.f*(i%width), (float)floor(((float)i)/width)}, cost, current});
         } else if (CT::colorCompare(data[i], Color{255, 0, 0, 255})) {
             current = Tile::FINISH;
-            this->goals.push_back(MapUnit{data[i], Vector2{1.f*(i%width), (float)floor(((float)i)/width)}, cost});
+            this->goals.push_back(MapUnit{data[i], Vector2{1.f*(i%width), (float)floor(((float)i)/width)}, cost, current});
         } else {
             current = Tile::GRASS;
         }
         cost = tile_costs.find(current)->second; // getting enum value
-        this->data[i] = MapUnit{data[i], Vector2{1.f*(i%width), (float)floor(((float)i)/width)}, cost};
+        this->data[i] = MapUnit{data[i], Vector2{1.f*(i%width), (float)floor(((float)i)/width)}, cost, current};
     }
     free(data);
 }
@@ -158,4 +158,30 @@ MapUnit Map::getAny(Tile_t type) {
     gettimeofday(&time, nullptr);
     srand(time.tv_usec);
     return temp[rand() % temp.size()];
+}
+
+void Map::clear() {
+        std::map<Tile_t, uint32_t> tile_costs = {
+        {Tile::ROAD, uint32_t(1)},
+        {Tile::START, uint32_t(1)},
+        {Tile::FINISH, uint32_t(1)},
+        {Tile::TOUREL, 2147000000},
+        {Tile::GRASS, 2147000000}
+    };
+    for (int i = 0; i < width*height; i++) {
+        uint32_t cost = 1;
+        Tile_t current;
+        if (CT::colorCompare(data[i].color, Color{255, 255, 0, 255})) {
+            current = Tile::ROAD;
+        } else if (CT::colorCompare(data[i].color, Color{255, 255, 255, 255})) {
+            current = Tile::TOUREL;
+        } else if (CT::colorCompare(data[i].color, Color{0, 0, 255, 255})) {
+            current = Tile::START;
+        } else if (CT::colorCompare(data[i].color, Color{255, 0, 0, 255})) {
+            current = Tile::FINISH;
+        } else {
+            current = Tile::GRASS;
+        }
+        data[i].cost = tile_costs.find(current)->second; // getting enum value
+    }
 }

@@ -5,4 +5,6 @@
 namespace CT {
     bool colorCompare(Color a, Color b, bool useAlpha = false);
     bool vec2Compare(Vector2 a, Vector2 b, float precition = 1.f);
+    float vec2Distance(Vector2 a, Vector2 b);
+    float vec2Length(Vector2 a);
 }

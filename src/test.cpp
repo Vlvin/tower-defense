@@ -183,7 +183,7 @@ int main(int argc, char *argv[]) {
     log("Setting route back to %p", first);
     gettimeofday(&beg, NULL);
 
-    Path *first_copy = last->setRouteFromStart(); 
+    Path *first_copy = last->setRouteFromStart(map); 
 
     gettimeofday(&end, NULL);
 

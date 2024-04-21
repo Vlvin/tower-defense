@@ -18,3 +18,11 @@ bool CT::vec2Compare(Vector2 a, Vector2 b, float precition) {
         (round(precition*a.y) == round(precition*b.y))
     );
 }
+
+float CT::vec2Length(Vector2 a) {
+    return pow(a.x*a.x + a.y*a.y, 0.5);
+}
+
+float CT::vec2Distance(Vector2 a, Vector2 b) {
+    return abs(vec2Length(a) - vec2Length(b));
+}

@@ -1,10 +1,10 @@
 #include "PathFinder.h"
 #include "ColorTools.h"
-#include "OpenQueue.h"
 #include "Map.h"
 #include <cstdio>
 #include <algorithm>
 #include <queue>
+#include <random>
 
 
 
@@ -132,7 +132,7 @@ std::vector<Path*> Path::getNeighbours(Map* map) {
     }
     for (char i = 0; i < neighbourCells.size(); i++) {
         int x = neighbourCells[i].x, y = neighbourCells[i].y;
-        neighbours.push_back(makeStep(neighbourCells[i], this->cost+(*map)[y][x].cost, this));
+        neighbours.push_back(makeStep(neighbourCells[i], ((*map)[y][x].cost), this));
     }
     return neighbours;
 }
@@ -189,7 +189,6 @@ Path* Path::findPath(Map *map, MapUnit goal) {
     Path* currentPath = this;
     unsigned int actual_size;
     while(!CT::vec2Compare(currentPath->getPosition(), goal.position)) {
-        // printf("%f:%f\n", currentPath->position.x, currentPath->position.y);
         tempPaths = currentPath->getNeighboursPositions(map);
 
         actual_size = mainPaths.size();
@@ -197,17 +196,16 @@ Path* Path::findPath(Map *map, MapUnit goal) {
             Vector2 pos = tempPaths[i];
             unsigned int cellCost = currentPath->cost + (*map)[int(pos.y)][int(pos.x)].cost;
             if ((!currentPath->isAlreadyPassed(pos, 5)) && (costMap[int(pos.y)*width+int(pos.x)].cost > cellCost)) {   
-                costMap[int(pos.y)*width+int(pos.x)] = {cellCost, makeStep(pos, cellCost, currentPath)};
+                costMap[int(pos.y)*width+int(pos.x)] = {cellCost, makeStep(pos, (*map)[int(pos.y)][int(pos.x)].cost, currentPath)};
                 mainPaths.push(costMap[int(pos.y)*width+int(pos.x)].point);
-                // printf("%u::%f %f\n", currentPath->cost + cellCost, pos.x, pos.y);
             }
         }
-        // if (mainPaths.size() <= actual_size) mainPaths.pop();
         currentPath = mainPaths.top();
         mainPaths.pop(); 
         locX = currentPath->getPosition().x, locY = currentPath->getPosition().y;
         if (costMap[locY*width+locX].cost <= currentPath->getFullCost()) currentPath = costMap[locY*width+locX].point;
     }   
+    map->clear();
     return currentPath;
 
 }
@@ -244,7 +242,7 @@ Path* Path::_findPathVisual(Map *map, MapUnit goal) {
             Vector2 pos = tempPaths[i];
             unsigned int cellCost = currentPath->cost + (*map)[int(pos.y)][int(pos.x)].cost;
             if ((!currentPath->isAlreadyPassed(pos, 5)) && (costMap[int(pos.y)*width+int(pos.x)].cost > cellCost)) {   
-                costMap[int(pos.y)*width+int(pos.x)] = {cellCost, makeStep(pos, cellCost, currentPath)};
+                costMap[int(pos.y)*width+int(pos.x)] = {cellCost, makeStep(pos, (*map)[int(pos.y)][int(pos.x)].cost, currentPath)};
                 mainPaths.push(costMap[int(pos.y)*width+int(pos.x)].point);
             }
         }
@@ -275,15 +273,30 @@ void Path::drawReverse(float scale) {
     }
 }
 
-Path* Path::setRouteFromStart() {
+void Path::draw(float scale) {
+    Path *i = this;
+    while(i != nullptr) {
+        DrawRectangle(i->getPosition().x*scale, i->getPosition().y*scale, scale, scale, PINK);
+        i = i->getNext();
+    }
+}
+
+Path* Path::setRouteFromStart(Map &map) {
     Path *i = this;
     while (i->prev != nullptr) {
-        i->prev->next = i; // in i-1 setting up pointer to i
+        srand(GetTime()*100000);
+        if ((map[int(i->getPosition().y)][int(i->getPosition().x)].cost > 4) && (map[int(i->getPosition().y)][int(i->getPosition().x)].type == Tile::ROAD)) {
+            map[int(i->getPosition().y)][int(i->getPosition().x)].cost = 1;
+        }
+        if (!(rand() % 4) && (5 > map[int(i->getPosition().y)][int(i->getPosition().x)].cost)) {
+            map[int(i->getPosition().y)][int(i->getPosition().x)].cost = 100;
+        }
+        i->prev->next = i; // in i-1 setting up +1 pointer to i
         i = i->prev; // setting i to i-1
     }
     return i;
 }
 
 Path* Path::findPathAndBuild(Map* map, MapUnit goal) {
-    return (this->findPath(map, goal))->setRouteFromStart();
+    return (this->findPath(map, goal))->setRouteFromStart(*map);
 }
