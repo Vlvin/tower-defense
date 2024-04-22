@@ -11,7 +11,7 @@ std::vector<std::shared_ptr<Creep>> Creep::all;
  * @param[in] position Spawn position
  * @warning route must be not cycling
 */
-Creep::Creep(Vector2 position, Path* route, float speed) : IGameObject({position.x, position.y, 0.25, 0.25}, 0) {
+Creep::Creep(Vector2 position, Path* route, float speed) : IGameObject({position.x, position.y, 0.5, 0.5}, 0) {
     this->speed = speed;
     Path* i = route;
     while (i->getPrevious() != nullptr)

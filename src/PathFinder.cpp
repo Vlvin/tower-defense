@@ -284,13 +284,13 @@ void Path::draw(float scale) {
 Path* Path::setRouteFromStart(Map &map) {
     Path *i = this;
     while (i->prev != nullptr) {
-        srand(GetTime()*100000);
-        if ((map[int(i->getPosition().y)][int(i->getPosition().x)].cost > 4) && (map[int(i->getPosition().y)][int(i->getPosition().x)].type == Tile::ROAD)) {
-            map[int(i->getPosition().y)][int(i->getPosition().x)].cost = 1;
-        }
-        if (!(rand() % 4) && (5 > map[int(i->getPosition().y)][int(i->getPosition().x)].cost)) {
-            map[int(i->getPosition().y)][int(i->getPosition().x)].cost = 100;
-        }
+        // srand(GetTime()*100000);
+        // if ((map[int(i->getPosition().y)][int(i->getPosition().x)].cost > 4) && (map[int(i->getPosition().y)][int(i->getPosition().x)].type == Tile::ROAD)) {
+        //     map[int(i->getPosition().y)][int(i->getPosition().x)].cost = 1;
+        // }
+        // if (!(rand() % 4) && (5 > map[int(i->getPosition().y)][int(i->getPosition().x)].cost)) {
+        //     map[int(i->getPosition().y)][int(i->getPosition().x)].cost = 100;
+        // }
         i->prev->next = i; // in i-1 setting up +1 pointer to i
         i = i->prev; // setting i to i-1
     }

@@ -42,7 +42,7 @@ int main() {
 
     Path* temp = first;
 
-    IGameObject* tourel = new Tourel({20.f, 10.f, 1.f, 1.f}, 10.f, .1f);
+    IGameObject* tourel = new Tourel({18.f, 10.f, 1.f, 1.f}, 20.f, .1f);
 
     // std::vector<std::shared_ptr<IGameObject>> objects;
 
@@ -55,7 +55,7 @@ int main() {
             usleep((tDelta - delta)*1000);
         }
 
-        if (GetTime() - lastSpawned > 0.1f) {
+        if (GetTime() - lastSpawned > 1.f) {
             startUnit = map.getAny(Tile::START);
             new Creep(
                         {startUnit.position.x, startUnit.position.y + 0.5f}, 
@@ -66,14 +66,13 @@ int main() {
             Creep::clearAtEnd();
             lastSpawned = GetTime();
         } 
-        lastSpawned = GetTime();
+        // lastSpawned = GetTime();
 
-        tourel->update(delta);
 
         Creep::updateAll(delta);
+        tourel->update(delta);
         Bullet::updateAll(delta);
         
-
         BeginDrawing();
             ClearBackground(BLACK);
             map.draw(SCALE);
