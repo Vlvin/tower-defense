@@ -42,7 +42,9 @@ int main() {
 
     Path* temp = first;
 
-    IGameObject* tourel = new Tourel({18.f, 10.f, 1.f, 1.f}, 20.f, .1f);
+    // new Tourel({20.5f, 3.5f, 1.f, 1.f}, 20.f, .1f);
+    // new Tourel({17.5f, 16.5f, 1.f, 1.f}, 20.f, .1f);
+    new Tourel({20.5f, 9.5f, 1.f, 1.f}, 20.f, .1f);
 
     // std::vector<std::shared_ptr<IGameObject>> objects;
 
@@ -70,14 +72,14 @@ int main() {
 
 
         Creep::updateAll(delta);
-        tourel->update(delta);
+        Tourel::updateAll(delta);
         Bullet::updateAll(delta);
         
         BeginDrawing();
             ClearBackground(BLACK);
             map.draw(SCALE);
             Creep::drawAll(SCALE);
-            tourel->draw(SCALE);
+            Tourel::drawAll(SCALE);
             Bullet::drawAll(SCALE);
         EndDrawing();
     
@@ -93,5 +95,6 @@ int main() {
     }
     Creep::cleanUp();
     Path::cleanUp();
+    Tourel::cleanUp();
     return 0;
 }

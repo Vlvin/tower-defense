@@ -11,8 +11,9 @@ std::vector<std::shared_ptr<Creep>> Creep::all;
  * @param[in] position Spawn position
  * @warning route must be not cycling
 */
-Creep::Creep(Vector2 position, Path* route, float speed) : IGameObject({position.x, position.y, 0.5, 0.5}, 0) {
+Creep::Creep(Vector2 position, Path* route, float speed, unsigned short hitPoints) : IGameObject({position.x, position.y, 0.5, 0.5}, 0) {
     this->speed = speed;
+    this->hitPoints = hitPoints;
     Path* i = route;
     while (i->getPrevious() != nullptr)
         i = i->getPrevious();
@@ -30,6 +31,7 @@ Creep::Creep(Vector2 position, Path* route, float speed) : IGameObject({position
 
 void Creep::update(float delta) {
     if (index >= route.size()) return;
+    if (hitPoints <= 0) index = route.size();
     if (CT::vec2Compare({body.x, body.y}, route[index], .9f)) {
         index++;
         if (index >= route.size()) return;
@@ -102,4 +104,16 @@ std::shared_ptr<Creep> Creep::pop() {
 
 float Creep::getSpeed() {
     return this->speed;
+}
+
+void Creep::hit(short damage) {
+    if (this->hitPoints < damage || (!this->hitPoints)) {
+        this->hitPoints = 0;
+        return; 
+    }
+    this->hitPoints -= damage;
+}
+
+bool Creep::isDead() {
+    return (this->hitPoints == 0);
 }

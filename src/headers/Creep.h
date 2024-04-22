@@ -14,18 +14,22 @@ protected:
     // WARNING if Path* route is cycling then program will stuck on creep
     std::vector<Vector2> route;
     int index;
+    unsigned short hitPoints;
     float speed;
+    virtual void hit(short damage);
 public:
-    Creep(Vector2 position, Path* route = nullptr, float speed = 2.f);
+    Creep(Vector2 position, Path* route = nullptr, float speed = 2.f, unsigned short hitPoints = 8);
     virtual void update(float delta) override;
     static void updateAll(float delta);
     static void drawAll(float scale);
-    Vector2 getTarget();
+    static void cleanUp();
+    static long count();
     static std::shared_ptr<Creep> get(long index);
+    Vector2 getTarget();
     int getIndex();
     float getSpeed();
     bool isAtEnd();
+    bool isDead();
     static void clearAtEnd();
-    static void cleanUp();
-    static long count();
+    friend class Bullet;
 };
