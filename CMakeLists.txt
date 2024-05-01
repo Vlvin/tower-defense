@@ -29,6 +29,7 @@ set(SOURCES
     ${SRC}/ColorTools.cpp
     ${SRC}/Bullet.cpp
     ${SRC}/Creep.cpp
+    ${SRC}/Picture.cpp
     ${SRC}/IGameObject.cpp
     ${SRC}/Tourel.cpp
 )
