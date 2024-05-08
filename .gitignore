@@ -2,3 +2,5 @@ makepy/
 build/
 libs/
 .vscode/
+MapLoader/
+SmartTiles/

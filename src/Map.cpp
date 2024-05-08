@@ -1,4 +1,5 @@
 #include "Map.h"
+// #include "Tiler.h"
 #include "File.h"
 #include "ColorTools.h"
 #include <map>
@@ -47,7 +48,7 @@ Map::~Map() {
 }
 
 Map Map::loadFromFile(const char* filename) {
-    File map_file("map.ppm");
+    File map_file(filename);
     std::string map_text = map_file.getText();
     int width, height;
     int previous_pos, channels = 3, nowChannel = 0, actual_size = 0;

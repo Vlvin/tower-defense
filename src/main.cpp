@@ -9,6 +9,7 @@
 #include "Window.h"
 #include "Creep.h"
 #include "Bullet.h"
+#include "Tiler.h"
 #include "IGameObject.h"
 #include "Picture.h"
 #include "Tourel.h"
@@ -28,7 +29,7 @@ using namespace std;
 
 int main(int argc, char** argv) {
     // // image parsing
-    char* level_name = "demo";
+    char *level_name = "demo";
     if (argc >= 2) {
         level_name = argv[argc-1];
     }
@@ -54,7 +55,9 @@ int main(int argc, char** argv) {
     // std::vector<std::shared_ptr<IGameObject>> objects;
 
     double lastSpawned = GetTime() - 1, lastFrame = GetTime(), delta, tFPS = 60, tDelta = 1000/tFPS;
-    Picture pic = Picture((std::string("level/") + std::string(level_name) + std::string("/highmap.png")).c_str());
+    bool draw = true;
+    Picture pic = Picture((std::string("level/") + std::string(level_name) + std::string("/tilemap-32.png")).c_str());
+    Tiler tiler = Tiler(pic, 32);
     while (!WindowShouldClose()) {
 
         delta = (GetTime() - lastFrame) * 1000.f;
@@ -62,7 +65,7 @@ int main(int argc, char** argv) {
         if (delta < tDelta) {
             usleep((tDelta - delta)*1000);
         }
-
+        if (IsKeyPressed(KEY_ENTER)) draw = !draw;
         if (GetTime() - lastSpawned > 1.f) {
             startUnit = map.getAny(Tile::START);
             new Creep(
@@ -80,12 +83,11 @@ int main(int argc, char** argv) {
         Creep::updateAll(delta);
         Tourel::updateAll(delta);
         Bullet::updateAll(delta);
-        Vector2 size{1.*pic.getTexture().width, 1.*pic.getTexture().height};
+        Vector2 size{1.f*pic.getTexture().width, 1.f*pic.getTexture().height};
         BeginDrawing();
             ClearBackground(BLACK);
-            // map.draw(SCALE);
-            DrawTexturePro(pic.getTexture(), {0., 0., size.x, size.y}, {0., 0., (width*SCALE), (height*SCALE)}, {0.,0.}, 0., WHITE);
-            // DrawTextureEx(pic.getTexture(), {0., 0.}, 0., SCALE, WHITE);
+            map.draw(SCALE);
+            if (draw) tiler.drawMap(map, SCALE);
             Creep::drawAll(SCALE);
             Tourel::drawAll(SCALE);
             Bullet::drawAll(SCALE);
