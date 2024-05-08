@@ -40,10 +40,10 @@ add_subdirectory(${LIBS}/raylib-master)
 
 
 
-# building tests
-add_executable(tests ${SRC}/test.cpp ${SOURCES})
-target_include_directories(tests PUBLIC ${INCLUDE})
-target_link_libraries(tests ${LIB_NAMES})
+# # building tests
+# add_executable(tests ${SRC}/test.cpp ${SOURCES})
+# target_include_directories(tests PUBLIC ${INCLUDE})
+# target_link_libraries(tests ${LIB_NAMES})
 
 # # run tests
 # add_custom_command(

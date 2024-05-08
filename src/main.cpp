@@ -71,7 +71,7 @@ int main(int argc, char** argv) {
             new Creep(
                         {startUnit.position.x, startUnit.position.y + 0.5f}, 
                         (new Path(startUnit.position, startUnit.cost))->findPathAndBuild(&map, map.getAny(Tile::FINISH)),
-                        2.f,
+                        5.f,
                         8,
                         (std::string("level/") + std::string(level_name) + std::string("/Zombie.png")).c_str()
                     );
@@ -91,8 +91,8 @@ int main(int argc, char** argv) {
             map.draw(SCALE);
             if (draw) tiler.drawMap(map, SCALE);
             Creep::drawAll(SCALE);
-            Tourel::drawAll(SCALE);
             Bullet::drawAll(SCALE);
+            Tourel::drawAll(SCALE);
         EndDrawing();
     
         // BeginDrawing();

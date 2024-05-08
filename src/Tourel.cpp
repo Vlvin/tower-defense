@@ -84,15 +84,19 @@ void Tourel::update(float delta) {
 }
 
 void Tourel::draw(float scale) {
+    float barrelX = ((body.x) - (cos(angle)*0.5f*0.5f*body.width))*scale,
+          barrelY = ((body.y) - (sin(angle)*0.5f*0.25f*body.height))*scale,
+          barrelWidth = scale,
+          barrelHeight = scale*0.5f;
+    DrawRectanglePro((Rectangle){barrelX, barrelY, barrelWidth, barrelHeight}, {scale*0.5f, 0.5f*scale*0.5f}, this->angle/M_PI*180, GRAY);
     IGameObject::draw(scale);
     DrawCircleLines(this->getPosition().x*scale,this->getPosition().y*scale, 4.f*scale, PINK);
     if (!target) return;
-    // DrawRectanglePro(
-    //     {this->target->getPosition().x*scale, this->target->getPosition().y*scale, 0.5f*scale, 0.5f*scale},
-    //     {0.5f*0.5f*scale, 0.5f*0.5f*scale},
-    //     this->target->getAngle()/M_PI*180.,
-    //     RED
-    // );
+    
+    DrawRectangleLines(
+        this->target->getPosition().x*scale-0.5f*scale, this->target->getPosition().y*scale-0.5f*scale, scale, scale,
+        GREEN
+    );
     // DrawRectanglePro(
     //     {predX*scale, predY*scale, 0.5f*scale, 0.5f*scale},
     //     {0.5f*0.5f*scale, 0.5f*0.5f*scale},
