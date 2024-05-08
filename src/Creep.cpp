@@ -6,12 +6,14 @@
 
 std::vector<std::shared_ptr<Creep>> Creep::all;
 
+Texture2D Creep::texture_{0, 0};
+
 /**
  * @param[in] route Path node pointing to any cell of route (if you got it after Path::setRouteFromStart)
  * @param[in] position Spawn position
  * @warning route must be not cycling
 */
-Creep::Creep(Vector2 position, Path* route, float speed, unsigned short hitPoints) : IGameObject({position.x, position.y, 0.5, 0.5}, 0) {
+Creep::Creep(Vector2 position, Path* route, float speed, unsigned short hitPoints, const char* texture_path) : IGameObject({position.x, position.y, 1, 1}, 0) {
     this->speed = speed;
     this->hitPoints = hitPoints;
     Path* i = route;
@@ -25,6 +27,12 @@ Creep::Creep(Vector2 position, Path* route, float speed, unsigned short hitPoint
     float deltaX = position.x - this->route[index].x, deltaY = position.y - this->route[index].y;
     angle = atan2(deltaY, deltaX); 
     all.push_back(std::shared_ptr<Creep>(this));
+    texture = texture_;
+    if ((!texture_path)) return;
+    if (texture_.width > 0) return;
+    Image temp = LoadImage(texture_path);
+    texture = texture_ = LoadTextureFromImage(temp);
+    UnloadImage(temp);
 }
 
 
@@ -38,7 +46,6 @@ void Creep::update(float delta) {
         float deltaX = body.x - route[index].x, deltaY = body.y - route[index].y;
         angle = atan2(deltaY, deltaX);
     }
-
 
     // please add speed
     body.x -= cos(angle) * speed * delta * 0.001f;
@@ -88,6 +95,7 @@ void Creep::updateAll(float delta) {
 }
 
 void Creep::cleanUp() {
+    UnloadTexture(texture_);
     while (Creep::count())
         Creep::pop();
 }

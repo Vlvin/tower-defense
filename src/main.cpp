@@ -71,7 +71,9 @@ int main(int argc, char** argv) {
             new Creep(
                         {startUnit.position.x, startUnit.position.y + 0.5f}, 
                         (new Path(startUnit.position, startUnit.cost))->findPathAndBuild(&map, map.getAny(Tile::FINISH)),
-                        5.f
+                        2.f,
+                        8,
+                        (std::string("level/") + std::string(level_name) + std::string("/Zombie.png")).c_str()
                     );
             Path::cleanUp();
             Creep::clearAtEnd();

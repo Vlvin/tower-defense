@@ -4,6 +4,7 @@
 class IGameObject {
 protected:
     Rectangle body;
+    Texture2D texture;
     float angle;
 public:
     IGameObject(Rectangle body, float angle);
