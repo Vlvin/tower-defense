@@ -34,9 +34,9 @@ Texture2D Tiler::getTile(Map& map, int x, int y) {
     int current = 4;
     if (map[y][x].type == Tile::GRASS) {
         current = 9;
-    } else {
+    } else if (map[y][x].type == Tile::ROAD) {
         current = 4;
-    }
+    } else return Texture2D{0, 0, 0, 0, 0};
     /** map (number is number of shifts to get value)
      * 7 - north
      * 6 - south
@@ -142,8 +142,11 @@ Texture2D Tiler::getTile(Map& map, int x, int y) {
 }
 
 void Tiler::drawMap(Map& map, float scale) {
+    map.draw(scale);
     for (int i = 0; i < map.getSize().y; i++)
         for (int j = 0; j < map.getSize().x; j++) {
-            DrawTexturePro(getTile(map, j, i), (Rectangle){0, 0, sizeOfTile, sizeOfTile}, (Rectangle){j*scale, i*scale, scale, scale}, {0.,0.}, 0., WHITE);
+            Texture2D temp = getTile(map, j, i);
+            if (temp.width)
+                DrawTexturePro(temp, (Rectangle){0, 0, sizeOfTile, sizeOfTile}, (Rectangle){j*scale, i*scale, scale, scale}, {0.,0.}, 0., WHITE);
         }
 }

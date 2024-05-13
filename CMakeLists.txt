@@ -31,6 +31,9 @@ set(SOURCES
     ${SRC}/Creep.cpp
     ${SRC}/Tiler.cpp
     ${SRC}/Picture.cpp
+    ${SRC}/ICollisionBody.cpp
+    ${SRC}/IDrawObject.cpp
+    ${SRC}/IUpdatingObject.cpp
     ${SRC}/IGameObject.cpp
     ${SRC}/Tourel.cpp
 )

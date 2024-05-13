@@ -38,7 +38,7 @@ int main(int argc, char** argv) {
     int width = map.getSize().x;
     int height = map.getSize().y;
 
-    Window::getInstance(SCALE*width, SCALE*height, "PathFinder");
+    Window::getInstance(SCALE*width, SCALE*(height+5), "PathFinder");
 
     MapUnit startUnit = map.getAny(Tile::START);
     if (!startUnit.cost) 
@@ -68,13 +68,14 @@ int main(int argc, char** argv) {
         if (IsKeyPressed(KEY_ENTER)) draw = !draw;
         if (GetTime() - lastSpawned > 1.f) {
             startUnit = map.getAny(Tile::START);
-            new Creep(
+            Creep* temp = new Creep(
                         {startUnit.position.x, startUnit.position.y + 0.5f}, 
                         (new Path(startUnit.position, startUnit.cost))->findPathAndBuild(&map, map.getAny(Tile::FINISH)),
                         5.f,
                         8,
                         (std::string("level/") + std::string(level_name) + std::string("/Zombie.png")).c_str()
                     );
+            temp->setColor(RED);
             Path::cleanUp();
             Creep::clearAtEnd();
             lastSpawned = GetTime();
