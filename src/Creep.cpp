@@ -2,9 +2,7 @@
 #include "ColorTools.h"
 #include <cmath>
 #include <cstdio>
-
-
-std::vector<std::shared_ptr<Creep>> Creep::all;
+#include <iostream>
 
 Texture2D Creep::texture_{0, 0};
 
@@ -26,7 +24,6 @@ Creep::Creep(Vector2 position, Path* route, float speed, unsigned short hitPoint
     this->index = 0;
     float deltaX = position.x - this->route[index].x, deltaY = position.y - this->route[index].y;
     angle = atan2(deltaY, deltaX); 
-    all.push_back(std::shared_ptr<Creep>(this));
     texture = texture_;
     if ((!texture_path)) return;
     if (texture_.width > 0) return;
@@ -38,8 +35,12 @@ Creep::Creep(Vector2 position, Path* route, float speed, unsigned short hitPoint
 
 
 void Creep::update(float delta) {
-    if (index >= route.size()) return;
     if (hitPoints <= 0) index = route.size();
+    if (index >= route.size()) {
+        hitPoints = 0;
+        IGameObject::remove(this);
+        return;
+    }
     if (CT::vec2Compare({body.x, body.y}, route[index], .9f)) {
         index++;
         if (index >= route.size()) return;
@@ -52,6 +53,25 @@ void Creep::update(float delta) {
     body.y -= sin(angle) * speed * delta * 0.001f;
 }
 
+// void Creep::draw(float scale) {
+//     std::cout << "Creep::draw\n";
+//     if (!texture_.width)
+//     {
+//         DrawRectangleRec(
+//             {body.x * scale, body.y * scale, body.width * scale, body.height * scale},
+//             color
+//         );
+//         return;
+//     }
+//     DrawTexturePro(
+//         texture,
+//         {0, 0, (float)texture.width, (float)texture.height},
+//         {body.x * scale, body.y * scale, body.width * scale, body.height * scale},
+//         {body.width*scale*0.5f, body.height*scale*0.5f},
+//         0.f,
+//         color
+//     );
+// }
 
 Vector2 Creep::getTarget() {
     if (index >= route.size()) return {-14.f, -88.f};
@@ -66,48 +86,12 @@ bool Creep::isAtEnd() {
     return index >= route.size();
 }
 
-std::shared_ptr<Creep> Creep::get(long index) {
-    if (index >= Creep::all.size()) 
-        return nullptr;
-    return Creep::all[index];
-}
-
-void Creep::clearAtEnd() {
-    for (int i = 0; i < Creep::all.size(); i++) {
-        if (Creep::get(i)->isAtEnd()) {
-            // delete Creep::get(i);
-            Creep::all[i] = Creep::all.back();
-            Creep::all.pop_back();
-        }
-    }
-}
-
-void Creep::drawAll(float scale) {
-    for (int i = 0; i < Creep::all.size(); i++) {
-        (Creep::get(i))->draw(scale);
-    }
-}
-
-void Creep::updateAll(float delta) {
-    for (int i = 0; i < Creep::all.size(); i++) {
-        (Creep::get(i))->update(delta);
-    }
-}
-
 void Creep::cleanUp() {
     UnloadTexture(texture_);
-    while (Creep::count())
-        Creep::pop();
 }
 
-long Creep::count() {
-    return Creep::all.size();
-}
-
-std::shared_ptr<Creep> Creep::pop() {
-    std::shared_ptr<Creep> res = all.back();
-    all.pop_back();
-    return res;
+bool Creep::isCollidable() {
+    return true;
 }
 
 float Creep::getSpeed() {

@@ -1,53 +1,49 @@
 #include "Tourel.h"
 #include "Creep.h"
 #include "Bullet.h"
+#include "Window.h"
 #include <cmath>
 #include <cstdio>
 #include "ColorTools.h"
 
-std::vector<std::shared_ptr<Tourel>> Tourel::all;
-
-Tourel::Tourel(Rectangle body, float projSpeed, float shootFreq) : IGameObject(body, 0) {
+Tourel::Tourel(Rectangle body, float projSpeed, float shootFreq) : IGameObject(body, 0), target(nullptr) {
     this->projSpeed = projSpeed;
     this->shootFreq = shootFreq;
-    this->target = nullptr;
-    this->lastShot = GetTime();
-    Tourel::all.push_back(std::shared_ptr<Tourel>(this));
+    lastShot = GetTime();
 }
 
 
 void Tourel::update(float delta) {
     float actual_time = 0;
-    if ((this->target == nullptr) || (CT::vec2Distance(this->getPosition(),this->target->getPosition()) > 1) || (this->target->isDead())) {
-       this->target = nullptr;
-        for (int i = 0; i < Creep::count(); i++) {
-            std::shared_ptr<Creep> creep = Creep::get(i);
+    if ((!target) || (CT::vec2Distance(this->getPosition(),target->getPosition()) > 1) || (target->isDead())) {
+       target = nullptr;
+        for (auto li = IGameObject::begin(); li != IGameObject::end(); li++) {
+            if (!(*li)->isCollidable()) continue;
+            Creep* creep = dynamic_cast<Creep*>(*li);
+            if (!creep) continue;
+
             if ((CT::vec2Distance(this->getPosition(), creep->getPosition()) < 4.f) && !creep->isDead()) {
-                this->target = std::shared_ptr<Creep>(creep);
+                target = creep;
                 break;
             }
         }
     }
-    if (this->target == nullptr) return;
+    if (!target) return;
     
-    float deltaX =this->target->getPosition().x - this->getPosition().x, 
-          deltaY =this->target->getPosition().y - this->getPosition().y;
+    float deltaX =target->getPosition().x - this->getPosition().x, 
+          deltaY =target->getPosition().y - this->getPosition().y;
 
     angle = atan2(deltaY, deltaX);
     // algebra
         float a = 0., b = 0., c = 0., D = 0., t1 = 0., t2 = 0.;
-        float targetAngle = (this->target)->getAngle();
-        float targetConstantSpeed = (this->target)->getSpeed();
+        float targetAngle = (target)->getAngle();
+        float targetConstantSpeed = (target)->getSpeed();
         float targetVelocityX = cos(targetAngle) * targetConstantSpeed;
         float targetVelocityY = sin(targetAngle) * targetConstantSpeed;
-        float targetStartX = (this->target)->getPosition().x;
-        float targetStartY = (this->target)->getPosition().y;
+        float targetStartX = (target)->getPosition().x;
+        float targetStartY = (target)->getPosition().y;
         float cannonX = this->getPosition().x;
         float cannonY = this->getPosition().y;
-            
-        
-        // if (cos(targetAngle) * targetConstantSpeed != targetVelocityX) 
-        //     printf("!!!! %f != %f\n", targetVelocityX, cos(targetAngle) * targetConstantSpeed);
 
         a = pow(targetVelocityX, 2) + pow(targetVelocityY, 2) - pow(projSpeed, 2);
         b = 2 * (
@@ -56,24 +52,17 @@ void Tourel::update(float delta) {
                 );
         c = pow(targetStartX - cannonX, 2) + pow(targetStartY - cannonY, 2);
         D = pow(b, 2) - 4*a*c;
-        // printf("a:%f b:%f c:%f D:%f\n", a, b, c, D);
         t1 = (-b + sqrt(D))/(2*a);
         t2 = (-b - sqrt(D))/(2*a);
         actual_time = t1 > t2 ? t2 : t1;
         if (0. > t1) actual_time = t2;
         if (0. > t2) actual_time = t1;
-        // printf("Time  %f:%f  %f\n", t1, t2, actual_time);
 
         predX = targetStartX - (targetVelocityX * actual_time);
         predY = targetStartY - (targetVelocityY * actual_time);
 
         deltaX = this->getPosition().x - predX, 
         deltaY = this->getPosition().y - predY;
-        // printf("Position predicted %f:%f target Start %f:%f delta  %f:%f  speed %f  %f:%f angle %f\n"
-        //         "cos %f sin %f\n", 
-        //     predX, predY, targetStartX, targetStartY, deltaX, deltaY, 
-        //     targetConstantSpeed, targetVelocityX, targetVelocityY,
-        //     targetAngle, cos(targetAngle), sin(targetAngle));
 
         angle = atan2(deltaY, deltaX);
 
@@ -83,49 +72,42 @@ void Tourel::update(float delta) {
     }
 }
 
-void Tourel::draw(float scale) {
-    float barrelX = ((body.x) - (cos(angle)*0.5f*0.5f*body.width))*scale,
-          barrelY = ((body.y) - (sin(angle)*0.5f*0.25f*body.height))*scale,
+void Tourel::draw(float scale, Vector2 camera) {
+    float barrelX = ((body.x - camera.x) - (cos(angle)*0.5f*0.5f*body.width))*scale,
+          barrelY = ((body.y - camera.y) - (sin(angle)*0.5f*0.25f*body.height))*scale,
           barrelWidth = scale,
           barrelHeight = scale*0.5f;
-    DrawRectanglePro((Rectangle){barrelX, barrelY, barrelWidth, barrelHeight}, {scale*0.5f, 0.5f*scale*0.5f}, this->angle/M_PI*180, GRAY);
-    IGameObject::draw(scale);
-    DrawCircleLines(this->getPosition().x*scale,this->getPosition().y*scale, 4.f*scale, PINK);
+    DrawRectanglePro(
+        (Rectangle){
+            barrelX + Window::getInstance()->getSize().x*0.5f,
+            barrelY + Window::getInstance()->getSize().y*0.5f, 
+            barrelWidth, barrelHeight
+        }, 
+        {scale*0.5f, 0.5f*scale*0.5f}, 
+        this->angle/M_PI*180, 
+        GRAY);
+    IGameObject::draw(scale, camera);
+    DrawCircleLines(
+        (body.x - camera.x)*scale + Window::getInstance()->getSize().x*0.5f, 
+        (body.y - camera.y)*scale + Window::getInstance()->getSize().y*0.5f, 
+        4.f*scale, 
+        PINK
+    );
     if (!target) return;
     
     DrawRectangleLines(
-        this->target->getPosition().x*scale-0.5f*scale, this->target->getPosition().y*scale-0.5f*scale, scale, scale,
+        (target->getPosition().x - camera.x)*scale-0.5f*scale + Window::getInstance()->getSize().x*0.5f, 
+        (target->getPosition().y - camera.y)*scale-0.5f*scale + Window::getInstance()->getSize().y*0.5f, 
+        scale, 
+        scale,
         GREEN
     );
-    // DrawRectanglePro(
-    //     {predX*scale, predY*scale, 0.5f*scale, 0.5f*scale},
-    //     {0.5f*0.5f*scale, 0.5f*0.5f*scale},
-    //     this->target->getAngle()/M_PI*180.,
-    //     DARKPURPLE
-    // );
+
 }
 
-
-void Tourel::updateAll(float delta) {
-    for (long i = 0; i < Tourel::count(); i++)
-        Tourel::get(i)->update(delta);
-}
-
-void Tourel::drawAll(float scale) {
-    for (long i = 0; i < Tourel::count(); i++)
-        Tourel::get(i)->draw(scale);
-}
-
-std::shared_ptr<Tourel> Tourel::get(long index) {
-    if (index >= Tourel::count()) return nullptr;
-    return Tourel::all[index];
-}
-
-long Tourel::count() {
-    return Tourel::all.size();
+bool Tourel::isCollidable() {
+    return false;
 }
 
 void Tourel::cleanUp() {
-    while(Tourel::count() > 0)
-        Tourel::all.pop_back();
 }

@@ -8,8 +8,6 @@
 
 class Creep: public IGameObject {
 private:
-    static std::vector<std::shared_ptr<Creep>> all;
-    static std::shared_ptr<Creep> pop();
     static Texture2D texture_;
 protected:
     // WARNING if Path* route is cycling then program will stuck on creep
@@ -21,16 +19,13 @@ protected:
 public:
     Creep(Vector2 position, Path* route = nullptr, float speed = 2.f, unsigned short hitPoints = 8, const char* texture_path = NULL);
     virtual void update(float delta) override;
-    static void updateAll(float delta);
-    static void drawAll(float scale);
+    // virtual void draw(float scale) override;
     static void cleanUp();
-    static long count();
-    static std::shared_ptr<Creep> get(long index);
     Vector2 getTarget();
     int getIndex();
     float getSpeed();
     bool isAtEnd();
+    bool isCollidable();
     bool isDead();
-    static void clearAtEnd();
     friend class Bullet;
 };

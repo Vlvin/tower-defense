@@ -210,7 +210,7 @@ Path* Path::findPath(Map *map, MapUnit goal) {
 
 }
 
-Path* Path::_findPathVisual(Map *map, MapUnit goal) {
+Path* Path::_findPathVisual(Map *map, MapUnit goal, Vector2 camera) {
     auto cmp = [&] (Path* a, Path* b) {
                     return (
                         ((a->manhattenDistance(goal.position))+(a->getFullCost())) 
@@ -258,7 +258,7 @@ Path* Path::_findPathVisual(Map *map, MapUnit goal) {
         // Clear back; Draw map; Draw path;
         BeginDrawing();
             ClearBackground(BLACK);
-            map->draw(20.f);
+            map->draw(20.f, camera);
             currentPath->drawReverse(20.f);
         EndDrawing();
     }   

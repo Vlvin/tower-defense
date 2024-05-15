@@ -39,7 +39,7 @@ public:
 
     Path* allocator();
     Path* findPath(Map* map, MapUnit goal);
-    Path* _findPathVisual(Map* map, MapUnit goal);
+    Path* _findPathVisual(Map* map, MapUnit goal, Vector2 camera);
 
     static void cleanUp(int signum = 0);
     void drawReverse(float scale = 20);

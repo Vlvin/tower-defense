@@ -14,6 +14,6 @@ protected:
 public:
     Texture2D getTile(Map &map, int x, int y);
     Tiler(Picture &tileTexture, int sizeOfTile);
-    void drawMap(Map& map, float scale);
+    void drawMap(Map& map, float scale, Vector2 camera);
     ~Tiler();
 };

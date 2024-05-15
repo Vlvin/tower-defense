@@ -1,6 +1,7 @@
 #include "Tiler.h"
 
 #include "Map.h"
+#include "Window.h"
 #include "Picture.h"
 
 Tiler::Tiler(Picture &tileTexture, int sizeOfTile) {
@@ -141,12 +142,18 @@ Texture2D Tiler::getTile(Map& map, int x, int y) {
     return tiles[current];
 }
 
-void Tiler::drawMap(Map& map, float scale) {
-    map.draw(scale);
+void Tiler::drawMap(Map& map, float scale, Vector2 camera) {
+    map.draw(scale, camera);
     for (int i = 0; i < map.getSize().y; i++)
         for (int j = 0; j < map.getSize().x; j++) {
             Texture2D temp = getTile(map, j, i);
             if (temp.width)
-                DrawTexturePro(temp, (Rectangle){0, 0, sizeOfTile, sizeOfTile}, (Rectangle){j*scale, i*scale, scale, scale}, {0.,0.}, 0., WHITE);
+                DrawTexturePro(
+                    temp, 
+                    (Rectangle){0, 0, sizeOfTile, sizeOfTile}, 
+                    (Rectangle){
+                        (j - camera.x)*scale + Window::getInstance()->getSize().x * 0.5f, 
+                        (i - camera.y)*scale + Window::getInstance()->getSize().y * 0.5f, 
+                        scale, scale}, {0.,0.}, 0., WHITE);
         }
 }

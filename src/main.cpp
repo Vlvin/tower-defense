@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <cmath>
 #include <memory>
 #include <unistd.h>
 
@@ -15,8 +16,6 @@
 #include "Tourel.h"
 #include "raylib.h"
 
-#define SCALE 20.f
-
 /**
  * Pathfinder logic
  * 1. Add start node in vector
@@ -29,6 +28,7 @@ using namespace std;
 
 int main(int argc, char** argv) {
     // // image parsing
+    float SCALE = 20.f;
     char *level_name = "demo";
     if (argc >= 2) {
         level_name = argv[argc-1];
@@ -38,7 +38,7 @@ int main(int argc, char** argv) {
     int width = map.getSize().x;
     int height = map.getSize().y;
 
-    Window::getInstance(SCALE*width, SCALE*(height+5), "PathFinder");
+    Window::getInstance(640, 480, "PathFinder");
 
     MapUnit startUnit = map.getAny(Tile::START);
     if (!startUnit.cost) 
@@ -50,7 +50,8 @@ int main(int argc, char** argv) {
 
     // new Tourel({20.5f, 3.5f, 1.f, 1.f}, 20.f, .1f);
     // new Tourel({17.5f, 16.5f, 1.f, 1.f}, 20.f, .1f);
-    new Tourel({20.5f, 9.5f, 1.f, 1.f}, 20.f, .1f);
+    for (int i = 0; i < 2; i++)
+        new Tourel({5.5f, 9.5f, 1.f, 1.f}, 20.f, .1f);
 
     // std::vector<std::shared_ptr<IGameObject>> objects;
 
@@ -58,7 +59,30 @@ int main(int argc, char** argv) {
     bool draw = true;
     Picture pic = Picture((std::string("level/") + std::string(level_name) + std::string("/tilemap-32.png")).c_str());
     Tiler tiler = Tiler(pic, 32);
+
+    Vector2 cameraMin{
+        Window::getInstance()->getSize().x*0.5f/SCALE, 
+        Window::getInstance()->getSize().y*0.5f/SCALE
+    };
+    Vector2 cameraMax{
+        map.getSize().x - cameraMin.x, 
+        map.getSize().y - cameraMin.y
+    };
+
+    Vector2 camera = {Window::getInstance()->getSize().x*0.5f/SCALE, Window::getInstance()->getSize().y*0.5f/SCALE};
+
     while (!WindowShouldClose()) {
+
+
+
+    cameraMin = Vector2{
+        Window::getInstance()->getSize().x*0.5f/SCALE, 
+        Window::getInstance()->getSize().y*0.5f/SCALE
+    };
+    cameraMax = Vector2{
+        map.getSize().x - cameraMin.x, 
+        map.getSize().y - cameraMin.y
+    };
 
         delta = (GetTime() - lastFrame) * 1000.f;
         lastFrame = GetTime();
@@ -68,32 +92,39 @@ int main(int argc, char** argv) {
         if (IsKeyPressed(KEY_ENTER)) draw = !draw;
         if (GetTime() - lastSpawned > 1.f) {
             startUnit = map.getAny(Tile::START);
-            Creep* temp = new Creep(
-                        {startUnit.position.x, startUnit.position.y + 0.5f}, 
-                        (new Path(startUnit.position, startUnit.cost))->findPathAndBuild(&map, map.getAny(Tile::FINISH)),
-                        5.f,
-                        8,
-                        (std::string("level/") + std::string(level_name) + std::string("/Zombie.png")).c_str()
-                    );
+            Creep* temp(
+                        new Creep(
+                            {startUnit.position.x, startUnit.position.y + 0.5f}, 
+                            (new Path(startUnit.position, startUnit.cost))->findPathAndBuild(&map, map.getAny(Tile::FINISH)),
+                            5.f,
+                            8,
+                            (std::string("level/") + std::string(level_name) + std::string("/Zombie.png")).c_str()
+                        )
+                );
             temp->setColor(RED);
             Path::cleanUp();
-            Creep::clearAtEnd();
             lastSpawned = GetTime();
         } 
         // lastSpawned = GetTime();
+        if (IsKeyDown(KEY_W) && (camera.y > cameraMin.y)) camera.y -= 0.1;
+        if (IsKeyDown(KEY_A) && (camera.x > cameraMin.x)) camera.x -= 0.1;
+        if (IsKeyDown(KEY_S) && (camera.y < cameraMax.y)) camera.y += 0.1;
+        if (IsKeyDown(KEY_D) && (camera.x < cameraMax.x)) camera.x += 0.1;
+        if (IsKeyDown(KEY_UP) && (SCALE < 100.f)) {
+            SCALE += 1;
+        }
+        if (IsKeyDown(KEY_DOWN) && (SCALE > 10.f)) {
+            SCALE -= 1;
+        } 
 
 
-        Creep::updateAll(delta);
-        Tourel::updateAll(delta);
-        Bullet::updateAll(delta);
+        IGameObject::updateAll(delta);
         Vector2 size{1.f*pic.getTexture().width, 1.f*pic.getTexture().height};
         BeginDrawing();
             ClearBackground(BLACK);
-            map.draw(SCALE);
-            if (draw) tiler.drawMap(map, SCALE);
-            Creep::drawAll(SCALE);
-            Bullet::drawAll(SCALE);
-            Tourel::drawAll(SCALE);
+            map.draw(SCALE, camera);
+            if (draw) tiler.drawMap(map, SCALE, camera);
+            IGameObject::drawAll(SCALE, camera);
         EndDrawing();
     
         // BeginDrawing();
@@ -108,6 +139,6 @@ int main(int argc, char** argv) {
     }
     Creep::cleanUp();
     Path::cleanUp();
-    Tourel::cleanUp();
+    IGameObject::cleanUp();
     return 0;
 }

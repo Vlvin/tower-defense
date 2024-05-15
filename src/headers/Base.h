@@ -2,10 +2,10 @@
 #include <vector>
 
 class Base : public IGameObject {  
-    static std::vector<Base*> all;
 protected:
 public:
     Base(int x, int y);
-    virtual void update(float delta);
-    virtual void draw(float scale);
+    virtual void update(float delta) override;
+    // virtual void draw(float scale) override;
+    virtual bool isCollidable() override;
 };

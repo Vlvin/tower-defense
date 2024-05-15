@@ -1,6 +1,7 @@
 #include "Map.h"
 // #include "Tiler.h"
 #include "File.h"
+#include "Window.h"
 #include "ColorTools.h"
 #include <map>
 #include <cmath>
@@ -131,11 +132,14 @@ MapUnit* Map::operator[](int index) {
     return &this->data[index*this->width];
 }
 
-void Map::draw(float scale) {
+void Map::draw(float scale, Vector2 camera) {
     int wid = this->getSize().x, hei = this->getSize().y;
     for (int i = 0; i < hei; i++) {
         for (int j = 0; j < wid; j++) {
-            DrawRectangle(j*scale, i*scale, scale, scale, (*this)[i][j].color);
+            DrawRectangle(
+                (j - camera.x)*scale + Window::getInstance()->getSize().x * 0.5f, 
+                (i - camera.y)*scale + Window::getInstance()->getSize().y * 0.5f, 
+                scale, scale, (*this)[i][j].color);
         }
     }
 }

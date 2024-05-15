@@ -32,7 +32,7 @@ public:
     static Map loadFromFile(const char* filename);
     MapUnit* operator[] (int index);
     MapUnit getAny(Tile_t type);
-    void draw(float scale);
+    void draw(float scale, Vector2 camera);
     Vector2 getSize();
     void clear();
 };
