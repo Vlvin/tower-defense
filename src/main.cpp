@@ -7,6 +7,7 @@
 
 #include "Map.h"
 #include "PathFinder.h"
+#include "Player.h"
 #include "Window.h"
 #include "Creep.h"
 #include "Bullet.h"
@@ -28,11 +29,11 @@ using namespace std;
 
 int main(int argc, char** argv) {
     // // image parsing
-    float SCALE = 20.f;
     char *level_name = "demo";
     if (argc >= 2) {
         level_name = argv[argc-1];
     }
+
 
     Map map = Map::loadFromFile((std::string("level/") + std::string(level_name) + std::string("/map.ppm")).c_str());
     int width = map.getSize().x;
@@ -60,29 +61,35 @@ int main(int argc, char** argv) {
     Picture pic = Picture((std::string("level/") + std::string(level_name) + std::string("/tilemap-32.png")).c_str());
     Tiler tiler = Tiler(pic, 32);
 
-    Vector2 cameraMin{
-        Window::getInstance()->getSize().x*0.5f/SCALE, 
-        Window::getInstance()->getSize().y*0.5f/SCALE
-    };
-    Vector2 cameraMax{
-        map.getSize().x - cameraMin.x, 
-        map.getSize().y - cameraMin.y
-    };
+    // Vector2 cameraMin{
+    //     Window::getInstance()->getSize().x*0.5f/SCALE, 
+    //     Window::getInstance()->getSize().y*0.5f/SCALE
+    // };
+    // Vector2 cameraMax{
+    //     map.getSize().x - cameraMin.x, 
+    //     map.getSize().y - cameraMin.y
+    // };
 
-    Vector2 camera = {Window::getInstance()->getSize().x*0.5f/SCALE, Window::getInstance()->getSize().y*0.5f/SCALE};
+    // Vector2 camera = {Window::getInstance()->getSize().x*0.5f/SCALE, Window::getInstance()->getSize().y*0.5f/SCALE};
+
+    Player::getInstance(&map);
+
+    float scale;
+    Vector2 camera;
 
     while (!WindowShouldClose()) {
 
+        scale = Player::getInstance()->getScale();
+        camera = Player::getInstance()->getCamera();
 
-
-    cameraMin = Vector2{
-        Window::getInstance()->getSize().x*0.5f/SCALE, 
-        Window::getInstance()->getSize().y*0.5f/SCALE
-    };
-    cameraMax = Vector2{
-        map.getSize().x - cameraMin.x, 
-        map.getSize().y - cameraMin.y
-    };
+    // cameraMin = Vector2{
+    //     Window::getInstance()->getSize().x*0.5f/SCALE, 
+    //     Window::getInstance()->getSize().y*0.5f/SCALE
+    // };
+    // cameraMax = Vector2{
+    //     map.getSize().x - cameraMin.x, 
+    //     map.getSize().y - cameraMin.y
+    // };
 
         delta = (GetTime() - lastFrame) * 1000.f;
         lastFrame = GetTime();
@@ -106,25 +113,16 @@ int main(int argc, char** argv) {
             lastSpawned = GetTime();
         } 
         // lastSpawned = GetTime();
-        if (IsKeyDown(KEY_W) && (camera.y > cameraMin.y)) camera.y -= 0.1;
-        if (IsKeyDown(KEY_A) && (camera.x > cameraMin.x)) camera.x -= 0.1;
-        if (IsKeyDown(KEY_S) && (camera.y < cameraMax.y)) camera.y += 0.1;
-        if (IsKeyDown(KEY_D) && (camera.x < cameraMax.x)) camera.x += 0.1;
-        if (IsKeyDown(KEY_UP) && (SCALE < 100.f)) {
-            SCALE += 1;
-        }
-        if (IsKeyDown(KEY_DOWN) && (SCALE > 10.f)) {
-            SCALE -= 1;
-        } 
 
 
+        Player::getInstance()->update(delta);
         IGameObject::updateAll(delta);
         Vector2 size{1.f*pic.getTexture().width, 1.f*pic.getTexture().height};
         BeginDrawing();
             ClearBackground(BLACK);
-            map.draw(SCALE, camera);
-            if (draw) tiler.drawMap(map, SCALE, camera);
-            IGameObject::drawAll(SCALE, camera);
+            map.draw(scale, camera);
+            if (draw) tiler.drawMap(map, scale, camera);
+            IGameObject::drawAll(scale, camera);
         EndDrawing();
     
         // BeginDrawing();

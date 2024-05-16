@@ -27,6 +27,7 @@ set(SOURCES
     ${SRC}/Map.cpp
     ${SRC}/PathFinder.cpp
     ${SRC}/ColorTools.cpp
+    ${SRC}/Player.cpp
     ${SRC}/Bullet.cpp
     ${SRC}/Creep.cpp
     ${SRC}/Tiler.cpp
