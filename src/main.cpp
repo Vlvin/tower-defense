@@ -6,6 +6,7 @@
 #include <unistd.h>
 
 #include "Map.h"
+#include "Scene.h"
 #include "PathFinder.h"
 #include "Player.h"
 #include "Window.h"
@@ -47,12 +48,10 @@ int main(int argc, char** argv) {
 
     Path* first = (new Path(startUnit.position, startUnit.cost))->findPathAndBuild(&map, map.getAny(Tile::FINISH));
 
-    Path* temp = first;
 
-    // new Tourel({20.5f, 3.5f, 1.f, 1.f}, 20.f, .1f);
-    // new Tourel({17.5f, 16.5f, 1.f, 1.f}, 20.f, .1f);
-    for (int i = 0; i < 2; i++)
-        new Tourel({5.5f, 9.5f, 1.f, 1.f}, 20.f, .1f);
+    Path* temp = first;
+    int index = 0;
+    std::vector<Scene> scenes(10);
 
     // std::vector<std::shared_ptr<IGameObject>> objects;
 
@@ -82,15 +81,6 @@ int main(int argc, char** argv) {
         scale = Player::getInstance()->getScale();
         camera = Player::getInstance()->getCamera();
 
-    // cameraMin = Vector2{
-    //     Window::getInstance()->getSize().x*0.5f/SCALE, 
-    //     Window::getInstance()->getSize().y*0.5f/SCALE
-    // };
-    // cameraMax = Vector2{
-    //     map.getSize().x - cameraMin.x, 
-    //     map.getSize().y - cameraMin.y
-    // };
-
         delta = (GetTime() - lastFrame) * 1000.f;
         lastFrame = GetTime();
         if (delta < tDelta) {
@@ -99,8 +89,8 @@ int main(int argc, char** argv) {
         if (IsKeyPressed(KEY_ENTER)) draw = !draw;
         if (GetTime() - lastSpawned > 1.f) {
             startUnit = map.getAny(Tile::START);
-            Creep* temp(
-                        new Creep(
+            std::shared_ptr<Creep> temp(
+                        new Creep( scenes[index],
                             {startUnit.position.x, startUnit.position.y + 0.5f}, 
                             (new Path(startUnit.position, startUnit.cost))->findPathAndBuild(&map, map.getAny(Tile::FINISH)),
                             5.f,
@@ -109,21 +99,26 @@ int main(int argc, char** argv) {
                         )
                 );
             temp->setColor(RED);
+            scenes[index].add(temp);
             Path::cleanUp();
             lastSpawned = GetTime();
         } 
         // lastSpawned = GetTime();
 
 
+        index += IsKeyDown(KEY_O) - IsKeyDown(KEY_I);
+        index = std::min( std::max(index, 0), (int)scenes.size() - 1);
+
         Player::getInstance()->update(delta);
-        IGameObject::updateAll(delta);
+        scenes[index].update(delta);
         Vector2 size{1.f*pic.getTexture().width, 1.f*pic.getTexture().height};
         BeginDrawing();
             ClearBackground(BLACK);
             map.draw(scale, camera);
             if (draw) tiler.drawMap(map, scale, camera);
-            IGameObject::drawAll(scale, camera);
+            scenes[index].draw();
         EndDrawing();
+
     
         // BeginDrawing();
         //     ClearBackground(BLACK);
@@ -137,6 +132,5 @@ int main(int argc, char** argv) {
     }
     Creep::cleanUp();
     Path::cleanUp();
-    IGameObject::cleanUp();
     return 0;
 }

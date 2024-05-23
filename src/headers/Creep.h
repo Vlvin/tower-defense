@@ -17,7 +17,7 @@ protected:
     float speed;
     virtual void hit(short damage);
 public:
-    Creep(Vector2 position, Path* route = nullptr, float speed = 2.f, unsigned short hitPoints = 8, const char* texture_path = NULL);
+    Creep(Scene& parent, Vector2 position, Path* route = nullptr, float speed = 2.f, unsigned short hitPoints = 8, const char* texture_path = NULL);
     virtual void update(float delta) override;
     // virtual void draw(float scale) override;
     static void cleanUp();
@@ -25,7 +25,4 @@ public:
     int getIndex();
     float getSpeed();
     bool isAtEnd();
-    bool isCollidable();
-    bool isDead();
-    friend class Bullet;
 };

@@ -1,4 +1,6 @@
 #include "Creep.h"
+#include "Scene.h"
+#include "Bullet.h"
 #include "ColorTools.h"
 #include <cmath>
 #include <cstdio>
@@ -11,7 +13,8 @@ Texture2D Creep::texture_{0, 0};
  * @param[in] position Spawn position
  * @warning route must be not cycling
 */
-Creep::Creep(Vector2 position, Path* route, float speed, unsigned short hitPoints, const char* texture_path) : IGameObject({position.x, position.y, 1, 1}, 0) {
+Creep::Creep(Scene& parent, Vector2 position, Path* route, float speed, unsigned short hitPoints, const char* texture_path) 
+: IGameObject(parent, {position.x, position.y, 1, 1}, 0, true) {
     this->speed = speed;
     this->hitPoints = hitPoints;
     Path* i = route;
@@ -35,10 +38,8 @@ Creep::Creep(Vector2 position, Path* route, float speed, unsigned short hitPoint
 
 
 void Creep::update(float delta) {
-    if (hitPoints <= 0) index = route.size();
-    if (index >= route.size()) {
-        hitPoints = 0;
-        IGameObject::remove(this);
+    if ((hitPoints <= 0) || (index >= route.size())) {
+        isDead = true;
         return;
     }
     if (CT::vec2Compare({body.x, body.y}, route[index], .9f)) {
@@ -47,31 +48,20 @@ void Creep::update(float delta) {
         float deltaX = body.x - route[index].x, deltaY = body.y - route[index].y;
         angle = atan2(deltaY, deltaX);
     }
+    for (auto li = parent.begin(); li != parent.end(); li++) {
+        std::shared_ptr<IGameObject> object = *li;
+        if ((!object->getIsCollideable())) continue;
+        auto bullet = std::dynamic_pointer_cast<Bullet>(object);
+        if (!bullet) continue;
+        float x = bullet->getBody().x, y = bullet->getBody().y, radius = bullet->getBody().width;
+        if (CT::isCircleInBox2({x, y}, radius, this->body))
+            this->hit(bullet->getDamage());
+    }
 
     // please add speed
     body.x -= cos(angle) * speed * delta * 0.001f;
     body.y -= sin(angle) * speed * delta * 0.001f;
 }
-
-// void Creep::draw(float scale) {
-//     std::cout << "Creep::draw\n";
-//     if (!texture_.width)
-//     {
-//         DrawRectangleRec(
-//             {body.x * scale, body.y * scale, body.width * scale, body.height * scale},
-//             color
-//         );
-//         return;
-//     }
-//     DrawTexturePro(
-//         texture,
-//         {0, 0, (float)texture.width, (float)texture.height},
-//         {body.x * scale, body.y * scale, body.width * scale, body.height * scale},
-//         {body.width*scale*0.5f, body.height*scale*0.5f},
-//         0.f,
-//         color
-//     );
-// }
 
 Vector2 Creep::getTarget() {
     if (index >= route.size()) return {-14.f, -88.f};
@@ -90,10 +80,6 @@ void Creep::cleanUp() {
     UnloadTexture(texture_);
 }
 
-bool Creep::isCollidable() {
-    return true;
-}
-
 float Creep::getSpeed() {
     return this->speed;
 }
@@ -104,8 +90,4 @@ void Creep::hit(short damage) {
         return; 
     }
     this->hitPoints -= damage;
-}
-
-bool Creep::isDead() {
-    return (this->hitPoints == 0);
 }

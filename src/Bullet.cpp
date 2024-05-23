@@ -1,13 +1,14 @@
 #include "Bullet.h"
 #include "Window.h"
+#include "Scene.h"
 #include "ColorTools.h"
 #include "Creep.h"
 #include <cmath>
 #include <cstdio>
 
 
-Bullet::Bullet(Vector2 position, float radius, float speed, float angle, unsigned short damage) 
-: IGameObject({position.x, position.y, radius, radius}, angle) {
+Bullet::Bullet(Scene& parent, Vector2 position, float radius, float speed, float angle, unsigned short damage) 
+: IGameObject(parent, {position.x, position.y, radius, radius}, angle, true) {
     this->speed = speed;
     this->damage = damage;
     this->radius = radius;
@@ -17,16 +18,14 @@ Bullet::Bullet(Vector2 position, float radius, float speed, float angle, unsigne
 void Bullet::update(float delta) {
     body.x -= cos(angle) * speed * delta * 0.001f;
     body.y -= sin(angle) * speed * delta * 0.001f;
-    for (auto li = IGameObject::begin(); li != IGameObject::end(); li++) {
-
-        if (!(*li)->isCollidable()) continue;
-        Creep* creep = dynamic_cast<Creep*>(*li);
+    for (auto li = parent.begin(); li != parent.end(); li++) {
+        std::shared_ptr<IGameObject> object = *li;
+        if ((!object->getIsCollideable()) || (object->getIsDead())) continue;
+        auto creep = std::dynamic_pointer_cast<Creep>(object);
         if (!creep) continue;
 
-        if (CT::isCircleInBox2({body.x, body.y}, this->radius, creep->body, 5.f)) {
-            creep->hit(this->damage);
-            printf("%u\n", creep->hitPoints);
-            this->damage = 0;
+        if (CT::isCircleInBox2({body.x, body.y}, this->radius, creep->getBody(), 5.f)) {
+            this->isDead = true;
             return;
         }
     }
@@ -40,10 +39,10 @@ void Bullet::draw(float scale, Vector2 camera) {
     );
 }
 
-float Bullet::getSpeed() {
-    return this->speed;
+short Bullet::getDamage() {
+    return this->damage;
 }
 
-bool Bullet::isCollidable() {
-    return true;
+float Bullet::getSpeed() {
+    return this->speed;
 }

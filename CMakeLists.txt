@@ -30,6 +30,7 @@ set(SOURCES
     ${SRC}/Player.cpp
     ${SRC}/Bullet.cpp
     ${SRC}/Creep.cpp
+    ${SRC}/Scene.cpp
     ${SRC}/Tiler.cpp
     ${SRC}/Picture.cpp
     # ${SRC}/ICollisionBody.cpp

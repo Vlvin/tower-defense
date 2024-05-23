@@ -1,12 +1,14 @@
 #include "Tourel.h"
 #include "Creep.h"
 #include "Bullet.h"
+#include "Scene.h"
 #include "Window.h"
 #include <cmath>
 #include <cstdio>
 #include "ColorTools.h"
 
-Tourel::Tourel(Rectangle body, float projSpeed, float shootFreq) : IGameObject(body, 0), target(nullptr) {
+Tourel::Tourel(Scene& parent, Rectangle body, float projSpeed, float shootFreq) 
+: IGameObject(parent, body, 0), target(nullptr) {
     this->projSpeed = projSpeed;
     this->shootFreq = shootFreq;
     lastShot = GetTime();
@@ -15,14 +17,15 @@ Tourel::Tourel(Rectangle body, float projSpeed, float shootFreq) : IGameObject(b
 
 void Tourel::update(float delta) {
     float actual_time = 0;
-    if ((!target) || (CT::vec2Distance(this->getPosition(),target->getPosition()) > 1) || (target->isDead())) {
-       target = nullptr;
-        for (auto li = IGameObject::begin(); li != IGameObject::end(); li++) {
-            if (!(*li)->isCollidable()) continue;
-            Creep* creep = dynamic_cast<Creep*>(*li);
+    if ((!target) || (CT::vec2Distance(this->getPosition(), target->getPosition()) > 1) || (target->getIsDead())) {
+        target = nullptr;
+        for (auto li = parent.begin(); li != parent.end(); li++) {
+            std::shared_ptr<IGameObject> object = *li;
+            if ((!object->getIsCollideable()) || (object->getIsDead())) continue;
+            auto creep = std::dynamic_pointer_cast<Creep>(object);
             if (!creep) continue;
 
-            if ((CT::vec2Distance(this->getPosition(), creep->getPosition()) < 4.f) && !creep->isDead()) {
+            if ((CT::vec2Distance(this->getPosition(), creep->getPosition()) < 4.f)) {
                 target = creep;
                 break;
             }
@@ -67,7 +70,7 @@ void Tourel::update(float delta) {
         angle = atan2(deltaY, deltaX);
 
     if (GetTime() - lastShot > shootFreq) {
-        new Bullet(getPosition(), 0.1, projSpeed, angle);
+        parent.add(std::make_shared<Bullet>(parent, getPosition(), 0.1, projSpeed, angle));
         lastShot = GetTime();
     }
 }
@@ -104,10 +107,5 @@ void Tourel::draw(float scale, Vector2 camera) {
     );
 
 }
-
-bool Tourel::isCollidable() {
-    return false;
-}
-
 void Tourel::cleanUp() {
 }
