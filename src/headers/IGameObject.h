@@ -1,12 +1,13 @@
 #pragma once 
 #include <raylib.h>
 #include <memory>
+#include "Node.h"
 
 class Scene;
 
-class IGameObject {
+class IGameObject : public Node {
 protected:
-    Scene& parent;
+    // Scene& parent;
     Rectangle body;
     bool isDead;
     bool isCollideable;
@@ -15,9 +16,10 @@ protected:
     Color color;
 public:
     IGameObject(Scene& parent, Rectangle body, float angle, bool collideable = false);
-    virtual void update(float delta) = 0;
+    // virtual void update(float delta) = 0;
+    virtual bool isUpdatable() override;
     virtual bool getIsCollideable();
-    virtual void draw(float scale, Vector2 camera);
+    virtual void draw(float scale, Vector2 camera) override;
     bool getIsDead();
     void setColor(Color color);
     Vector2 getPosition();

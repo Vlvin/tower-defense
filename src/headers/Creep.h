@@ -4,7 +4,9 @@
 #include <cstddef>
 #include <memory>
 #include "PathFinder.h"
+#include "Bullet.h"
 #include "IGameObject.h"
+
 
 class Creep: public IGameObject {
 private:
@@ -25,4 +27,5 @@ public:
     int getIndex();
     float getSpeed();
     bool isAtEnd();
+    friend void Bullet::update(float deltaTime);
 };

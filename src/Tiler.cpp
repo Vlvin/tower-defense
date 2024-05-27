@@ -4,7 +4,9 @@
 #include "Window.h"
 #include "Picture.h"
 
-Tiler::Tiler(Picture &tileTexture, int sizeOfTile) {
+Tiler::Tiler(Scene& parent, Picture &tileTexture, Map &map, int sizeOfTile)
+: Node(parent), map(map)
+{
     if (tileTexture.getImage().height != sizeOfTile*14) {
         fprintf(stderr, "Not equal tiles size\nexpected %d but %d found instead\n", sizeOfTile*14, tileTexture.getTexture().height);
         return;
@@ -143,6 +145,24 @@ Texture2D Tiler::getTile(Map& map, int x, int y) {
 }
 
 void Tiler::drawMap(Map& map, float scale, Vector2 camera) {
+    map.draw(scale, camera);
+    for (int i = 0; i < map.getSize().y; i++)
+        for (int j = 0; j < map.getSize().x; j++) {
+            Texture2D temp = getTile(map, j, i);
+            if (temp.width)
+                DrawTexturePro(
+                    temp, 
+                    (Rectangle){0, 0, sizeOfTile, sizeOfTile}, 
+                    (Rectangle){
+                        (j - camera.x)*scale + Window::getInstance()->getSize().x * 0.5f, 
+                        (i - camera.y)*scale + Window::getInstance()->getSize().y * 0.5f, 
+                        scale, scale}, {0.,0.}, 0., WHITE);
+        }
+}
+
+void Tiler::update(float deltaTime) {}
+
+void Tiler::draw(float scale, Vector2 camera) {
     map.draw(scale, camera);
     for (int i = 0; i < map.getSize().y; i++)
         for (int j = 0; j < map.getSize().x; j++) {

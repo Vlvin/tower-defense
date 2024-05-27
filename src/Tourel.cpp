@@ -20,7 +20,9 @@ void Tourel::update(float delta) {
     if ((!target) || (CT::vec2Distance(this->getPosition(), target->getPosition()) > 1) || (target->getIsDead())) {
         target = nullptr;
         for (auto li = parent.begin(); li != parent.end(); li++) {
-            std::shared_ptr<IGameObject> object = *li;
+            if (!(*li)->isUpdatable()) continue;
+            std::shared_ptr<IGameObject> object = 
+                std::dynamic_pointer_cast<IGameObject>(*li);
             if ((!object->getIsCollideable()) || (object->getIsDead())) continue;
             auto creep = std::dynamic_pointer_cast<Creep>(object);
             if (!creep) continue;

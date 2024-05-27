@@ -19,12 +19,15 @@ void Bullet::update(float delta) {
     body.x -= cos(angle) * speed * delta * 0.001f;
     body.y -= sin(angle) * speed * delta * 0.001f;
     for (auto li = parent.begin(); li != parent.end(); li++) {
-        std::shared_ptr<IGameObject> object = *li;
+        if (!(*li)->isUpdatable()) continue;
+        std::shared_ptr<IGameObject> object = 
+            std::dynamic_pointer_cast<IGameObject>(*li);
         if ((!object->getIsCollideable()) || (object->getIsDead())) continue;
         auto creep = std::dynamic_pointer_cast<Creep>(object);
         if (!creep) continue;
 
-        if (CT::isCircleInBox2({body.x, body.y}, this->radius, creep->getBody(), 5.f)) {
+        if (CT::isCircleInBox2({body.x, body.y}, this->radius, creep->getBody(), 10.f)) {
+            creep->hit(getDamage());
             this->isDead = true;
             return;
         }
@@ -39,7 +42,7 @@ void Bullet::draw(float scale, Vector2 camera) {
     );
 }
 
-short Bullet::getDamage() {
+unsigned short Bullet::getDamage() {
     return this->damage;
 }
 

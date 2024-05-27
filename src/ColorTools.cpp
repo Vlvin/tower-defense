@@ -1,4 +1,5 @@
 #include "ColorTools.h"
+#include <iostream>
 #include <cmath>
 
 
@@ -28,10 +29,31 @@ float CT::vec2Distance(Vector2 a, Vector2 b) {
 }
 
 bool CT::isCircleInBox2(Vector2 position, float radius, Rectangle box, float precition) {
+    // std::cout << round(position.x*precition) << ":";
     int x = round(position.x*precition);
     int y = round(position.y*precition);
+
+    // std::cout << x << '\n';
     return (
         (round((box.x - radius)*precition) <= x) && (x <= round((box.x + box.width + radius)*precition)) &&
         (round((box.y - radius)*precition) <= y) && (y <= round((box.y + box.height + radius)*precition))
+    );
+}
+
+bool CT::boxCollision(Rectangle a, Rectangle b, float precition) {
+    int ax = round(a.x*precition), 
+        ay = round(a.y*precition), 
+        aw = round(a.width*precition), 
+        ah = round(a.height*precition);
+    int bx = round(b.x*precition), 
+        by = round(b.y*precition), 
+        bw = round(b.width*precition), 
+        bh = round(b.height*precition);
+    return (
+
+        (ax < bx + bw) &&
+        (ax + aw > bx) &&
+        (ay < by + bh) &&
+        (ay + ah > by)
     );
 }

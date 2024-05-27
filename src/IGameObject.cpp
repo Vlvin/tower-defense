@@ -3,7 +3,7 @@
 #include <cmath>
 #include <iostream>
 
-IGameObject::IGameObject(Scene& parent, Rectangle body, float angle, bool collideable) : parent(parent) {
+IGameObject::IGameObject(Scene& parent, Rectangle body, float angle, bool collideable) : Node(parent) {
     this->body = body;
     this->angle = angle;
     this->color = WHITE;
@@ -57,4 +57,8 @@ bool IGameObject::getIsDead() {
 
 bool IGameObject::getIsCollideable() {
     return isCollideable;
+}
+
+bool IGameObject::isUpdatable() {
+    return true;
 }

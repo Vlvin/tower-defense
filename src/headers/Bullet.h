@@ -13,6 +13,6 @@ public:
     virtual void update(float delta) override;
     virtual void draw(float scale, Vector2 camera) override;
     float getSpeed();
-    short getDamage();
+    unsigned short getDamage();
     static void cleanUp();
 };

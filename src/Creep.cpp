@@ -49,13 +49,17 @@ void Creep::update(float delta) {
         angle = atan2(deltaY, deltaX);
     }
     for (auto li = parent.begin(); li != parent.end(); li++) {
-        std::shared_ptr<IGameObject> object = *li;
+        if (!(*li)->isUpdatable()) continue;
+        std::shared_ptr<IGameObject> object = 
+            std::dynamic_pointer_cast<IGameObject>(*li);
         if ((!object->getIsCollideable())) continue;
         auto bullet = std::dynamic_pointer_cast<Bullet>(object);
         if (!bullet) continue;
         float x = bullet->getBody().x, y = bullet->getBody().y, radius = bullet->getBody().width;
-        if (CT::isCircleInBox2({x, y}, radius, this->body))
-            this->hit(bullet->getDamage());
+        if (CT::isCircleInBox2({x, y}, radius, this->body, 10.f)) {
+            std::cout << "Zombie " << this << " hp: " << this->hitPoints << '\n';
+            // this->hit(bullet->getDamage());
+        }
     }
 
     // please add speed
