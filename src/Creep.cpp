@@ -13,8 +13,8 @@ Texture2D Creep::texture_{0, 0};
  * @param[in] position Spawn position
  * @warning route must be not cycling
 */
-Creep::Creep(Scene& parent, Vector2 position, Path* route, float speed, unsigned short hitPoints, const char* texture_path) 
-: IGameObject(parent, {position.x, position.y, 1, 1}, 0, true) {
+Creep::Creep(Scene& parent, Vector2 position, Path* route, float speed, uint16_t hitPoints, const char* texture_path, uint32_t layer) 
+: IGameObject(parent, {position.x, position.y, 1, 1}, 0, true, layer) {
     this->speed = speed;
     this->hitPoints = hitPoints;
     Path* i = route;
@@ -88,7 +88,8 @@ float Creep::getSpeed() {
     return this->speed;
 }
 
-void Creep::hit(short damage) {
+void Creep::hit(uint16_t damage) {
+    std::cout << this << " hp: " << hitPoints << '\n';
     if (this->hitPoints < damage || (!this->hitPoints)) {
         this->hitPoints = 0;
         return; 

@@ -4,8 +4,8 @@
 #include "Window.h"
 #include "Picture.h"
 
-Tiler::Tiler(Scene& parent, Picture &tileTexture, Map &map, int sizeOfTile)
-: Node(parent), map(map)
+Tiler::Tiler(Scene& parent, Picture &tileTexture, Map &map, int sizeOfTile, uint32_t layer)
+: Node(parent, layer), map(map)
 {
     if (tileTexture.getImage().height != sizeOfTile*14) {
         fprintf(stderr, "Not equal tiles size\nexpected %d but %d found instead\n", sizeOfTile*14, tileTexture.getTexture().height);
@@ -18,7 +18,7 @@ Tiler::Tiler(Scene& parent, Picture &tileTexture, Map &map, int sizeOfTile)
             tileTexture.getImage(), 
             (Rectangle){
                 0.f,
-                i*sizeOfTile,
+                1.f*i*sizeOfTile,
                 32.f,
                 32.f
             }
@@ -152,11 +152,11 @@ void Tiler::drawMap(Map& map, float scale, Vector2 camera) {
             if (temp.width)
                 DrawTexturePro(
                     temp, 
-                    (Rectangle){0, 0, sizeOfTile, sizeOfTile}, 
+                    (Rectangle){0.f, 0.f, 1.f*sizeOfTile, 1.f*sizeOfTile}, 
                     (Rectangle){
                         (j - camera.x)*scale + Window::getInstance()->getSize().x * 0.5f, 
                         (i - camera.y)*scale + Window::getInstance()->getSize().y * 0.5f, 
-                        scale, scale}, {0.,0.}, 0., WHITE);
+                        scale, scale}, {0.f,0.f}, 0., WHITE);
         }
 }
 
@@ -170,10 +170,10 @@ void Tiler::draw(float scale, Vector2 camera) {
             if (temp.width)
                 DrawTexturePro(
                     temp, 
-                    (Rectangle){0, 0, sizeOfTile, sizeOfTile}, 
+                    (Rectangle){0.f, 0.f, 1.f*sizeOfTile, 1.f*sizeOfTile}, 
                     (Rectangle){
                         (j - camera.x)*scale + Window::getInstance()->getSize().x * 0.5f, 
                         (i - camera.y)*scale + Window::getInstance()->getSize().y * 0.5f, 
-                        scale, scale}, {0.,0.}, 0., WHITE);
+                        scale, scale}, {0.f,0.f}, 0., WHITE);
         }
 }

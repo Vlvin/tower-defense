@@ -3,7 +3,8 @@
 #include <cmath>
 #include <iostream>
 
-IGameObject::IGameObject(Scene& parent, Rectangle body, float angle, bool collideable) : Node(parent) {
+IGameObject::IGameObject(Scene& parent, Rectangle body, float angle, bool collideable, uint32_t layer) 
+: Node(parent, layer) {
     this->body = body;
     this->angle = angle;
     this->color = WHITE;
@@ -27,7 +28,7 @@ void IGameObject::draw(float scale, Vector2 camera) {
     }
     DrawTexturePro(
         texture, 
-        (Rectangle){0, 0, texture.width, texture.height}, 
+        (Rectangle){0.f, 0.f, 1.f*texture.width, 1.f*texture.height}, 
         {
             (body.x-camera.x)*scale + Window::getInstance()->getSize().x * 0.5f, 
             (body.y-camera.y)*scale + Window::getInstance()->getSize().y * 0.5f, 

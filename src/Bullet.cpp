@@ -4,11 +4,11 @@
 #include "ColorTools.h"
 #include "Creep.h"
 #include <cmath>
-#include <cstdio>
+#include <iostream>
 
 
-Bullet::Bullet(Scene& parent, Vector2 position, float radius, float speed, float angle, unsigned short damage) 
-: IGameObject(parent, {position.x, position.y, radius, radius}, angle, true) {
+Bullet::Bullet(Scene& parent, Vector2 position, float radius, float speed, float angle, uint16_t damage, uint32_t layer) 
+: IGameObject(parent, {position.x, position.y, radius, radius}, angle, true, layer) {
     this->speed = speed;
     this->damage = damage;
     this->radius = radius;
@@ -42,7 +42,7 @@ void Bullet::draw(float scale, Vector2 camera) {
     );
 }
 
-unsigned short Bullet::getDamage() {
+uint16_t Bullet::getDamage() {
     return this->damage;
 }
 

@@ -7,8 +7,10 @@
 #include <cstdio>
 #include "ColorTools.h"
 
-Tourel::Tourel(Scene& parent, Rectangle body, float projSpeed, float shootFreq) 
-: IGameObject(parent, body, 0), target(nullptr) {
+
+
+Tourel::Tourel(Scene& parent, Rectangle body, float projSpeed, float shootFreq, uint32_t layer) 
+: IGameObject(parent, body, 0, layer), target(nullptr) {
     this->projSpeed = projSpeed;
     this->shootFreq = shootFreq;
     lastShot = GetTime();
@@ -17,7 +19,7 @@ Tourel::Tourel(Scene& parent, Rectangle body, float projSpeed, float shootFreq)
 
 void Tourel::update(float delta) {
     float actual_time = 0;
-    if ((!target) || (CT::vec2Distance(this->getPosition(), target->getPosition()) > 1) || (target->getIsDead())) {
+    if ((!target) || (CT::vec2Distance(this->getPosition(), target->getPosition()) > 4) || (target->getIsDead())) {
         target = nullptr;
         for (auto li = parent.begin(); li != parent.end(); li++) {
             if (!(*li)->isUpdatable()) continue;
@@ -35,8 +37,8 @@ void Tourel::update(float delta) {
     }
     if (!target) return;
     
-    float deltaX =target->getPosition().x - this->getPosition().x, 
-          deltaY =target->getPosition().y - this->getPosition().y;
+    float deltaX = target->getPosition().x - this->getPosition().x, 
+          deltaY = target->getPosition().y - this->getPosition().y;
 
     angle = atan2(deltaY, deltaX);
     // algebra
@@ -72,7 +74,9 @@ void Tourel::update(float delta) {
         angle = atan2(deltaY, deltaX);
 
     if (GetTime() - lastShot > shootFreq) {
-        parent.add(std::make_shared<Bullet>(parent, getPosition(), 0.1, projSpeed, angle));
+        uint32_t bulletLayer = getDrawLayer() - 1;
+        if (getDrawLayer() < 1) bulletLayer = 0;
+        parent.add(std::make_shared<Bullet>(parent, getPosition(), 0.1, projSpeed, angle, 1, bulletLayer));
         lastShot = GetTime();
     }
 }

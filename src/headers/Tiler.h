@@ -15,7 +15,7 @@ protected:
     int sizeOfTile;
 public:
     Texture2D getTile(Map &map, int x, int y);
-    Tiler(Scene& parent, Picture &tileTexture, Map &map, int sizeOfTile);
+    Tiler(Scene& parent, Picture &tileTexture, Map &map, int sizeOfTile, uint32_t layer = 1);
     void drawMap(Map& map, float scale, Vector2 camera);
     virtual void draw(float scale, Vector2 camera);
     virtual void update(float deltaTime);

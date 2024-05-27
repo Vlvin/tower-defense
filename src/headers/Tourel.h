@@ -14,7 +14,7 @@ protected:
     float predX, predY;
     std::shared_ptr<Creep> target;
 public:
-    Tourel(Scene& parent, Rectangle body, float projSpeed, float shootFreq);
+    Tourel(Scene& parent, Rectangle body, float projSpeed, float shootFreq, uint32_t layer = 1);
     virtual void update(float delta) override;
     virtual void draw(float scale, Vector2 camera) override;
     static void cleanUp();

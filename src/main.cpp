@@ -4,6 +4,7 @@
 #include <cmath>
 #include <memory>
 #include <unistd.h>
+#include "raylib.h"
 
 #include "Map.h"
 #include "Scene.h"
@@ -16,7 +17,6 @@
 #include "IGameObject.h"
 #include "Picture.h"
 #include "Tourel.h"
-#include "raylib.h"
 
 /**
  * Pathfinder logic
@@ -51,10 +51,10 @@ int main(int argc, char** argv) {
     int index = 0;
     std::vector<Scene> scenes(10);
 
-    scenes[0].add(std::make_shared<Tourel>(scenes[0], Rectangle{7.f, 11.f, 1.f, 1.f}, 10.f, .01f));
+    scenes[0].add(std::make_shared<Tourel>(scenes[0], Rectangle{7.f, 11.f, 1.f, 1.f}, 100.f, .01f, 2));
     double lastSpawned = GetTime() - 1, lastFrame = GetTime(), delta, tFPS = 60, tDelta = 1000/tFPS;
     Picture pic = Picture((std::string("level/") + std::string(level_name) + std::string("/tilemap-32.png")).c_str());
-    scenes[index].add(std::make_shared<Tiler>(scenes[index], pic, map, 32));
+    scenes[index].add(std::make_shared<Tiler>(scenes[index], pic, map, 32, 3));
 
     Player::getInstance(&map);
 
@@ -80,7 +80,8 @@ int main(int argc, char** argv) {
                             (new Path(startUnit.position, startUnit.cost))->findPathAndBuild(&map, map.getAny(Tile::FINISH)),
                             5.f,
                             8,
-                            (std::string("level/") + std::string(level_name) + std::string("/Zombie.png")).c_str()
+                            (std::string("level/") + std::string(level_name) + std::string("/Zombie.png")).c_str(),
+                            3
                         )
                 );
             temp->setColor(RED);

@@ -15,7 +15,7 @@ protected:
     float angle;
     Color color;
 public:
-    IGameObject(Scene& parent, Rectangle body, float angle, bool collideable = false);
+    IGameObject(Scene& parent, Rectangle body, float angle, bool collideable = false, uint32_t layer = 1);
     // virtual void update(float delta) = 0;
     virtual bool isUpdatable() override;
     virtual bool getIsCollideable();
