@@ -19,7 +19,7 @@ Tourel::Tourel(Scene& parent, Rectangle body, float projSpeed, float shootFreq, 
 
 void Tourel::update(float delta) {
     float actual_time = 0;
-    if ((!target) || (CT::vec2Distance(this->getPosition(), target->getPosition()) > 4) || (target->getIsDead())) {
+    if ((!target) || (CT::vec2Distance(this->getPosition(), target->getPosition()) > 4.f) || (target->getIsDead())) {
         target = nullptr;
         for (auto li = parent.begin(); li != parent.end(); li++) {
             if (!(*li)->isUpdatable()) continue;
@@ -30,17 +30,16 @@ void Tourel::update(float delta) {
             if (!creep) continue;
 
             if ((CT::vec2Distance(this->getPosition(), creep->getPosition()) < 4.f)) {
-                target = creep;
+                this->target = creep;
                 break;
             }
         }
     }
     if (!target) return;
-    
     float deltaX = target->getPosition().x - this->getPosition().x, 
           deltaY = target->getPosition().y - this->getPosition().y;
 
-    angle = atan2(deltaY, deltaX);
+    // angle = atan2(deltaY, deltaX);
     // algebra
         float a = 0., b = 0., c = 0., D = 0., t1 = 0., t2 = 0.;
         float targetAngle = (target)->getAngle();
@@ -51,7 +50,8 @@ void Tourel::update(float delta) {
         float targetStartY = (target)->getPosition().y;
         float cannonX = this->getPosition().x;
         float cannonY = this->getPosition().y;
-
+        // ax^2 + bx + c = 0
+        // x is time
         a = pow(targetVelocityX, 2) + pow(targetVelocityY, 2) - pow(projSpeed, 2);
         b = 2 * (
                     targetVelocityX * (targetStartX - cannonX)
@@ -59,11 +59,14 @@ void Tourel::update(float delta) {
                 );
         c = pow(targetStartX - cannonX, 2) + pow(targetStartY - cannonY, 2);
         D = pow(b, 2) - 4*a*c;
+        if (D < 0) return;
         t1 = (-b + sqrt(D))/(2*a);
         t2 = (-b - sqrt(D))/(2*a);
-        actual_time = t1 > t2 ? t2 : t1;
+        actual_time = std::min(t1, t2);
         if (0. > t1) actual_time = t2;
         if (0. > t2) actual_time = t1;
+        if (actual_time < 0) return;
+        
 
         predX = targetStartX - (targetVelocityX * actual_time);
         predY = targetStartY - (targetVelocityY * actual_time);
@@ -72,16 +75,18 @@ void Tourel::update(float delta) {
         deltaY = this->getPosition().y - predY;
 
         angle = atan2(deltaY, deltaX);
-
-    if (GetTime() - lastShot > shootFreq) {
-        uint32_t bulletLayer = getDrawLayer() - 1;
-        if (getDrawLayer() < 1) bulletLayer = 0;
+        // printf("%f :  x %f, y %f\n", actual_time, t1, t2);
+    if (GetTime() - lastShot >= shootFreq) {
+        // printf("%p Summon Bullet\n", this);
+        uint32_t bulletLayer = 0;
+        if (getDrawLayer() > 0) bulletLayer = getDrawLayer() - 1;
         parent.add(std::make_shared<Bullet>(parent, getPosition(), 0.1, projSpeed, angle, 1, bulletLayer));
         lastShot = GetTime();
     }
 }
 
 void Tourel::draw(float scale, Vector2 camera) {
+    // printf("%p Alive\n", this);
     float barrelX = ((body.x - camera.x) - (cos(angle)*0.5f*0.5f*body.width))*scale,
           barrelY = ((body.y - camera.y) - (sin(angle)*0.5f*0.25f*body.height))*scale,
           barrelWidth = scale,
