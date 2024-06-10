@@ -2,17 +2,20 @@
 #include <iostream>
 #include "IGameObject.h"
 #include "Player.h"
+#include "Map.h"
 
 void Scene::draw() {
     Vector2 camera = Player::getInstance()->getCamera();
     float scale = Player::getInstance()->getScale();
     
+    if (map.get()) map->draw(scale, camera);
     for (std::shared_ptr<Node> object : objects) 
         object->draw(scale, camera);
 
 }
 
 void Scene::update(float deltaTime) {
+    if (map.get()) map->update(deltaTime);
     for (std::shared_ptr<Node> object : objects) 
         if (object->isUpdatable())
             object->update(deltaTime);
@@ -31,6 +34,10 @@ void Scene::add(std::shared_ptr<Node> object) {
     objects.sort([](std::shared_ptr<Node> left, std::shared_ptr<Node> right) {
         return left->getDrawLayer() > right->getDrawLayer();
     });
+}
+
+void Scene::addMap(std::unique_ptr<Map> map) {
+    this->map.swap(map);
 }
 
 auto Scene::begin() -> decltype(objects.begin()) {

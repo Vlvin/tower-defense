@@ -30,32 +30,36 @@
 using namespace std;
 
 int main(int argc, char** argv) {
-    // // image parsing
+    
     char *level_name = "demo";
     if (argc >= 2) {
         level_name = argv[argc-1];
     }
 
-    Map map = Map::loadFromFile((std::string("level/") + std::string(level_name) + std::string("/map.ppm")).c_str());
-    int width = map.getSize().x;
-    int height = map.getSize().y;
-
-    Window::getInstance(640, 480, "PathFinder");
-
-    MapUnit startUnit = map.getAny(Tile::START);
-    if (!startUnit.cost) 
-        startUnit = map[1][1];
-
-    Path* first = (new Path(startUnit.position, startUnit.cost))->findPathAndBuild(&map, map.getAny(Tile::FINISH));
-    Path* temp = first;
 
     int index = 0;
     std::vector<Scene> scenes(10);
+    Map map = Map::loadFromFile(
+        scenes[index], 
+        (
+            std::string("level/") + 
+            std::string(level_name) + 
+            std::string("/map.ppm")
+        ).c_str()
+    );
 
-    scenes[0].add(std::make_shared<Tourel>(scenes[index], Rectangle{7.f, 11.f, 1.f, 1.f}, 1.f, .01f, 2));
+    Window::getInstance(640, 480, "PathFinder");
+
+    scenes[index].add(
+        std::make_shared<Tourel>(
+            scenes[index], Rectangle{7.f, 11.f, 1.f, 1.f}, 1.f, .01f, 2
+        )
+    );
     double lastSpawned = GetTime() - 1, lastFrame = GetTime(), delta, tFPS = 60, tDelta = 1000/tFPS;
     Picture pic = Picture((std::string("level/") + std::string(level_name) + std::string("/tilemap-32.png")).c_str());
-    scenes[index].add(std::make_shared<Tiler>(scenes[index], pic, map, 32, 10));
+    scenes[index].add(std::make_shared<Tiler>(scenes[index], pic, map, 32, map.getDrawLayer() - 1));
+
+    scenes[index].addMap(std::unique_ptr<Map>(&map));
 
     Player::getInstance(&map);
 
@@ -63,7 +67,6 @@ int main(int argc, char** argv) {
     Vector2 camera;
 
     while (!WindowShouldClose()) {
-
         scale = Player::getInstance()->getScale();
         camera = Player::getInstance()->getCamera();
 
@@ -73,23 +76,7 @@ int main(int argc, char** argv) {
             usleep((tDelta - delta)*1000);
         }
         
-        if (GetTime() - lastSpawned > 1.f) {
-            startUnit = map.getAny(Tile::START);
-            std::shared_ptr<Creep> temp(
-                        new Creep( scenes[index],
-                            {startUnit.position.x, startUnit.position.y + 0.5f}, 
-                            (new Path(startUnit.position, startUnit.cost))->findPathAndBuild(&map, map.getAny(Tile::FINISH)),
-                            5.f,
-                            8,
-                            (std::string("level/") + std::string(level_name) + std::string("/Zombie.png")).c_str(),
-                            3
-                        )
-                );
-            temp->setColor(RED);
-            scenes[index].add(temp);
-            Path::cleanUp();
-            lastSpawned = GetTime();
-        }
+        
 
 
         index += IsKeyPressed(KEY_O) - IsKeyPressed(KEY_I);

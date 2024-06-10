@@ -1,6 +1,9 @@
 #include "Map.h"
 #include "File.h"
 #include "Window.h"
+#include "IGameObject.h"
+#include "Creep.h"
+#include "PathFinder.h"
 #include "ColorTools.h"
 #include <map>
 #include <cmath>
@@ -9,7 +12,8 @@
 #include <malloc.h>
 
 // Map type
-Map::Map(int width, int height, Color* data) {
+Map::Map(Scene& parent, int width, int height, Color* data) : Node(parent, 4) {
+    lastSpawned = GetTime();
     this->width = width;
     this->height = height;
     this->data = (MapUnit*)malloc(width*height*sizeof(MapUnit));
@@ -47,7 +51,7 @@ Map::~Map() {
     free(this->data);
 }
 
-Map Map::loadFromFile(const char* filename) {
+Map Map::loadFromFile(Scene& parent, const char* filename) {
     File map_file(filename);
     std::string map_text = map_file.getText();
     int width, height;
@@ -119,7 +123,7 @@ Map Map::loadFromFile(const char* filename) {
         }
     }
     free(colorByte);
-    return Map(width, height, map);
+    return Map(parent, width, height, map);
 }
 
 Vector2 Map::getSize() {
@@ -141,6 +145,26 @@ void Map::draw(float scale, Vector2 camera) {
                 scale, scale, (*this)[i][j].color);
         }
     }
+}
+
+void Map::update(float deltaTime) {
+    if (GetTime() - lastSpawned > 1.f) {
+            MapUnit startUnit = getAny(Tile::START);
+            std::shared_ptr<Creep> temp(
+                        new Creep( parent,
+                            {startUnit.position.x, startUnit.position.y + 0.5f}, 
+                            (new Path(startUnit.position, startUnit.cost))->findPathAndBuild(this, getAny(Tile::FINISH)),
+                            5.f,
+                            8,
+                            (std::string("level/demo/") + std::string("Zombie.png")).c_str(),
+                            3
+                        )
+                );
+            temp->setColor(RED);
+            parent.add(temp);
+            Path::cleanUp();
+            lastSpawned = GetTime();
+        }
 }
 
 /**
