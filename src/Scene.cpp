@@ -2,6 +2,7 @@
 #include "IGameObject.hpp"
 
 Scene::Scene() 
+  : IGameObject(SCENE_DRAW_LAYER)
 {
 
 }

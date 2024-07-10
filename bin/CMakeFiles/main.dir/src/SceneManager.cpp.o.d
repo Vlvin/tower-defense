@@ -177,4 +177,6 @@ CMakeFiles/main.dir/src/SceneManager.cpp.o: \
  /usr/include/c++/11/bits/istream.tcc \
  /home/vlvin/Code/CPP/Towerfork/src/headers/Scene.hpp \
  /home/vlvin/Code/CPP/Towerfork/src/headers/IGameObject.hpp \
- /home/vlvin/Code/CPP/Towerfork/libs/raylib-master/src/raylib.h
+ /home/vlvin/Code/CPP/Towerfork/libs/raylib-master/src/raylib.h \
+ /home/vlvin/Code/CPP/Towerfork/src/headers/Node.hpp \
+ /home/vlvin/Code/CPP/Towerfork/src/headers/LayerValues.hpp

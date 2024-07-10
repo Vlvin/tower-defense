@@ -1,6 +1,8 @@
 file(REMOVE_RECURSE
   "CMakeFiles/main.dir/src/Button.cpp.o"
   "CMakeFiles/main.dir/src/Button.cpp.o.d"
+  "CMakeFiles/main.dir/src/Node.cpp.o"
+  "CMakeFiles/main.dir/src/Node.cpp.o.d"
   "CMakeFiles/main.dir/src/Scene.cpp.o"
   "CMakeFiles/main.dir/src/Scene.cpp.o.d"
   "CMakeFiles/main.dir/src/SceneManager.cpp.o"

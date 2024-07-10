@@ -177,6 +177,8 @@ CMakeFiles/main.dir/src/main.cpp.o: \
  /usr/include/c++/11/bits/ostream.tcc /usr/include/c++/11/istream \
  /usr/include/c++/11/bits/istream.tcc \
  /home/vlvin/Code/CPP/Towerfork/libs/raylib-master/src/raylib.h \
+ /home/vlvin/Code/CPP/Towerfork/src/headers/Node.hpp \
+ /home/vlvin/Code/CPP/Towerfork/src/headers/LayerValues.hpp \
  /home/vlvin/Code/CPP/Towerfork/src/headers/Button.hpp \
  /usr/include/c++/11/functional /usr/include/c++/11/bits/std_function.h \
  /usr/include/c++/11/unordered_map /usr/include/c++/11/bits/hashtable.h \

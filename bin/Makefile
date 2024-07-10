@@ -270,6 +270,30 @@ src/Button.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/src/Button.cpp.s
 .PHONY : src/Button.cpp.s
 
+src/Node.o: src/Node.cpp.o
+.PHONY : src/Node.o
+
+# target to build an object file
+src/Node.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/src/Node.cpp.o
+.PHONY : src/Node.cpp.o
+
+src/Node.i: src/Node.cpp.i
+.PHONY : src/Node.i
+
+# target to preprocess a source file
+src/Node.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/src/Node.cpp.i
+.PHONY : src/Node.cpp.i
+
+src/Node.s: src/Node.cpp.s
+.PHONY : src/Node.s
+
+# target to generate assembly for a file
+src/Node.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/src/Node.cpp.s
+.PHONY : src/Node.cpp.s
+
 src/Scene.o: src/Scene.cpp.o
 .PHONY : src/Scene.o
 
@@ -364,6 +388,9 @@ help:
 	@echo "... src/Button.o"
 	@echo "... src/Button.i"
 	@echo "... src/Button.s"
+	@echo "... src/Node.o"
+	@echo "... src/Node.i"
+	@echo "... src/Node.s"
 	@echo "... src/Scene.o"
 	@echo "... src/Scene.i"
 	@echo "... src/Scene.s"

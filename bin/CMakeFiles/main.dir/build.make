@@ -83,10 +83,24 @@ CMakeFiles/main.dir/src/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/main.dir/src/main.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/vlvin/Code/CPP/Towerfork/src/main.cpp -o CMakeFiles/main.dir/src/main.cpp.s
 
+CMakeFiles/main.dir/src/Node.cpp.o: CMakeFiles/main.dir/flags.make
+CMakeFiles/main.dir/src/Node.cpp.o: ../src/Node.cpp
+CMakeFiles/main.dir/src/Node.cpp.o: CMakeFiles/main.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/vlvin/Code/CPP/Towerfork/bin/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/main.dir/src/Node.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/main.dir/src/Node.cpp.o -MF CMakeFiles/main.dir/src/Node.cpp.o.d -o CMakeFiles/main.dir/src/Node.cpp.o -c /home/vlvin/Code/CPP/Towerfork/src/Node.cpp
+
+CMakeFiles/main.dir/src/Node.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/main.dir/src/Node.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/vlvin/Code/CPP/Towerfork/src/Node.cpp > CMakeFiles/main.dir/src/Node.cpp.i
+
+CMakeFiles/main.dir/src/Node.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/main.dir/src/Node.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/vlvin/Code/CPP/Towerfork/src/Node.cpp -o CMakeFiles/main.dir/src/Node.cpp.s
+
 CMakeFiles/main.dir/src/SceneManager.cpp.o: CMakeFiles/main.dir/flags.make
 CMakeFiles/main.dir/src/SceneManager.cpp.o: ../src/SceneManager.cpp
 CMakeFiles/main.dir/src/SceneManager.cpp.o: CMakeFiles/main.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/vlvin/Code/CPP/Towerfork/bin/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/main.dir/src/SceneManager.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/vlvin/Code/CPP/Towerfork/bin/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/main.dir/src/SceneManager.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/main.dir/src/SceneManager.cpp.o -MF CMakeFiles/main.dir/src/SceneManager.cpp.o.d -o CMakeFiles/main.dir/src/SceneManager.cpp.o -c /home/vlvin/Code/CPP/Towerfork/src/SceneManager.cpp
 
 CMakeFiles/main.dir/src/SceneManager.cpp.i: cmake_force
@@ -100,7 +114,7 @@ CMakeFiles/main.dir/src/SceneManager.cpp.s: cmake_force
 CMakeFiles/main.dir/src/Scene.cpp.o: CMakeFiles/main.dir/flags.make
 CMakeFiles/main.dir/src/Scene.cpp.o: ../src/Scene.cpp
 CMakeFiles/main.dir/src/Scene.cpp.o: CMakeFiles/main.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/vlvin/Code/CPP/Towerfork/bin/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/main.dir/src/Scene.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/vlvin/Code/CPP/Towerfork/bin/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/main.dir/src/Scene.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/main.dir/src/Scene.cpp.o -MF CMakeFiles/main.dir/src/Scene.cpp.o.d -o CMakeFiles/main.dir/src/Scene.cpp.o -c /home/vlvin/Code/CPP/Towerfork/src/Scene.cpp
 
 CMakeFiles/main.dir/src/Scene.cpp.i: cmake_force
@@ -114,7 +128,7 @@ CMakeFiles/main.dir/src/Scene.cpp.s: cmake_force
 CMakeFiles/main.dir/src/Button.cpp.o: CMakeFiles/main.dir/flags.make
 CMakeFiles/main.dir/src/Button.cpp.o: ../src/Button.cpp
 CMakeFiles/main.dir/src/Button.cpp.o: CMakeFiles/main.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/vlvin/Code/CPP/Towerfork/bin/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/main.dir/src/Button.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/vlvin/Code/CPP/Towerfork/bin/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/main.dir/src/Button.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/main.dir/src/Button.cpp.o -MF CMakeFiles/main.dir/src/Button.cpp.o.d -o CMakeFiles/main.dir/src/Button.cpp.o -c /home/vlvin/Code/CPP/Towerfork/src/Button.cpp
 
 CMakeFiles/main.dir/src/Button.cpp.i: cmake_force
@@ -128,6 +142,7 @@ CMakeFiles/main.dir/src/Button.cpp.s: cmake_force
 # Object files for target main
 main_OBJECTS = \
 "CMakeFiles/main.dir/src/main.cpp.o" \
+"CMakeFiles/main.dir/src/Node.cpp.o" \
 "CMakeFiles/main.dir/src/SceneManager.cpp.o" \
 "CMakeFiles/main.dir/src/Scene.cpp.o" \
 "CMakeFiles/main.dir/src/Button.cpp.o"
@@ -136,6 +151,7 @@ main_OBJECTS = \
 main_EXTERNAL_OBJECTS =
 
 main: CMakeFiles/main.dir/src/main.cpp.o
+main: CMakeFiles/main.dir/src/Node.cpp.o
 main: CMakeFiles/main.dir/src/SceneManager.cpp.o
 main: CMakeFiles/main.dir/src/Scene.cpp.o
 main: CMakeFiles/main.dir/src/Button.cpp.o
@@ -146,7 +162,7 @@ main: /usr/lib/x86_64-linux-gnu/libGLX.so
 main: /usr/lib/x86_64-linux-gnu/librt.a
 main: /usr/lib/x86_64-linux-gnu/libm.so
 main: CMakeFiles/main.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/vlvin/Code/CPP/Towerfork/bin/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Linking CXX executable main"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/vlvin/Code/CPP/Towerfork/bin/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Linking CXX executable main"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/main.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

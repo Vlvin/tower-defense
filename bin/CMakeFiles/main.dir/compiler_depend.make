@@ -216,7 +216,29 @@ CMakeFiles/main.dir/src/Button.cpp.o: ../src/Button.cpp \
   /usr/include/c++/11/bits/ostream.tcc \
   /usr/include/c++/11/istream \
   /usr/include/c++/11/bits/istream.tcc \
-  ../libs/raylib-master/src/raylib.h
+  ../libs/raylib-master/src/raylib.h \
+  ../src/headers/Node.hpp
+
+CMakeFiles/main.dir/src/Node.cpp.o: ../src/Node.cpp \
+  /usr/include/stdc-predef.h \
+  ../src/headers/Node.hpp \
+  /usr/lib/gcc/x86_64-linux-gnu/11/include/stdint.h \
+  /usr/include/stdint.h \
+  /usr/include/x86_64-linux-gnu/bits/libc-header-start.h \
+  /usr/include/features.h \
+  /usr/include/features-time64.h \
+  /usr/include/x86_64-linux-gnu/bits/wordsize.h \
+  /usr/include/x86_64-linux-gnu/bits/timesize.h \
+  /usr/include/x86_64-linux-gnu/sys/cdefs.h \
+  /usr/include/x86_64-linux-gnu/bits/long-double.h \
+  /usr/include/x86_64-linux-gnu/gnu/stubs.h \
+  /usr/include/x86_64-linux-gnu/gnu/stubs-64.h \
+  /usr/include/x86_64-linux-gnu/bits/types.h \
+  /usr/include/x86_64-linux-gnu/bits/typesizes.h \
+  /usr/include/x86_64-linux-gnu/bits/time64.h \
+  /usr/include/x86_64-linux-gnu/bits/wchar.h \
+  /usr/include/x86_64-linux-gnu/bits/stdint-intn.h \
+  /usr/include/x86_64-linux-gnu/bits/stdint-uintn.h
 
 CMakeFiles/main.dir/src/Scene.cpp.o: ../src/Scene.cpp \
   /usr/include/stdc-predef.h \
@@ -435,7 +457,8 @@ CMakeFiles/main.dir/src/Scene.cpp.o: ../src/Scene.cpp \
   /usr/include/c++/11/bits/ostream.tcc \
   /usr/include/c++/11/istream \
   /usr/include/c++/11/bits/istream.tcc \
-  ../libs/raylib-master/src/raylib.h
+  ../libs/raylib-master/src/raylib.h \
+  ../src/headers/Node.hpp
 
 CMakeFiles/main.dir/src/SceneManager.cpp.o: ../src/SceneManager.cpp \
   /usr/include/stdc-predef.h \
@@ -655,7 +678,8 @@ CMakeFiles/main.dir/src/SceneManager.cpp.o: ../src/SceneManager.cpp \
   /usr/include/c++/11/bits/istream.tcc \
   ../src/headers/Scene.hpp \
   ../src/headers/IGameObject.hpp \
-  ../libs/raylib-master/src/raylib.h
+  ../libs/raylib-master/src/raylib.h \
+  ../src/headers/Node.hpp
 
 CMakeFiles/main.dir/src/main.cpp.o: ../src/main.cpp \
   /usr/include/stdc-predef.h \
@@ -876,6 +900,7 @@ CMakeFiles/main.dir/src/main.cpp.o: ../src/main.cpp \
   /usr/include/c++/11/istream \
   /usr/include/c++/11/bits/istream.tcc \
   ../libs/raylib-master/src/raylib.h \
+  ../src/headers/Node.hpp \
   ../src/headers/Button.hpp \
   /usr/include/c++/11/functional \
   /usr/include/c++/11/bits/std_function.h \
@@ -901,6 +926,10 @@ CMakeFiles/main.dir/src/main.cpp.o: ../src/main.cpp \
 /usr/include/c++/11/bits/stl_raw_storage_iter.h:
 
 /usr/include/c++/11/memory:
+
+../src/Node.cpp:
+
+../src/headers/Node.hpp:
 
 /usr/include/c++/11/bits/istream.tcc:
 

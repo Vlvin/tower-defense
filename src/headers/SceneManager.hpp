@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <memory>
+#include "Scene.hpp"
 
 class Scene;
 
@@ -13,6 +14,7 @@ public:
   static void PopScene(); // retranslator
   static void Update(double deltaTime); // retranslator
   static void Draw(); // retranslator
+  static std::shared_ptr<Scene> Back(); // retranslator
 
   SceneManager(SceneManager&) = delete;
   SceneManager &operator=(SceneManager&) = delete;
@@ -21,6 +23,7 @@ private:
   void internPopScene();
   void internUpdate(double deltaTime);
   void internDraw();
+  std::shared_ptr<Scene> internBack();
 
   std::vector<std::shared_ptr<Scene>> m_scenes; // stack of scenes
   /**

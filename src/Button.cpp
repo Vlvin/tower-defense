@@ -2,6 +2,7 @@
 
 
 Button::Button(Rectangle body, std::function<void(void)> onClick) 
+  : IGameObject(BUTTON_DRAW_LAYER)
 {
   m_onClick = onClick;
   m_color = m_persistent = WHITE;

@@ -9,6 +9,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/home/vlvin/Code/CPP/Towerfork/src/Button.cpp" "CMakeFiles/main.dir/src/Button.cpp.o" "gcc" "CMakeFiles/main.dir/src/Button.cpp.o.d"
+  "/home/vlvin/Code/CPP/Towerfork/src/Node.cpp" "CMakeFiles/main.dir/src/Node.cpp.o" "gcc" "CMakeFiles/main.dir/src/Node.cpp.o.d"
   "/home/vlvin/Code/CPP/Towerfork/src/Scene.cpp" "CMakeFiles/main.dir/src/Scene.cpp.o" "gcc" "CMakeFiles/main.dir/src/Scene.cpp.o.d"
   "/home/vlvin/Code/CPP/Towerfork/src/SceneManager.cpp" "CMakeFiles/main.dir/src/SceneManager.cpp.o" "gcc" "CMakeFiles/main.dir/src/SceneManager.cpp.o.d"
   "/home/vlvin/Code/CPP/Towerfork/src/main.cpp" "CMakeFiles/main.dir/src/main.cpp.o" "gcc" "CMakeFiles/main.dir/src/main.cpp.o.d"

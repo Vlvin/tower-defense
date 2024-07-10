@@ -22,6 +22,7 @@ set(LIB_NAMES
 )
 
 set(SOURCES 
+  ${SRC}/Node.cpp
   ${SRC}/SceneManager.cpp
   ${SRC}/Scene.cpp
   ${SRC}/Button.cpp
