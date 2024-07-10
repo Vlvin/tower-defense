@@ -1,5 +1,6 @@
 makepy/
 build/
+bin/
 libs/
 .vscode/
 MapLoader/
