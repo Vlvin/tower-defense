@@ -1,6 +1,8 @@
 #include "Map.hpp"
 #include "ColorTools.hpp"
+#include "Creep.hpp"
 #include "SceneManager.hpp"
+#include "PathNode.hpp"
 
 #include <string>
 #include <map>
@@ -81,7 +83,7 @@ std::shared_ptr<Map> Map::loadFromFile(const char *filename)
     }
   }
   colorByte.clear();
-  return std::make_shared<Map>(map);
+  return std::make_shared<Map>(map, width, height);
 }
 
 
@@ -116,28 +118,30 @@ Map::Map(std::vector<Color> &data, uint width, uint height)
         current = Tile::GRASS;
     }
     cost = tile_costs.find(current)->second; // getting enum value
-    m_data[i] = MapUnit
-      {
-        data[i], 
-        (Vector2)
+    m_data.push_back(
+        MapUnit
         {
-          (i%width),
-          floor(i/width)
-        },
-        cost,
-        current
-      };
+          data[i], 
+          (Vector2)
+          {
+            (float)(i%width),
+            (float)(i/width)
+          },
+          cost,
+          current
+        }
+      );
     
     // fill concrete vectors with with references
     switch (current) {
       case TOUREL:
-        m_placeholders.push_back(m_data[i]);
+        m_placeholders.push_back(&m_data[i]);
         break;
       case START:
-        m_spawns.push_back(m_data[i]);
+        m_spawns.push_back(&m_data[i]);
         break;
       case FINISH:
-        m_goals.push_back(m_data[i]);
+        m_goals.push_back(&m_data[i]);
         break;
     }
   }
@@ -146,26 +150,47 @@ Map::Map(std::vector<Color> &data, uint width, uint height)
 void Map::update(double deltaTime) {
   spawnCreeps();
 }
-
 void Map::draw() {
   Vector2 winSize = (Vector2)
   {
     GetScreenWidth(),
     GetScreenHeight()
   };
+  uint scale = 10;
+  for (int i = 0; i < m_height; i++)
+    for (int j = 0; j < m_width; j++)
+    {
+      DrawRectangle(j*scale, i*scale, scale, scale, m_data[i*m_width+j].color);
+    }
+
 }
 
 void Map::spawnCreeps() {
   srand(GetTime());
   int index = rand() % m_spawns.size();
 
-  Vector2 position = m_spawns.at(index).position;
+  Vector2 position = m_spawns.at(index)->position;
+  srand(GetTime());
+  index = rand() % m_goals.size();
 
+  Vector2 goal = m_goals.at(index)->position;
+  
+  auto creep = std::make_shared<Creep>(
+    (Rectangle){ position.x, position.y, 20.f, 20.f },
+    PathNode(getUnit(int(position.x), int(position.y))).findPath(this, goal)
+  );
+  
+  SceneManager::Back()->pushObject(creep);
+}
 
-  /**
-  * auto creep = std::make_shared<Creep>(
-  *   position
-  * );
-  */
-  // SceneManager::Back()->pushObject(Creep)
+MapUnit Map::getUnit(uint x, uint y) {
+  return m_data.at(y*m_width+x);
+}
+
+Vector2 Map::getSize() {
+  return (Vector2)
+        {
+          (float)m_width,
+          (float)m_height
+        };
 }

@@ -9,8 +9,11 @@
 class IGameObject : public Node {
 public:
   inline IGameObject(uint8_t layer) 
-    : Node(layer)
+    : Node(layer), m_isDead(false)
   {}
+  bool isDead() { return m_isDead; }
   virtual void update(double deltaTime) = 0;
   virtual void draw() = 0;
+protected:
+  bool m_isDead;
 };

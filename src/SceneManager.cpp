@@ -29,19 +29,6 @@ std::shared_ptr<Scene> SceneManager::Back() {
 
 void SceneManager::internPushScene(std::shared_ptr<Scene> scene) {
   m_scenes.push_back(scene);
-  std::sort
-  (
-    m_scenes.begin(),
-    m_scenes.end(),
-    []
-    (
-      std::shared_ptr<Scene> left, 
-      std::shared_ptr<Scene> right
-    )
-    {
-      return left->getLayer() > right->getLayer();
-    }
-  );
 
 }
 

@@ -26,6 +26,11 @@ set(SOURCES
   ${SRC}/SceneManager.cpp
   ${SRC}/Scene.cpp
   ${SRC}/Button.cpp
+  ${SRC}/Map.cpp
+  ${SRC}/ColorTools.cpp
+  ${SRC}/Creep.cpp
+  ${SRC}/PathNode.cpp
+
 )
 
 

@@ -4,7 +4,7 @@
 
 
 
-bool CT::colorCompare(Color a, Color b, bool useAlpha) {
+ bool CT::colorCompare(Color a, Color b, bool useAlpha) {
     return (
         (a.r == b.r) &&
         (a.g == b.g) &&
@@ -13,22 +13,22 @@ bool CT::colorCompare(Color a, Color b, bool useAlpha) {
     );
 }
 
-bool CT::vec2Compare(Vector2 a, Vector2 b, float precition) {
+ bool CT::vec2Compare(Vector2 a, Vector2 b, float precition) {
     return (
-        (round(precition*a.x) == round(precition*b.x)) &&
-        (round(precition*a.y) == round(precition*b.y))
+        ((int)round(precition*a.x) == (int)round(precition*b.x)) &&
+        ((int)round(precition*a.y) == (int)round(precition*b.y))
     );
 }
 
-float CT::vec2Length(Vector2 a) {
+ float CT::vec2Length(Vector2 a) {
     return sqrt((a.x*a.x) + (a.y*a.y));
 }
 
-float CT::vec2Distance(Vector2 a, Vector2 b) {
+ float CT::vec2Distance(Vector2 a, Vector2 b) {
     return vec2Length({a.x-b.x, a.y-b.y});
 }
 
-bool CT::isCircleInBox2(Vector2 position, float radius, Rectangle box, float precition) {
+ bool CT::isCircleInBox2(Vector2 position, float radius, Rectangle box, float precition) {
     // std::cout << round(position.x*precition) << ":";
     int x = round(position.x*precition);
     int y = round(position.y*precition);
@@ -40,7 +40,7 @@ bool CT::isCircleInBox2(Vector2 position, float radius, Rectangle box, float pre
     );
 }
 
-bool CT::boxCollision(Rectangle a, Rectangle b, float precition) {
+ bool CT::boxCollision(Rectangle a, Rectangle b, float precition) {
     int ax = round(a.x*precition), 
         ay = round(a.y*precition), 
         aw = round(a.width*precition), 

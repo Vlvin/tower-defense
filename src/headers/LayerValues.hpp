@@ -3,7 +3,8 @@
 
 #define SCENE_DRAW_LAYER 0
 #define MAP_DRAW_LAYER 1
-#define BUTTON_DRAW_LAYER 2
+#define CREEP_DRAW_LAYER 2
+#define BUTTON_DRAW_LAYER 3
 
 
 

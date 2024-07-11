@@ -1,6 +1,7 @@
 #include "SceneManager.hpp"
 #include "Scene.hpp"
 #include "Button.hpp"
+#include "Map.hpp"
 #include <iostream>
 
 int main(int argc, char** argv) {
@@ -19,7 +20,11 @@ int main(int argc, char** argv) {
   auto settingsFun = [&]()
   {
     auto settings = std::make_shared<Scene>();
+    auto map = Map::loadFromFile("level/demo/map.ppm");
+    
+    
     settings->pushObject(quitScene);
+    settings->pushObject(map);
     SceneManager::PushScene(settings);
   };
 
@@ -51,10 +56,10 @@ int main(int argc, char** argv) {
     delta = (GetTime() - time) * 1000;
     time = GetTime();
 
+    BeginDrawing();
     SceneManager::Update(delta);
     if (WindowShouldClose()) break;
 
-    BeginDrawing();
       ClearBackground(BLACK);
       SceneManager::Draw();
     EndDrawing();

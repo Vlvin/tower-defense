@@ -28,12 +28,14 @@ public:
   static std::shared_ptr<Map> loadFromFile(const char *filename);
   Map(std::vector<Color> &data, uint width, uint height);
   void attachTiler(std::shared_ptr<Tiler> tiler);
+  MapUnit getUnit(uint x, uint y);
+  Vector2 getSize();
   virtual void update(double deltaTime);
   virtual void draw();
 private:
   void spawnCreeps();
   std::vector<MapUnit> m_data;
-  std::vector<MapUnit&> m_placeholders, m_spawns, m_goals;
+  std::vector<MapUnit*> m_placeholders, m_spawns, m_goals;
   std::shared_ptr<Tiler> m_tiler;
   uint m_width, m_height;
 };

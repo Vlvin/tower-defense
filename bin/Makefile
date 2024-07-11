@@ -270,6 +270,78 @@ src/Button.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/src/Button.cpp.s
 .PHONY : src/Button.cpp.s
 
+src/ColorTools.o: src/ColorTools.cpp.o
+.PHONY : src/ColorTools.o
+
+# target to build an object file
+src/ColorTools.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/src/ColorTools.cpp.o
+.PHONY : src/ColorTools.cpp.o
+
+src/ColorTools.i: src/ColorTools.cpp.i
+.PHONY : src/ColorTools.i
+
+# target to preprocess a source file
+src/ColorTools.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/src/ColorTools.cpp.i
+.PHONY : src/ColorTools.cpp.i
+
+src/ColorTools.s: src/ColorTools.cpp.s
+.PHONY : src/ColorTools.s
+
+# target to generate assembly for a file
+src/ColorTools.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/src/ColorTools.cpp.s
+.PHONY : src/ColorTools.cpp.s
+
+src/Creep.o: src/Creep.cpp.o
+.PHONY : src/Creep.o
+
+# target to build an object file
+src/Creep.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/src/Creep.cpp.o
+.PHONY : src/Creep.cpp.o
+
+src/Creep.i: src/Creep.cpp.i
+.PHONY : src/Creep.i
+
+# target to preprocess a source file
+src/Creep.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/src/Creep.cpp.i
+.PHONY : src/Creep.cpp.i
+
+src/Creep.s: src/Creep.cpp.s
+.PHONY : src/Creep.s
+
+# target to generate assembly for a file
+src/Creep.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/src/Creep.cpp.s
+.PHONY : src/Creep.cpp.s
+
+src/Map.o: src/Map.cpp.o
+.PHONY : src/Map.o
+
+# target to build an object file
+src/Map.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/src/Map.cpp.o
+.PHONY : src/Map.cpp.o
+
+src/Map.i: src/Map.cpp.i
+.PHONY : src/Map.i
+
+# target to preprocess a source file
+src/Map.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/src/Map.cpp.i
+.PHONY : src/Map.cpp.i
+
+src/Map.s: src/Map.cpp.s
+.PHONY : src/Map.s
+
+# target to generate assembly for a file
+src/Map.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/src/Map.cpp.s
+.PHONY : src/Map.cpp.s
+
 src/Node.o: src/Node.cpp.o
 .PHONY : src/Node.o
 
@@ -293,6 +365,30 @@ src/Node.s: src/Node.cpp.s
 src/Node.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/src/Node.cpp.s
 .PHONY : src/Node.cpp.s
+
+src/PathNode.o: src/PathNode.cpp.o
+.PHONY : src/PathNode.o
+
+# target to build an object file
+src/PathNode.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/src/PathNode.cpp.o
+.PHONY : src/PathNode.cpp.o
+
+src/PathNode.i: src/PathNode.cpp.i
+.PHONY : src/PathNode.i
+
+# target to preprocess a source file
+src/PathNode.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/src/PathNode.cpp.i
+.PHONY : src/PathNode.cpp.i
+
+src/PathNode.s: src/PathNode.cpp.s
+.PHONY : src/PathNode.s
+
+# target to generate assembly for a file
+src/PathNode.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/src/PathNode.cpp.s
+.PHONY : src/PathNode.cpp.s
 
 src/Scene.o: src/Scene.cpp.o
 .PHONY : src/Scene.o
@@ -388,9 +484,21 @@ help:
 	@echo "... src/Button.o"
 	@echo "... src/Button.i"
 	@echo "... src/Button.s"
+	@echo "... src/ColorTools.o"
+	@echo "... src/ColorTools.i"
+	@echo "... src/ColorTools.s"
+	@echo "... src/Creep.o"
+	@echo "... src/Creep.i"
+	@echo "... src/Creep.s"
+	@echo "... src/Map.o"
+	@echo "... src/Map.i"
+	@echo "... src/Map.s"
 	@echo "... src/Node.o"
 	@echo "... src/Node.i"
 	@echo "... src/Node.s"
+	@echo "... src/PathNode.o"
+	@echo "... src/PathNode.i"
+	@echo "... src/PathNode.s"
 	@echo "... src/Scene.o"
 	@echo "... src/Scene.i"
 	@echo "... src/Scene.s"
