@@ -90,20 +90,21 @@ std::shared_ptr<Map> Map::loadFromFile(const char *filename)
 Map::Map(std::vector<Color> &data, uint width, uint height) 
   : IGameObject(MAP_DRAW_LAYER)
 {
+  m_lastSpawned = GetTime() - 99;
   m_tiler = nullptr;
   m_width = width;
   m_height = height;
   m_data.reserve(m_width*m_height);
-  std::map<Tile, uint> tile_costs = {
-    {Tile::ROAD, uint(1)},
-    {Tile::START, uint(1)},
-    {Tile::FINISH, uint(1)},
-    {Tile::TOUREL, 2147000000},
-    {Tile::GRASS, 2147000000}
+  std::map<Tile, int> tile_costs = {
+    {Tile::ROAD, 1},
+    {Tile::START, 1},
+    {Tile::FINISH, 1},
+    {Tile::TOUREL, INT32_MAX},
+    {Tile::GRASS, INT32_MAX}
   };
 
   for (int i = 0; i < width*height; i++) {
-    uint32_t cost = 1;
+    int cost = 1;
     Tile current;
     // get current
     if (CT::colorCompare(data[i], Color{255, 255, 0, 255})) {
@@ -162,10 +163,11 @@ void Map::draw() {
     {
       DrawRectangle(j*scale, i*scale, scale, scale, m_data[i*m_width+j].color);
     }
-
 }
 
 void Map::spawnCreeps() {
+  if (GetTime() - m_lastSpawned < 100) return;
+  m_lastSpawned = GetTime();
   srand(GetTime());
   int index = rand() % m_spawns.size();
 
@@ -175,8 +177,9 @@ void Map::spawnCreeps() {
 
   Vector2 goal = m_goals.at(index)->position;
   
-  auto creep = std::make_shared<Creep>(
-    (Rectangle){ position.x, position.y, 20.f, 20.f },
+  auto creep = std::make_shared<Creep>
+  (
+    (Rectangle){ position.x, position.y, 10.f, 10.f },
     PathNode(getUnit(int(position.x), int(position.y))).findPath(this, goal)
   );
   
@@ -184,7 +187,7 @@ void Map::spawnCreeps() {
 }
 
 MapUnit Map::getUnit(uint x, uint y) {
-  return m_data.at(y*m_width+x);
+  return m_data.at(x+y*m_width);
 }
 
 Vector2 Map::getSize() {

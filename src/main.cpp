@@ -3,6 +3,7 @@
 #include "Button.hpp"
 #include "Map.hpp"
 #include <iostream>
+#include <unistd.h>
 
 int main(int argc, char** argv) {
 
@@ -47,14 +48,20 @@ int main(int argc, char** argv) {
   
   SceneManager::PushScene(main);
 
-  double delta, time;
+  double delta, time, FPS = 60, desDelta = 1000/FPS;
 
   InitWindow(640, 480, "Test");
 
   while(!WindowShouldClose()) 
   {
     delta = (GetTime() - time) * 1000;
+    
     time = GetTime();
+    if (desDelta > delta)
+    {
+      usleep((desDelta - delta) * 1000);
+    }
+
 
     BeginDrawing();
     SceneManager::Update(delta);

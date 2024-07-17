@@ -3,7 +3,7 @@
 #include "ColorTools.hpp"
 #include <queue>
 
-PathNode::PathNode(Vector2 position, uint cost)
+PathNode::PathNode(Vector2 position, int cost)
 {
   m_prev = nullptr;
   m_next = nullptr;
@@ -15,7 +15,7 @@ PathNode::PathNode(MapUnit unit)
  : PathNode(unit.position, unit.cost)
 {}
 
-PathNode::PathNode(Vector2 position, uint cost, PathNode* prev)
+PathNode::PathNode(Vector2 position, int cost, PathNode* prev)
   : PathNode(position, cost)
 {
   m_prev = prev;
@@ -38,25 +38,25 @@ std::vector<Vector2> PathNode::findPath
 )
 {
   Vector2 size = map->getSize();
-  uint width = size.x, height = size.y;
+  int width = size.x, height = size.y;
 
   
   auto cmp = [&](PathNode* left, PathNode* right)
   {
     return 
     (
-      ( left->manhattenDistance(goal) +  left->getFullCost()) 
-    > (right->manhattenDistance(goal) + right->getFullCost())
+      ( (left->manhattenDistance(goal)) + (left->m_cost)) 
+    < ((right->manhattenDistance(goal)) + (right->m_cost))
     );
   };
 
   typedef struct {
-    uint cost;
+    int cost;
     PathNode* point;
   } shortcut;
   shortcut nodeMap[width*height];
   for (int i = 0; i < width*height; i++) 
-    nodeMap[i] = {uint(-1), nullptr};
+    nodeMap[i] = {0x7fffffff, nullptr};
 
 
   std::priority_queue
@@ -68,61 +68,48 @@ std::vector<Vector2> PathNode::findPath
 
 
   PathNode* current = this;
-  uint x = goal.x, y = goal.y;
+  int x = goal.x, y = goal.y;
   nodeMap[y*width+x] = {
     current->getFullCost(),
     current
   };
 
-  paths.push(this);
+  std::vector<PathNode*> temporaryStorage;
 
 
   while(!CT::vec2Compare(current->m_position, goal)) 
   {
-
+    for (Vector2 &neighbour : current->getNeighboursPositions(map)) {
+      x = neighbour.x, y = neighbour.y;
+      // std::cout << (int)current->m_position.x << ":" << (int)current->m_position.y << '\n';
+      int cellCost = current->getFullCost() + map->getUnit(x, y).cost;
+      if 
+      (
+        (!(current->isAlreadyPassed(neighbour, 5))) && 
+        ((nodeMap[y*width+x].cost) > cellCost)
+      ) 
+      {
+        nodeMap[y*width+x] = { 
+          cellCost,
+          new PathNode(neighbour, map->getUnit(x, y).cost, current)
+        };
+        paths.push(nodeMap[y*width+x].point);
+        temporaryStorage.push_back(nodeMap[y*width+x].point);
+      }
+    }
     current = paths.top();
     paths.pop();
 
     x = current->m_position.x, y = current->m_position.y;
     if (nodeMap[y*width+x].cost <= current->getFullCost())
     {
-      if (current != nodeMap[y*width+x].point) {
-        delete current;
-      }
       current = nodeMap[y*width+x].point;
     }
-    for (Vector2 &node : current->getNeighboursPositions(map)) {
-      x = node.x, y = node.y;
-      uint cellCost = current->getFullCost() + map->getUnit(x, y).cost;
-      if 
-      (
-        (!current->isAlreadyPassed(node, 5)) && 
-        (nodeMap[y*width+x].cost > cellCost)
-      ) 
-      {
-        if (nodeMap[y*width+x].point) {
-        
-          delete nodeMap[y*width+x].point;
-          nodeMap[y*width+x].point = nullptr;
-        }
-        nodeMap[y*width+x] = { 
-          cellCost,
-          new PathNode(node, map->getUnit(x, y).cost, current)
-        };
-        paths.push(nodeMap[y*width+x].point);
-      }
-      if (CT::vec2Compare(node, goal))
-      {
-        std::cout << map->getUnit(node.x, node.y).cost << '\n';
-      } 
-    }
+    x = current->m_position.x, y = current->m_position.y;
   }
-  printf("fuck yeah\n"); 
-  // program will never reach this point
-  // for some reason
+  std::cout << "fuckYeah\n";
 
-  current->buildPath();
-  // it will just stuck at while loop above
+  current->buildPath(); // sets link from goal to start
 
   std::vector<Vector2> result = {};
 
@@ -131,11 +118,17 @@ std::vector<Vector2> PathNode::findPath
     result.push_back(current->m_position);
     current = current->m_next;
   }
-  // and will never give us result
+  
+  while (!temporaryStorage.empty())
+  {
+    delete temporaryStorage.back();
+    temporaryStorage.pop_back();
+  }
+
   return result;
 }
 
-uint PathNode::manhattenDistance(Vector2 goal) {
+int PathNode::manhattenDistance(Vector2 goal) {
   return 
   (
     abs(m_position.x - goal.x) +
@@ -209,7 +202,7 @@ void PathNode::buildPath()
    * but i am using fucking shared_ptr to avoid manual deletion
   */
   if (!m_prev) return;
-  PathNode* current;
+  PathNode* current = this;
   while (current->m_prev) 
   {
     current->m_prev->m_next = current;
@@ -217,9 +210,9 @@ void PathNode::buildPath()
   }
 }
 
-uint PathNode::getFullCost()
+int PathNode::getFullCost()
 {
-  uint cost = m_cost;
+  int cost = m_cost;
 
   for (PathNode* current = m_prev; current; current = current->m_prev){
     // std::cout << current << '\n';
@@ -229,10 +222,10 @@ uint PathNode::getFullCost()
   return cost;
 }
 
-bool PathNode::isAlreadyPassed(uint depth)
+bool PathNode::isAlreadyPassed(int depth)
 { 
   PathNode* curr = this;
-  for (uint i = 0; i < depth; i++)
+  for (int i = 0; i < depth; i++)
   {
     if (CT::vec2Compare(curr->m_position, m_position)) return true;
     if (curr == this) return true;
@@ -241,10 +234,10 @@ bool PathNode::isAlreadyPassed(uint depth)
   return false;
 }
 
-bool PathNode::isAlreadyPassed(Vector2 position, uint depth)
+bool PathNode::isAlreadyPassed(Vector2 position, int depth)
 { 
   PathNode* curr = this;
-  for (uint i = 0; i < depth; i++)
+  for (int i = 0; i < depth; i++)
   {
     if (CT::vec2Compare(curr->m_position, position)) return true;
   }

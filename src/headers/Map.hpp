@@ -3,7 +3,7 @@
 #include <memory>
 
 #include "IGameObject.hpp"
-
+#include <limits>
 class Tiler;
 
 
@@ -19,7 +19,7 @@ typedef enum {
 typedef struct {
     Color color;
     Vector2 position;
-    uint32_t cost;
+    int cost;
     Tile type;
 } MapUnit;
 
@@ -34,6 +34,7 @@ public:
   virtual void draw();
 private:
   void spawnCreeps();
+  double m_lastSpawned;
   std::vector<MapUnit> m_data;
   std::vector<MapUnit*> m_placeholders, m_spawns, m_goals;
   std::shared_ptr<Tiler> m_tiler;
