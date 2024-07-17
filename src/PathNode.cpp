@@ -31,8 +31,7 @@ std::vector<Vector2> PathNode::findPath
   return findPath(map, goal.position);
 }
 
-std::vector<Vector2> PathNode::findPath
-(
+std::vector<Vector2> PathNode::findPath (
   Map* map, 
   Vector2 goal
 )
@@ -41,7 +40,7 @@ std::vector<Vector2> PathNode::findPath
   int width = size.x, height = size.y;
 
   
-  auto cmp = [&](PathNode* left, PathNode* right)
+  auto cmp = [&](PathNode* left, PathNode* right) 
   {
     return 
     (
@@ -50,7 +49,8 @@ std::vector<Vector2> PathNode::findPath
     );
   };
 
-  typedef struct {
+  typedef struct 
+  {
     int cost;
     PathNode* point;
   } shortcut;
@@ -69,7 +69,9 @@ std::vector<Vector2> PathNode::findPath
 
   PathNode* current = this;
   int x = goal.x, y = goal.y;
-  nodeMap[y*width+x] = {
+  nodeMap[y*width+x] = 
+  (shortcut)
+  {
     current->getFullCost(),
     current
   };
@@ -79,9 +81,10 @@ std::vector<Vector2> PathNode::findPath
 
   while(!CT::vec2Compare(current->m_position, goal)) 
   {
-    for (Vector2 &neighbour : current->getNeighboursPositions(map)) {
+    for (Vector2 &neighbour : current->getNeighboursPositions(map)) 
+    {
       x = neighbour.x, y = neighbour.y;
-      // std::cout << (int)current->m_position.x << ":" << (int)current->m_position.y << '\n';
+      
       int cellCost = current->getFullCost() + map->getUnit(x, y).cost;
       if 
       (
@@ -89,7 +92,9 @@ std::vector<Vector2> PathNode::findPath
         ((nodeMap[y*width+x].cost) > cellCost)
       ) 
       {
-        nodeMap[y*width+x] = { 
+        nodeMap[y*width+x] = 
+        (shortcut)
+        { 
           cellCost,
           new PathNode(neighbour, map->getUnit(x, y).cost, current)
         };
@@ -107,7 +112,6 @@ std::vector<Vector2> PathNode::findPath
     }
     x = current->m_position.x, y = current->m_position.y;
   }
-  std::cout << "fuckYeah\n";
 
   current->buildPath(); // sets link from goal to start
 

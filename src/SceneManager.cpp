@@ -10,7 +10,7 @@ SceneManager& SceneManager::Get() {
   return s_instance;
 }
 
-void SceneManager::PushScene(std::shared_ptr<Scene>scene) {
+void SceneManager::PushScene(Scene scene) {
   return Get().internPushScene(scene);
 }
 void SceneManager::PopScene() {
@@ -22,12 +22,11 @@ void SceneManager::Update(double deltaTime) {
 void SceneManager::Draw() {
   return Get().internDraw();
 }
-
-std::shared_ptr<Scene> SceneManager::Back() {
+Scene &SceneManager::Back() {
   return Get().internBack();
 }
 
-void SceneManager::internPushScene(std::shared_ptr<Scene> scene) {
+void SceneManager::internPushScene(Scene scene) {
   m_scenes.push_back(scene);
 
 }
@@ -40,16 +39,17 @@ void SceneManager::internPopScene() {
 
 void SceneManager::internUpdate(double deltaTime) {
   if (m_scenes.empty()) return;
-  m_scenes.back()->update(deltaTime);
+  m_scenes.back().update(deltaTime);
 }
 
 void SceneManager::internDraw() {
   if (m_scenes.empty()) return;
-  m_scenes.back()->draw();
+  m_scenes.back().draw();
 }
 
-std::shared_ptr<Scene> SceneManager::internBack() {
-  if (m_scenes.empty()) return nullptr;
+Scene &SceneManager::internBack() {
+  if (m_scenes.empty()) 
+    throw std::out_of_range("No Scenes in manager");
   return m_scenes.back();
 }
 

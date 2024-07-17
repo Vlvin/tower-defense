@@ -9,8 +9,8 @@ Button::Button(Rectangle body, std::function<void(void)> onClick)
   m_body = body;
 }
 
-Button::Button(Button button, Color color) 
-  : Button(button)
+Button::Button(Rectangle body, std::function<void(void)> onClick, Color color) 
+  : Button(body, onClick)
 {
   m_color = m_persistent = color;
 }

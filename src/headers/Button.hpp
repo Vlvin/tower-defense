@@ -10,7 +10,7 @@
 class Button : public IGameObject {
 public:
   Button(Rectangle body, std::function<void(void)> onClick);
-  Button(Button button, Color color);
+  Button(Rectangle body, std::function<void(void)> onClick, Color color);
 
   void setColor(Color color);
 // IGameObject

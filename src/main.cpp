@@ -8,42 +8,32 @@
 int main(int argc, char** argv) {
 
   // Buttons
-  auto quitScene = std::make_shared<Button>
-  (
-    Button
-    (
-      (Rectangle){25., 25., 25., 25.},
-      SceneManager::PopScene
-    ),
+  auto quitScene = std::make_shared<Button>(
+    (Rectangle){25., 25., 25., 25.},
+    SceneManager::PopScene,
     RED
   );
 
-  auto settingsFun = [&]()
-  {
-    auto settings = std::make_shared<Scene>();
+  auto loadLevel = [&]() {
+    Scene settings;
     auto map = Map::loadFromFile("level/demo/map.ppm");
     
-    
-    settings->pushObject(quitScene);
-    settings->pushObject(map);
+    settings.pushObject(quitScene);
+    settings.pushObject(map);
     SceneManager::PushScene(settings);
   };
 
 
-  auto enterSettings = std::make_shared<Button>
-  (
-    Button
-    (
-      (Rectangle){100., 200., 440., 50.},
-      settingsFun
-    ),
+  auto enterLevel = std::make_shared<Button>(
+    (Rectangle){100., 200., 440., 50.},
+    loadLevel,
     GREEN
   );
 
   // MainScene
-  auto main = std::make_shared<Scene>();
-  main->pushObject(quitScene);
-  main->pushObject(enterSettings);
+  Scene main;
+  main.pushObject(quitScene);
+  main.pushObject(enterLevel);
 
   
   SceneManager::PushScene(main);

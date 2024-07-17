@@ -182,8 +182,7 @@ void Map::spawnCreeps() {
     (Rectangle){ position.x, position.y, 10.f, 10.f },
     PathNode(getUnit(int(position.x), int(position.y))).findPath(this, goal)
   );
-  
-  SceneManager::Back()->pushObject(creep);
+  SceneManager::Back().pushObject(creep);
 }
 
 MapUnit Map::getUnit(uint x, uint y) {
