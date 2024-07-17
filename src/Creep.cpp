@@ -28,7 +28,8 @@ Creep::Creep(Rectangle body, std::vector<Vector2> path)
   m_pathIterator = 0;
   m_healthPoints = 10;
   m_color = m_persistent = WHITE;
-
+  
+  
   m_directionAngle = atan2
     (
       getPosition().y - m_path[m_pathIterator+1].y,

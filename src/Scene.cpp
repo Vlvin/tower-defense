@@ -19,7 +19,7 @@ void Scene::pushObject(std::shared_ptr<IGameObject> object) {
       std::shared_ptr<IGameObject> &left, 
       std::shared_ptr<IGameObject> &right
     ) {
-      return left->getLayer() < right->getLayer();
+      return left->node.getLayer() < right->node.getLayer();
     }
   );
 }

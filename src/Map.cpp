@@ -154,8 +154,8 @@ void Map::update(double deltaTime) {
 void Map::draw() {
   Vector2 winSize = (Vector2)
   {
-    GetScreenWidth(),
-    GetScreenHeight()
+    (float)GetScreenWidth(),
+    (float)GetScreenHeight()
   };
   uint scale = 10;
   for (int i = 0; i < m_height; i++)

@@ -59,6 +59,7 @@ add_subdirectory(${LIBS}/raylib-master)
 # )
 
 
+message("DEBUG", "${CMAKE_CURRENT_BINARY_DIR}")
 # building main
 add_executable(main ${SRC}/main.cpp ${SOURCES})
 # add_dependencies(main run_tests)

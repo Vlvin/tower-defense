@@ -11,7 +11,7 @@ int main(int argc, char** argv) {
   auto quitScene = std::make_shared<Button>(
     (Rectangle){25., 25., 25., 25.},
     SceneManager::PopScene,
-    RED
+    RED 
   );
 
   auto loadLevel = [&]() {
