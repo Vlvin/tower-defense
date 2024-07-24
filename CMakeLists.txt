@@ -30,6 +30,7 @@ set(SOURCES
   ${SRC}/ColorTools.cpp
   ${SRC}/Creep.cpp
   ${SRC}/PathNode.cpp
+  ${SRC}/Tourel.cpp
 
 )
 

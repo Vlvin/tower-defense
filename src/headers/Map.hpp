@@ -34,9 +34,9 @@ public:
 
   virtual void update(double deltaTime);
   virtual void draw();
-private:
+protected:
   void spawnCreeps();
-private:
+protected:
   double m_lastSpawned;
   std::vector<MapUnit> m_data;
   std::vector<MapUnit*> m_placeholders, m_spawns, m_goals;

@@ -57,3 +57,12 @@ void Scene::draw() {
     object->draw();
   }
 }
+
+
+auto Scene::begin() -> decltype(m_objects.begin()) {
+  return m_objects.begin();
+}
+
+auto Scene::end() -> decltype(m_objects.end()) {
+  return m_objects.end();
+}

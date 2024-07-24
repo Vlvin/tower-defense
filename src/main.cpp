@@ -1,6 +1,7 @@
 #include <SceneManager.hpp>
 #include <Scene.hpp>
 #include <Button.hpp>
+#include <Tourel.hpp>
 #include <Map.hpp>
 #include <iostream>
 #include <unistd.h>
@@ -17,9 +18,14 @@ int main(int argc, char** argv) {
   auto loadLevel = [&]() {
     Scene settings;
     auto map = Map::loadFromFile("level/demo/map.ppm");
-    
+    auto shooter = std::make_shared<Tourel>(
+      (Rectangle){10.f, 10.f, 10.f, 10.f},
+      4.f,
+      Bullet()
+    );
     settings.pushObject(quitScene);
     settings.pushObject(map);
+    settings.pushObject(shooter);
     SceneManager::PushScene(settings);
   };
 

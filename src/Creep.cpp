@@ -26,7 +26,7 @@ Creep::Creep(Rectangle body, std::vector<Vector2> path)
   
   m_path = path;
   m_pathIterator = 0;
-  m_healthPoints = 10;
+  m_healthPoints = {10};
   m_color = m_persistent = WHITE;
   
   
@@ -37,24 +37,24 @@ Creep::Creep(Rectangle body, std::vector<Vector2> path)
     );
 }
 
-Creep::Creep(Creep creep, Color color)
+Creep::Creep(const Creep &creep, Color color)
   : Creep(creep)
 {
   m_color = m_persistent = color;
 }
 
 void Creep::hit(uint damage) {
-  if (m_healthPoints <= damage)
+  if (m_healthPoints.value <= damage)
   {
-    m_healthPoints = 0;
+    m_healthPoints.value = 0;
     m_isDead = true;
     return;
   }
-  m_healthPoints -= damage;
+  m_healthPoints.value -= damage;
 }
 
 void Creep::update(double deltaTime) {
-  if (m_healthPoints <= 0) m_isDead = true;
+  if (m_healthPoints.value <= 0) m_isDead = true;
   if (m_pathIterator >= m_path.size())
   {
     /**
@@ -90,8 +90,6 @@ void Creep::update(double deltaTime) {
    * check colitions and all that stuff
   */
 
-
-
 }
 
 void Creep::draw() {
@@ -112,3 +110,7 @@ Vector2 Creep::getPosition()
 {
   return {m_body.x, m_body.y};
 }
+
+OBJECT_OVERRIDE_COMPONENT_CPP(Creep, Body, m_body)
+OBJECT_OVERRIDE_COMPONENT_CPP(Creep, Health, m_healthPoints)
+OBJECT_OVERRIDE_COMPONENT_CPP(Creep, EnemyTag, m_enemyTag)

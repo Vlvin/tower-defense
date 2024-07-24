@@ -15,11 +15,8 @@ public:
   virtual void update(double deltaTime) override;
   virtual void draw() override;
 protected:
-  /**
-   * Change reference on something different
-   * like pointer or direct instance
-   * cause you'll create object 
-   * and destruct it after passing a reference
-  */
   std::vector<std::shared_ptr<IGameObject>> m_objects;
+public:
+  auto begin() -> decltype(m_objects.begin());
+  auto end() -> decltype(m_objects.end());
 };
