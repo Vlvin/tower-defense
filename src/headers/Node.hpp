@@ -1,7 +1,7 @@
 #pragma once
 
-#include "stdint.h" 
-#include "LayerValues.hpp"
+#include <stdint.h>
+#include <LayerValues.hpp>
 
 class Node {
 public:

@@ -1,9 +1,11 @@
 #pragma once
 #include <raylib.h>
-#include "Map.hpp"
+
+#include <Map.hpp>
+
 #include <memory>
 #include <vector>
-#include "sys/types.h"
+#include <sys/types.h>
 
 class PathNode {
 public:

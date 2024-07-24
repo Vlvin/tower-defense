@@ -2,7 +2,7 @@
 
 #include <functional>
 
-#include "IGameObject.hpp"
+#include <IGameObject.hpp>
 
 
 

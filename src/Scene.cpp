@@ -1,5 +1,5 @@
-#include "Scene.hpp"
-#include "IGameObject.hpp"
+#include <Scene.hpp>
+#include <IGameObject.hpp>
 #include <algorithm>
 
 Scene::Scene() 
@@ -19,7 +19,7 @@ void Scene::pushObject(std::shared_ptr<IGameObject> object) {
       std::shared_ptr<IGameObject> &left, 
       std::shared_ptr<IGameObject> &right
     ) {
-      return left->node.getLayer() < right->node.getLayer();
+      return left->getLayer() < right->getLayer();
     }
   );
 }

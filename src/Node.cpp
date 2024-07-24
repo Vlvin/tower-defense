@@ -1,4 +1,4 @@
-#include "Node.hpp"
+#include <Node.hpp>
 
 Node::Node(uint8_t layer) {
   m_layer = layer;

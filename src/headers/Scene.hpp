@@ -2,7 +2,7 @@
 #include <vector>
 #include <memory>
 
-#include "IGameObject.hpp"
+#include <IGameObject.hpp>
 
 
 

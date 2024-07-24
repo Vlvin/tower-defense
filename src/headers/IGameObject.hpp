@@ -4,18 +4,20 @@
 #include <random>
 
 #include <raylib.h>
-#include "Node.hpp"
+#include <Node.hpp>
 
 class IGameObject {
 public:
   inline IGameObject(uint8_t layer) 
-    : node(layer), m_isDead(false)
+    : m_node(layer), m_isDead(false)
   {}
+
   bool isDead() { return m_isDead; }
+  uint8_t getLayer() { return m_node.getLayer(); }
+
   virtual void update(double deltaTime) = 0;
   virtual void draw() = 0;
-public:
-  const Node node;
 protected:
+  Node m_node;
   bool m_isDead;
 };

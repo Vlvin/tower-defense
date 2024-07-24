@@ -1,7 +1,7 @@
 #pragma once
 
-#include "IGameObject.hpp"
-#include "Map.hpp"
+#include <IGameObject.hpp>
+#include <Map.hpp>
 
 class PathNode;
 

@@ -1,7 +1,7 @@
-#include "SceneManager.hpp"
+#include <SceneManager.hpp>
 #include <iostream>
 
-#include "Scene.hpp"
+#include <Scene.hpp>
 
 
 SceneManager& SceneManager::Get() {

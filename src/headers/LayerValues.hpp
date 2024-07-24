@@ -1,11 +1,7 @@
-#ifndef _LAYER_VALUES_H_
-#define _LAYER_VALUES_H_
+#pragma once
 
-#define SCENE_DRAW_LAYER 0
-#define MAP_DRAW_LAYER 1
-#define CREEP_DRAW_LAYER 2
-#define BUTTON_DRAW_LAYER 3
-
-
-
-#endif // _LAYER_VALUES_H_
+inline const int SCENE_DRAW_LAYER = 0;
+inline const int MAP_DRAW_LAYER = 1;
+inline const int CREEP_DRAW_LAYER = 2;
+inline const int TOUREL_DRAW_LAYER = 3;
+inline const int BUTTON_DRAW_LAYER = 4;

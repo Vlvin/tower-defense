@@ -1,6 +1,6 @@
-#include "PathNode.hpp"
+#include <PathNode.hpp>
 #include <stdint.h>
-#include "ColorTools.hpp"
+#include <ColorTools.hpp>
 #include <queue>
 
 PathNode::PathNode(Vector2 position, int cost)
