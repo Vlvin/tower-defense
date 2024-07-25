@@ -15,7 +15,7 @@ public:
   virtual void draw();
   
   void hit(uint damage);
-private:
+protected:
 
   Vector2 getPosition();
 
