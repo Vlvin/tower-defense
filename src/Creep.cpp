@@ -22,7 +22,7 @@ Creep::Creep(Rectangle body, std::vector<Vector2> path)
     UnloadImage(image);
   }
   m_body = body;
-  m_speed = 2.5f;
+  m_speed = {2.5f};
   
   m_path = path;
   m_pathIterator = 0;
@@ -30,11 +30,12 @@ Creep::Creep(Rectangle body, std::vector<Vector2> path)
   m_color = m_persistent = WHITE;
   
   
-  m_directionAngle = atan2
-    (
+  m_directionAngle = {
+    (float)atan2(
       getPosition().y - m_path[m_pathIterator+1].y,
       getPosition().x - m_path[m_pathIterator+1].x
-    );
+    )
+  };
 }
 
 Creep::Creep(const Creep &creep, Color color)
@@ -74,17 +75,21 @@ void Creep::update(double deltaTime) {
 
   if (CT::vec2Compare(getPosition(), m_path[m_pathIterator]))
     m_pathIterator++;
-  // std::cout << deltaTime << '\n';
-  m_directionAngle =
+
+  float &direction = m_directionAngle.value;
+  float &speed = m_speed.value;
+  direction =
     atan2
     (
       getPosition().y - m_path[m_pathIterator].y,
       getPosition().x - m_path[m_pathIterator].x
     );
 
-
-  m_body.x -= cos(m_directionAngle) * m_speed * deltaTime * 0.001f;
-  m_body.y -= sin(m_directionAngle) * m_speed * deltaTime * 0.001f;
+  // look at how clean it becomes, 
+  // no more 
+  // cos(m_directionAngle.value) * m_speed.value
+  m_body.x -= cos(direction) * speed * deltaTime * 0.001f;
+  m_body.y -= sin(direction) * speed * deltaTime * 0.001f;
 
   /**
    * check colitions and all that stuff
@@ -94,23 +99,29 @@ void Creep::update(double deltaTime) {
 
 void Creep::draw() {
 
-  float scale = 10.f; // rudimentary
+  float scale = 20.f; // rudimentary
+
+  float &direction = m_directionAngle.value;
+  float texWidth = s_texture.width;
+  float texHeight = s_texture.height;
   DrawTexturePro
   (
     s_texture, // texture
-    {0.f, 0.f, (float)s_texture.width, (float)s_texture.height}, // src
-    {(m_body.x + 0.5f) * scale, (m_body.y + 0.5f) * scale, m_body.width, m_body.height}, // dest
-    {m_body.width * 0.5f, m_body.height * 0.5f}, // origin
-    (m_directionAngle - M_PI*0.5)/M_PI*180, // rotation
+    {0.f, 0.f, texWidth, texHeight}, // src
+    {(m_body.x + 0.5f) * scale, (m_body.y + 0.5f) * scale, m_body.width * scale, m_body.height * scale}, // dest
+    {m_body.width * 0.5f * scale, m_body.height * 0.5f * scale}, // origin
+    (direction - M_PI*0.5)/M_PI*180, // rotation
     m_color // color
     ); 
 }
 
 Vector2 Creep::getPosition()
 {
-  return {m_body.x, m_body.y};
+  return { m_body.x, m_body.y };
 }
 
 OBJECT_OVERRIDE_COMPONENT_CPP(Creep, Body, m_body)
 OBJECT_OVERRIDE_COMPONENT_CPP(Creep, Health, m_healthPoints)
 OBJECT_OVERRIDE_COMPONENT_CPP(Creep, EnemyTag, m_enemyTag)
+OBJECT_OVERRIDE_COMPONENT_CPP(Creep, Direction, m_directionAngle)
+OBJECT_OVERRIDE_COMPONENT_CPP(Creep, Speed, m_speed)

@@ -15,11 +15,13 @@ protected:
   Vector2 getPosition();
 
   OBJECT_OVERRIDE_COMPONENT_H(Body)
+  OBJECT_OVERRIDE_COMPONENT_H(Direction)
 protected:
-  float m_rangeOfAction, m_directionAngle;
+  float m_rangeOfAction;
   std::shared_ptr<IGameObject> m_target;
 
   components::Body m_body;
+  components::Direction m_directionAngle;
 
   
   Bullet m_bullet;

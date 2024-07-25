@@ -19,7 +19,7 @@ int main(int argc, char** argv) {
     Scene settings;
     auto map = Map::loadFromFile("level/demo/map.ppm");
     auto shooter = std::make_shared<Tourel>(
-      (Rectangle){10.f, 10.f, 10.f, 10.f},
+      (Rectangle){10.f, 10.f, 1.f, 1.f},
       4.f,
       Bullet()
     );

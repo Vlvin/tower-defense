@@ -20,6 +20,8 @@ private:
   Vector2 getPosition();
 
   OBJECT_OVERRIDE_COMPONENT_H(Body)
+  OBJECT_OVERRIDE_COMPONENT_H(Direction)
+  OBJECT_OVERRIDE_COMPONENT_H(Speed)
   OBJECT_OVERRIDE_COMPONENT_H(Health)
   OBJECT_OVERRIDE_COMPONENT_H(EnemyTag)
   
@@ -29,9 +31,8 @@ private:
   components::Health m_healthPoints;
   components::Body m_body;
   components::EnemyTag m_enemyTag;
-  
-  
-  float m_directionAngle, m_speed;
+  components::Direction m_directionAngle;
+  components::Speed m_speed;
   
   Color m_color, m_persistent;
   static Texture s_texture;

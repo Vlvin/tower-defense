@@ -61,6 +61,15 @@ namespace components {
       uint value;
     };
 
+    struct Speed {
+      float value;
+    };
+
+    // Direction angle
+    struct Direction {
+      float value;
+    };
+
     typedef Rectangle Body; // cause Rectangle is struct already
     
     struct EnemyTag { };

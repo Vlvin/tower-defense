@@ -69,20 +69,51 @@ void Tourel::update(double deltaTime) {
   if (!m_target) 
     return;
 
+
+  
+
+  float &direction = m_directionAngle.value;
+  Rectangle &body = m_body;
+  
+  m_target->dispatch([&] (
+    // arguements
+    components::Body &tBody, 
+    components::Speed &tSpeed, 
+    components::Direction &tDirection
+  ) {
+    // body
+    /**
+     * future: predict m_target position after optimal shoot time
+     * 
+     * now: look at m_target
+    */
+    direction = atan2(
+      body.y - tBody.y,
+      body.x - tBody.x
+    );
+  });
+
+
   shoot();
 }
 
 void Tourel::draw() {
-  float scale = 10.f; // rudimentary
+  // predefined sugar
+  float &direction = m_directionAngle.value;
+  float texWidth = s_texture.width;
+  float texHeight = s_texture.height;
+
+  float scale = 20.f; // rudimentary
   DrawTexturePro
   (
     s_texture, // texture
-    {0.f, 0.f, (float)s_texture.width, (float)s_texture.height}, // src
-    {(m_body.x + 0.5f) * scale, (m_body.y + 0.5f) * scale, m_body.width, m_body.height}, // dest
-    {m_body.width * 0.5f, m_body.height * 0.5f}, // origin
-    (m_directionAngle - M_PI*0.5)/M_PI*180, // rotation
+    {0.f, 0.f, texWidth, texHeight}, // src
+    {(m_body.x + 0.5f) * scale, (m_body.y + 0.5f) * scale, m_body.width * scale, m_body.height * scale}, // dest
+    {m_body.width * 0.5f * scale, m_body.height * 0.5f * scale}, // origin
+    (direction - M_PI*0.5)/M_PI*180, // rotation
     m_color // color
   ); 
 }
 
 OBJECT_OVERRIDE_COMPONENT_CPP(Tourel, Body, m_body)
+OBJECT_OVERRIDE_COMPONENT_CPP(Tourel, Direction, m_directionAngle)

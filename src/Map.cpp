@@ -157,7 +157,7 @@ void Map::draw() {
     (float)GetScreenWidth(),
     (float)GetScreenHeight()
   };
-  uint scale = 10;
+  uint scale = 20;
   for (int i = 0; i < m_height; i++)
     for (int j = 0; j < m_width; j++)
     {
@@ -179,7 +179,7 @@ void Map::spawnCreeps() {
   
   auto creep = std::make_shared<Creep>
   (
-    (Rectangle){ position.x, position.y, 10.f, 10.f },
+    (Rectangle){ position.x, position.y, 1.f, 1.f },
     PathNode(getUnit(int(position.x), int(position.y))).findPath(this, goal)
   );
   SceneManager::Back().pushObject(creep);

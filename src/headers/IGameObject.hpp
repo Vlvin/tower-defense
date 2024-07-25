@@ -46,6 +46,8 @@ protected:
   virtual ::components::CompType *get_(tag<::components::CompType>) { return nullptr; }
   
   OBJECT_DECLARE_COMPONENT(Health)
+  OBJECT_DECLARE_COMPONENT(Speed)
+  OBJECT_DECLARE_COMPONENT(Direction)
   OBJECT_DECLARE_COMPONENT(Body)
   OBJECT_DECLARE_COMPONENT(EnemyTag)
 
