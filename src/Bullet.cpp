@@ -11,9 +11,9 @@ Texture Bullet::s_texture = {
 
 Bullet::Bullet(Rectangle body) 
   : IGameObject(BULLET_DRAW_LAYER) 
-{
+{  
   if (!s_texture.width) {
-    auto image = LoadImage("assets/Bullet.png");
+    auto image = LoadImage("assets/Tourel.png");
     s_texture = LoadTextureFromImage(image);
     UnloadImage(image);
   }
@@ -37,3 +37,8 @@ void Bullet::update(double deltaTime) {
 void Bullet::draw() {
 
 }
+
+
+OBJECT_OVERRIDE_COMPONENT_CPP(Bullet, Body, m_body)
+OBJECT_OVERRIDE_COMPONENT_CPP(Bullet, Direction, m_direction)
+OBJECT_OVERRIDE_COMPONENT_CPP(Bullet, Speed, m_speed)

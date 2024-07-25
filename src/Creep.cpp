@@ -4,8 +4,7 @@
 
 
 
-Texture Creep::s_texture
-{
+Texture Creep::s_texture = {
   0,
   0,
   0,

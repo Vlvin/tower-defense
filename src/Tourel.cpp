@@ -2,7 +2,7 @@
 #include <SceneManager.hpp>
 #include <ColorTools.hpp>
 
-Texture Tourel::s_texture{
+Texture Tourel::s_texture = {
   0,
   0,
   0,

@@ -21,7 +21,7 @@ int main(int argc, char** argv) {
     auto shooter = std::make_shared<Tourel>(
       (Rectangle){10.f, 10.f, 1.f, 1.f},
       4.f,
-      Bullet()
+      Bullet({10.f, 10.f, 1.f, 1.f})
     );
     settings.pushObject(quitScene);
     settings.pushObject(map);
