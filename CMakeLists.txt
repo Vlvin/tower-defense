@@ -2,7 +2,11 @@ cmake_minimum_required(VERSION 3.0.0 FATAL_ERROR)
 
 set(CXX_STANDARD 23)
 set(CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O3")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O1")
+
+if (${CMAKE_BUILD_TYPE} STREQUAL "Debug")
+  add_definitions(-DNDEBUG)
+endif(${CMAKE_BUILD_TYPE} STREQUAL "Debug")
 
 project(TowerFork)
 
@@ -31,6 +35,7 @@ set(SOURCES
   ${SRC}/Creep.cpp
   ${SRC}/PathNode.cpp
   ${SRC}/Tourel.cpp
+  ${SRC}/Bullet.cpp
 
 )
 

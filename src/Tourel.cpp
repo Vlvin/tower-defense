@@ -19,6 +19,7 @@ Tourel::Tourel(Rectangle body, float rangeOfAction, Bullet bullet)
     s_texture = LoadTextureFromImage(image);
     UnloadImage(image);
   }
+  m_directionAngle = {0.f};
   m_rangeOfAction = rangeOfAction;
   m_body = body;
   m_target = {nullptr};
@@ -32,8 +33,19 @@ Tourel::Tourel(const Tourel &tourel, Color color)
 }
 
 void Tourel::shoot() {
+  auto &parent = SceneManager::Back();
+  auto &tourelDir = m_directionAngle.value;
+  auto tourelPos = this->getPosition();
   // summon new bullet which moves to target with m_bullet speed and body
-  std::cout << "shoot to " << m_target << " at " << GetTime() << '\n';
+  m_bullet.dispatch(
+    [&] (components::Direction& dir, components::Body& body) {
+      auto bullet = std::make_shared<Bullet>(
+        (Rectangle){tourelPos.x, tourelPos.y, body.width, body.height}, 
+        tourelDir
+      );
+      parent.pushObject(bullet);
+    }
+  );
 }
 
 void Tourel::locateTarget() {
@@ -74,6 +86,7 @@ void Tourel::update(double deltaTime) {
 
   float &direction = m_directionAngle.value;
   Rectangle &body = m_body;
+
   
   m_target->dispatch([&] (
     // arguements

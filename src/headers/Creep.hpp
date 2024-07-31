@@ -31,7 +31,7 @@ protected:
   components::Health m_healthPoints;
   components::Body m_body;
   components::EnemyTag m_enemyTag;
-  components::Direction m_directionAngle;
+  components::Direction m_direction;
   components::Speed m_speed;
   
   Color m_color, m_persistent;

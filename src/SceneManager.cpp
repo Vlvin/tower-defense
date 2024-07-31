@@ -32,6 +32,8 @@ void SceneManager::internPushScene(Scene scene) {
 }
 
 void SceneManager::internPopScene() {
+  if (!m_scenes.empty()) // useless cause all actions called from SceneManager::Back().update
+    m_scenes.back().clear();
   m_scenes.pop_back();
   if (m_scenes.empty()) CloseWindow();
 }

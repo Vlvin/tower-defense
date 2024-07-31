@@ -29,7 +29,7 @@ Creep::Creep(Rectangle body, std::vector<Vector2> path)
   m_color = m_persistent = WHITE;
   
   
-  m_directionAngle = {
+  m_direction = {
     (float)atan2(
       getPosition().y - m_path[m_pathIterator+1].y,
       getPosition().x - m_path[m_pathIterator+1].x
@@ -75,7 +75,7 @@ void Creep::update(double deltaTime) {
   if (CT::vec2Compare(getPosition(), m_path[m_pathIterator]))
     m_pathIterator++;
 
-  float &direction = m_directionAngle.value;
+  float &direction = m_direction.value;
   float &speed = m_speed.value;
   direction =
     atan2
@@ -100,7 +100,7 @@ void Creep::draw() {
 
   float scale = 20.f; // rudimentary
 
-  float &direction = m_directionAngle.value;
+  float &direction = m_direction.value;
   float texWidth = s_texture.width;
   float texHeight = s_texture.height;
   DrawTexturePro
@@ -122,5 +122,5 @@ Vector2 Creep::getPosition()
 OBJECT_OVERRIDE_COMPONENT_CPP(Creep, Body, m_body)
 OBJECT_OVERRIDE_COMPONENT_CPP(Creep, Health, m_healthPoints)
 OBJECT_OVERRIDE_COMPONENT_CPP(Creep, EnemyTag, m_enemyTag)
-OBJECT_OVERRIDE_COMPONENT_CPP(Creep, Direction, m_directionAngle)
+OBJECT_OVERRIDE_COMPONENT_CPP(Creep, Direction, m_direction)
 OBJECT_OVERRIDE_COMPONENT_CPP(Creep, Speed, m_speed)

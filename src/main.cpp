@@ -7,7 +7,6 @@
 #include <unistd.h>
 
 int main(int argc, char** argv) {
-
   // Buttons
   auto quitScene = std::make_shared<Button>(
     (Rectangle){25., 25., 25., 25.},
@@ -19,9 +18,9 @@ int main(int argc, char** argv) {
     Scene settings;
     auto map = Map::loadFromFile("level/demo/map.ppm");
     auto shooter = std::make_shared<Tourel>(
-      (Rectangle){10.f, 10.f, 1.f, 1.f},
+      (Rectangle){1.f, 13.f, 1.f, 1.f},
       4.f,
-      Bullet({10.f, 10.f, 1.f, 1.f})
+      Bullet({1.f, 1.f, .1f, .1f}, 0.f)
     );
     settings.pushObject(quitScene);
     settings.pushObject(map);
@@ -50,6 +49,12 @@ int main(int argc, char** argv) {
 
   while(!WindowShouldClose()) 
   {
+    // SceneManager::Update(delta) Is allowed to close window
+    BeginDrawing(); 
+      ClearBackground(BLACK);
+      SceneManager::Draw();
+    EndDrawing();
+
     delta = (GetTime() - time) * 1000;
     
     time = GetTime();
@@ -57,15 +62,6 @@ int main(int argc, char** argv) {
     {
       usleep((desDelta - delta) * 1000);
     }
-
-
-    BeginDrawing();
     SceneManager::Update(delta);
-    if (WindowShouldClose()) break;
-
-      ClearBackground(BLACK);
-      SceneManager::Draw();
-    EndDrawing();
-
   }
 }

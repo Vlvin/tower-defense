@@ -4,8 +4,6 @@
 
 #include <IGameObject.hpp>
 
-
-
 class Scene : public IGameObject
 {
 public:

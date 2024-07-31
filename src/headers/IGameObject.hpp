@@ -2,10 +2,12 @@
 
 #include <iostream>
 #include <random>
+#include <stdexcept>
 
 #include <raylib.h>
 #include <Node.hpp>
 #include <Components.hpp>
+
 
 class IGameObject {
 public:
@@ -37,8 +39,8 @@ public:
   bool isDead() { return m_isDead; }
   uint8_t getLayer() { return m_node.getLayer(); }
 
-  virtual void update(double deltaTime) = 0;
-  virtual void draw() = 0;
+  virtual void update(double deltaTime);
+  virtual void draw();
   
 protected:
 
