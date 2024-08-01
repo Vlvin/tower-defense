@@ -1,6 +1,7 @@
 #include <Tourel.hpp>
 #include <SceneManager.hpp>
 #include <ColorTools.hpp>
+#include <cmath>
 
 Texture Tourel::s_texture = {
   0,
@@ -48,6 +49,76 @@ void Tourel::shoot() {
   );
 }
 
+void Tourel::predictTargetPosition() {float &direction = m_directionAngle.value;
+  Rectangle &body = m_body;
+
+  float projSpeed;
+
+  m_bullet.dispatch([&] (
+    components::Speed &bSpeed
+  ) {
+    projSpeed = bSpeed.value;
+  });
+
+  m_target->dispatch([&] (
+    // arguements
+    components::Body &tBody, 
+    components::Speed &tSpeed, 
+    components::Direction &tDirection
+  ) {
+    // body
+    /**
+     * future: predict m_target position after optimal shoot time
+     * 
+     * now: look at m_target
+    */
+#pragma region init
+    float a = 0., b = 0., c = 0., D = 0., t1 = 0., t2 = 0., actual_time = 0.;
+    float targetAngle = tDirection.value;
+    float targetConstantSpeed = tSpeed.value;
+    float targetVelocityX = cos(targetAngle) * targetConstantSpeed;
+    float targetVelocityY = sin(targetAngle) * targetConstantSpeed;
+    float targetStartX = tBody.x;
+    float targetStartY = tBody.y;
+    float cannonX = body.x;
+    float cannonY = body.y;
+#pragma endregion init
+    // ax^2 + bx + c = 0
+    // x is time
+#pragma region equasion
+    a = pow(targetVelocityX, 2) + pow(targetVelocityY, 2) - pow(projSpeed, 2);
+    b = 2 * (
+          targetVelocityX * (targetStartX - cannonX)
+        + targetVelocityY * (targetStartY - cannonY)
+            );
+    c = pow(targetStartX - cannonX, 2) + pow(targetStartY - cannonY, 2);
+    D = pow(b, 2) - 4*a*c;
+#pragma endregion equasion
+
+    if (D < 0) return;
+    t1 = (-b + sqrt(D))/(2*a);
+    t2 = (-b - sqrt(D))/(2*a);
+
+    actual_time = std::min(t1, t2);
+    if (0. > t1) actual_time = t2;
+    if (0. > t2) actual_time = t1;
+    if (actual_time < 0) return;
+    
+#ifdef NDEBUG
+    this->predX = targetStartX - (targetVelocityX * actual_time);
+    this->predY = targetStartY - (targetVelocityY * actual_time);
+#else
+    float predX = targetStartX - (targetVelocityX * actual_time);
+    float predY = targetStartY - (targetVelocityY * actual_time);
+#endif
+
+    float deltaX = this->getPosition().x - predX;
+    float deltaY = this->getPosition().y - predY;
+
+    direction = atan2(deltaY, deltaX);
+  });
+}
+
 void Tourel::locateTarget() {
   auto &parent = SceneManager::Back();
   auto tourelPos = this->getPosition();
@@ -81,32 +152,9 @@ void Tourel::update(double deltaTime) {
   if (!m_target) 
     return;
 
-
   
-
-  float &direction = m_directionAngle.value;
-  Rectangle &body = m_body;
-
+  predictTargetPosition();
   
-  m_target->dispatch([&] (
-    // arguements
-    components::Body &tBody, 
-    components::Speed &tSpeed, 
-    components::Direction &tDirection
-  ) {
-    // body
-    /**
-     * future: predict m_target position after optimal shoot time
-     * 
-     * now: look at m_target
-    */
-    direction = atan2(
-      body.y - tBody.y,
-      body.x - tBody.x
-    );
-  });
-
-
   shoot();
 }
 
@@ -126,6 +174,9 @@ void Tourel::draw() {
     (direction - M_PI*0.5)/M_PI*180, // rotation
     m_color // color
   ); 
+#ifdef NDEBUG
+  DrawRectangleRec({(predX) * scale, (predY) * scale, m_body.width * scale, m_body.height * scale}, PINK);
+#endif
 }
 
 OBJECT_OVERRIDE_COMPONENT_CPP(Tourel, Body, m_body)

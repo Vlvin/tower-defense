@@ -10,7 +10,8 @@ public:
   virtual void update(double deltaTime) override;
   virtual void draw() override;
 protected:
-  void shoot();
+  inline void shoot();
+  inline void predictTargetPosition();
   void locateTarget();
   Vector2 getPosition();
 
@@ -18,6 +19,9 @@ protected:
   OBJECT_OVERRIDE_COMPONENT_H(Direction)
 protected:
   float m_rangeOfAction;
+#ifdef NDEBUG
+  float predX, predY;
+#endif
   std::shared_ptr<IGameObject> m_target;
 
   components::Body m_body;

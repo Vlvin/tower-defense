@@ -24,6 +24,10 @@ Creep::Creep(Rectangle body, std::vector<Vector2> path)
   m_speed = {2.5f};
   
   m_path = path;
+  for (auto & node : m_path) {
+    node.x += 0.5f;
+    node.y += 0.5f;
+  }
   m_pathIterator = 0;
   m_healthPoints = {10};
   m_color = m_persistent = WHITE;
@@ -72,7 +76,7 @@ void Creep::update(double deltaTime) {
   }
   if (m_isDead) return;
 
-  if (CT::vec2Compare(getPosition(), m_path[m_pathIterator]))
+  if (CT::vec2Compare(getPosition(), m_path[m_pathIterator], 0.9f))
     m_pathIterator++;
 
   float &direction = m_direction.value;
@@ -107,7 +111,7 @@ void Creep::draw() {
   (
     s_texture, // texture
     {0.f, 0.f, texWidth, texHeight}, // src
-    {(m_body.x + 0.5f) * scale, (m_body.y + 0.5f) * scale, m_body.width * scale, m_body.height * scale}, // dest
+    {(m_body.x) * scale, (m_body.y) * scale, m_body.width * scale, m_body.height * scale}, // dest
     {m_body.width * 0.5f * scale, m_body.height * 0.5f * scale}, // origin
     (direction - M_PI*0.5)/M_PI*180, // rotation
     m_color // color

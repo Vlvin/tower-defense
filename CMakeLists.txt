@@ -33,9 +33,9 @@ set(SOURCES
   ${SRC}/Map.cpp
   ${SRC}/ColorTools.cpp
   ${SRC}/Creep.cpp
+  ${SRC}/Bullet.cpp
   ${SRC}/PathNode.cpp
   ${SRC}/Tourel.cpp
-  ${SRC}/Bullet.cpp
 
 )
 
