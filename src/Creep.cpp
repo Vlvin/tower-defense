@@ -107,15 +107,18 @@ void Creep::draw() {
   float &direction = m_direction.value;
   float texWidth = s_texture.width;
   float texHeight = s_texture.height;
-  DrawTexturePro
-  (
+  DrawTexturePro(
     s_texture, // texture
     {0.f, 0.f, texWidth, texHeight}, // src
     {(m_body.x) * scale, (m_body.y) * scale, m_body.width * scale, m_body.height * scale}, // dest
     {m_body.width * 0.5f * scale, m_body.height * 0.5f * scale}, // origin
     (direction - M_PI*0.5)/M_PI*180, // rotation
     m_color // color
-    ); 
+  ); 
+  // DrawRectangleRec(
+  //   {(m_body.x) * scale, (m_body.y) * scale, m_body.width * scale, m_body.height * scale}, // dest
+  //   m_color // color
+  // ); 
 }
 
 Vector2 Creep::getPosition()

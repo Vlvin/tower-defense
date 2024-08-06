@@ -49,14 +49,15 @@ void Bullet::update(double deltaTime) {
   // check collision
   auto &parent = SceneManager::Back();
   auto &bullet = m_body;
+
   for (auto &object : parent) {
     bool colliding = false;
     object->dispatch([&] (components::EnemyTag&, components::Body& body) {
-      DLOG("Enemy");
-      if (CT::boxCollision(body, bullet, 1.f)) {
-        colliding = true;
-        DLOG("Collision");
-      }
+      DLOG("Enemy Info:");
+      
+      DLOG("  Collision:")
+      colliding = CT::boxCollision(bullet, body, 1.f);
+      DLOG_IF(colliding, "    Detected", "    Undetected");
     });
     if (colliding) {
       std::dynamic_pointer_cast<Creep>(object)->hit(1); // damage
@@ -65,8 +66,6 @@ void Bullet::update(double deltaTime) {
       break;
     }
   }
-
-
 }
 
 void Bullet::draw() {
@@ -82,11 +81,19 @@ void Bullet::draw() {
   (
     s_texture, // texture
     {0.f, 0.f, texWidth, texHeight}, // src
-    {(m_body.x + 0.5f) * scale, (m_body.y + 0.5f) * scale, m_body.width * scale, m_body.height * scale}, // dest
+    {(m_body.x) * scale, (m_body.y) * scale, m_body.width * scale, m_body.height * scale}, // dest
     {m_body.width * 0.5f * scale, m_body.height * 0.5f * scale}, // origin
     (direction - M_PI*0.5)/M_PI*180, // rotation
     m_color // color
   ); 
+
+  #ifdef NDEBUG
+    DrawRectangleRec(
+      {(m_body.x) * scale, (m_body.y) * scale, m_body.width * scale, m_body.height * scale}, // dest
+      WHITE
+    );
+  #endif
+
 }
 
 

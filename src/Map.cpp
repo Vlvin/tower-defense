@@ -3,6 +3,7 @@
 #include <Creep.hpp>
 #include <SceneManager.hpp>
 #include <PathNode.hpp>
+#include <Tiler.hpp>
 
 #include <string>
 #include <map>
@@ -90,6 +91,7 @@ std::shared_ptr<Map> Map::loadFromFile(const char *filename)
 Map::Map(std::vector<Color> &data, uint width, uint height) 
   : IGameObject(MAP_DRAW_LAYER)
 {
+  m_tiler = nullptr;
   m_lastSpawned = GetTime() - 99;
   m_tiler = nullptr;
   m_width = width;
@@ -148,9 +150,16 @@ Map::Map(std::vector<Color> &data, uint width, uint height)
   }
 }
 
+
+void Map::attachTiler(std::shared_ptr<Tiler> tiler) {
+  m_tiler = tiler;
+}
+
+
 void Map::update(double deltaTime) {
   spawnCreeps();
 }
+
 void Map::draw() {
   Vector2 winSize = (Vector2)
   {
@@ -163,6 +172,8 @@ void Map::draw() {
     {
       DrawRectangle(j*scale, i*scale, scale, scale, m_data[i*m_width+j].color);
     }
+  if (m_tiler)
+    m_tiler->drawMap(*this);
 }
 
 void Map::spawnCreeps() {
@@ -195,4 +206,12 @@ Vector2 Map::getSize() {
           (float)m_width,
           (float)m_height
         };
+}
+
+std::vector<MapUnit>::iterator Map::begin() {
+  return m_data.begin();
+}
+
+std::vector<MapUnit>::iterator Map::end() {
+  return m_data.end();
 }

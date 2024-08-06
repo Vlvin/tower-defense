@@ -18,6 +18,7 @@ protected:
   OBJECT_OVERRIDE_COMPONENT_H(Body)
   OBJECT_OVERRIDE_COMPONENT_H(Direction)
 protected:
+  float m_shootFreq, m_lastShot;
   float m_rangeOfAction;
 #ifdef NDEBUG
   float predX, predY;

@@ -1,16 +1,30 @@
 #pragma once
 
-// assert
+
 #ifdef NDEBUG
-  #define DASSERT(expr) static_assert(expr);
-#else
-  #define DASSERT(expr)
 #endif
 
-// log
+#ifdef NDEBUG
+#else
+#endif
+
 #ifdef NDEBUG
   #include <iostream>
-  #define DLOG(expr) std::cout << expr << '\n';
+// assert
+  #define DASSERT(expr) static_assert(expr);
+
+// log  
+  #define DLOG(message) std::cout << message << '\n';
+
+// conditional log
+  // if expr then DLOG(True) else DLOG(False)
+  #define DLOG_IF(expr, True, False) DLOG((expr ? True : False))
 #else
-  #define DLOG(expr)
+  #define DASSERT(expr)
+  #define DLOG(message)
+  #define DLOG_IF(expr, True, False)
+#endif
+
+#ifdef NDEBUG
+#else
 #endif

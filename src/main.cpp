@@ -2,6 +2,7 @@
 #include <Scene.hpp>
 #include <Button.hpp>
 #include <Tourel.hpp>
+#include <Tiler.hpp>
 #include <Map.hpp>
 #include <iostream>
 #include <unistd.h>
@@ -17,8 +18,10 @@ int main(int argc, char** argv) {
   auto loadLevel = [&]() {
     Scene settings;
     auto map = Map::loadFromFile("level/demo/map.ppm");
+    auto tiler = std::make_shared<Tiler>("assets/tilemap-32.png");
+    map->attachTiler(tiler);
     auto shooter = std::make_shared<Tourel>(
-      (Rectangle){15.f, 12.f, 1.f, 1.f},
+      (Rectangle){10.f, 10.f, 1.f, 1.f},
       4.f,
       Bullet({1.f, 1.f, .1f, .1f}, 0.f)
     );
@@ -47,6 +50,7 @@ int main(int argc, char** argv) {
 
   InitWindow(640, 480, "Test");
 
+
   while(!WindowShouldClose()) 
   {
     // SceneManager::Update(delta) Is allowed to close window
@@ -55,13 +59,14 @@ int main(int argc, char** argv) {
       SceneManager::Draw();
     EndDrawing();
 
+
     delta = (GetTime() - time) * 1000;
     
     time = GetTime();
+
     if (desDelta > delta)
-    {
       usleep((desDelta - delta) * 1000);
-    }
+
     SceneManager::Update(delta);
   }
 }

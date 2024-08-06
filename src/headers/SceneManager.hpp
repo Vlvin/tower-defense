@@ -10,7 +10,7 @@ public:
 
   static SceneManager& Get();
 
-  static void PushScene(Scene scene); // retranslator
+  static void PushScene(Scene &scene); // retranslator
   static void PopScene(); // retranslator
   static void Update(double deltaTime); // retranslator
   static void Draw(); // retranslator
@@ -19,18 +19,12 @@ public:
   SceneManager(SceneManager&) = delete;
   SceneManager &operator=(SceneManager&) = delete;
 private:
-  void internPushScene(Scene scene);
+  void internPushScene(Scene &scene);
   void internPopScene();
   void internUpdate(double deltaTime);
   void internDraw();
   Scene &internBack();
 
   std::vector<Scene> m_scenes; // stack of scenes
-  /**
-   * PushScene
-   * PopScene
-   * Update
-   * Draw
-  */
   SceneManager();
 };

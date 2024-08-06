@@ -36,6 +36,7 @@ set(SOURCES
   ${SRC}/Bullet.cpp
   ${SRC}/PathNode.cpp
   ${SRC}/Tourel.cpp
+  ${SRC}/Tiler.cpp
 
 )
 

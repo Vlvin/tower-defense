@@ -34,6 +34,9 @@ public:
 
   virtual void update(double deltaTime);
   virtual void draw();
+
+  std::vector<MapUnit>::iterator begin();
+  std::vector<MapUnit>::iterator end();
 protected:
   void spawnCreeps();
 protected:

@@ -1,6 +1,5 @@
 #include <SceneManager.hpp>
 #include <iostream>
-
 #include <Scene.hpp>
 
 
@@ -10,25 +9,28 @@ SceneManager& SceneManager::Get() {
   return s_instance;
 }
 
-void SceneManager::PushScene(Scene scene) {
+void SceneManager::PushScene(Scene &scene) {
   return Get().internPushScene(scene);
 }
+
 void SceneManager::PopScene() {
   return Get().internPopScene();
 }
+
 void SceneManager::Update(double deltaTime) {
   return Get().internUpdate(deltaTime);
 }
+
 void SceneManager::Draw() {
   return Get().internDraw();
 }
+
 Scene &SceneManager::Back() {
   return Get().internBack();
 }
 
-void SceneManager::internPushScene(Scene scene) {
+void SceneManager::internPushScene(Scene &scene) {
   m_scenes.push_back(scene);
-
 }
 
 void SceneManager::internPopScene() {
@@ -37,7 +39,6 @@ void SceneManager::internPopScene() {
   m_scenes.pop_back();
   if (m_scenes.empty()) CloseWindow();
 }
-
 
 void SceneManager::internUpdate(double deltaTime) {
   if (m_scenes.empty()) return;

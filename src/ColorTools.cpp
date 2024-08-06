@@ -1,6 +1,7 @@
 #include <ColorTools.hpp>
 #include <iostream>
 #include <cmath>
+#include <Debug.h>
 
 
 
@@ -41,19 +42,19 @@
 }
 
  bool CT::boxCollision(Rectangle a, Rectangle b, float precition) {
-    int ax = round(a.x*precition), 
-        ay = round(a.y*precition), 
-        aw = round(a.width*precition), 
-        ah = round(a.height*precition);
-    int bx = round(b.x*precition), 
-        by = round(b.y*precition), 
-        bw = round(b.width*precition), 
-        bh = round(b.height*precition);
+    int ax = ceil(a.x*precition),
+        ay = ceil(a.y*precition),
+        aw = ceil(a.width*precition),
+        ah = ceil(a.height*precition);
+    int bx = ceil(b.x*precition),
+        by = ceil(b.y*precition),
+        bw = ceil(b.width*precition),
+        bh = ceil(b.height*precition);
     return (
 
-        (ax < bx + bw) &&
-        (ax + aw > bx) &&
-        (ay < by + bh) &&
-        (ay + ah > by)
+        (ax < (bx + bw)) &&
+        ((ax + aw) > bx) &&
+        (ay < (by + bh)) &&
+        ((ay + ah) > by)
     );
 }
