@@ -4,6 +4,7 @@
 #include <SceneManager.hpp>
 #include <PathNode.hpp>
 #include <Tiler.hpp>
+#include <Game.hpp>
 
 #include <string>
 #include <map>
@@ -193,10 +194,11 @@ void Map::spawnCreeps() {
     (Rectangle){ position.x, position.y, 1.f, 1.f },
     PathNode(getUnit(int(position.x), int(position.y))).findPath(this, goal)
   );
-  SceneManager::Back().pushObject(creep);
+  Game::GetSceneManager().Back().pushObject(creep);
 }
 
 MapUnit Map::getUnit(uint x, uint y) {
+
   return m_data.at(x+y*m_width);
 }
 

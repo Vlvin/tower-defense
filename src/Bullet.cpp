@@ -2,6 +2,7 @@
 #include <SceneManager.hpp>
 #include <ColorTools.hpp>
 #include <Creep.hpp>
+#include <Game.hpp>
 
 Texture Bullet::s_texture = {
   0,
@@ -47,7 +48,7 @@ void Bullet::update(double deltaTime) {
 
 
   // check collision
-  auto &parent = SceneManager::Back();
+  auto &parent = Game::GetSceneManager().Back();
   auto &bullet = m_body;
 
   for (auto &object : parent) {

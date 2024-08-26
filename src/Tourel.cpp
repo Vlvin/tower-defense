@@ -1,6 +1,7 @@
 #include <Tourel.hpp>
 #include <SceneManager.hpp>
 #include <ColorTools.hpp>
+#include <Game.hpp>
 #include <cmath>
 
 Texture Tourel::s_texture = {
@@ -50,7 +51,7 @@ void Tourel::shoot() {
   if ((GetTime() - m_lastShot) < m_shootFreq)
     return;
 
-  auto &parent = SceneManager::Back();
+  auto &parent = Game::GetSceneManager().Back();
   auto &tourelDir = m_directionAngle.value;
   // summon new bullet which moves to target with m_bullet speed and body
   m_bullet.dispatch(
@@ -143,7 +144,7 @@ void Tourel::predictTargetPosition() {float &direction = m_directionAngle.value;
 }
 
 void Tourel::locateTarget() {
-  auto &parent = SceneManager::Back();
+  auto &parent = Game::GetSceneManager().Back();
   auto tourelPos = this->getPosition();
   float radius = this->m_rangeOfAction;
   m_target = nullptr;

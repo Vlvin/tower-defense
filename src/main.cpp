@@ -1,5 +1,6 @@
 #include <SceneManager.hpp>
 #include <Scene.hpp>
+#include <Game.hpp>
 #include <Button.hpp>
 #include <Tourel.hpp>
 #include <Tiler.hpp>
@@ -8,10 +9,12 @@
 #include <unistd.h>
 
 int main(int argc, char** argv) {
+
+  Game::Init();
   // Buttons
   auto quitScene = std::make_shared<Button>(
     (Rectangle){25., 25., 25., 25.},
-    SceneManager::PopScene,
+    [] {Game::GetSceneManager().PopScene();},
     RED 
   );
 
@@ -28,7 +31,7 @@ int main(int argc, char** argv) {
     settings.pushObject(quitScene);
     settings.pushObject(map);
     settings.pushObject(shooter);
-    SceneManager::PushScene(settings);
+    Game::GetSceneManager().PushScene(settings);
   };
 
 
@@ -44,29 +47,9 @@ int main(int argc, char** argv) {
   main.pushObject(enterLevel);
 
   
-  SceneManager::PushScene(main);
+  Game::GetSceneManager().PushScene(main);
 
-  double delta, time, FPS = 60, desDelta = 1000/FPS;
+  Game::Run();
 
-  InitWindow(640, 480, "Test");
-
-
-  while(!WindowShouldClose()) 
-  {
-    // SceneManager::Update(delta) Is allowed to close window
-    BeginDrawing(); 
-      ClearBackground(BLACK);
-      SceneManager::Draw();
-    EndDrawing();
-
-
-    delta = (GetTime() - time) * 1000;
-    
-    time = GetTime();
-
-    if (desDelta > delta)
-      usleep((desDelta - delta) * 1000);
-
-    SceneManager::Update(delta);
-  }
+  Game::Quit();
 }
