@@ -29,7 +29,7 @@ Creep::Creep(Rectangle body, std::vector<Vector2> path)
     node.y += 0.5f;
   }
   m_pathIterator = 0;
-  m_healthPoints = {10};
+  m_healthPoints = {1000};
   m_color = m_persistent = WHITE;
   
   
@@ -58,9 +58,9 @@ void Creep::hit(uint damage) {
 }
 
 void Creep::update(double deltaTime) {
-  if (m_healthPoints.value <= 0) m_isDead = true;
-  if (m_pathIterator >= m_path.size())
-  {
+  if (m_healthPoints.value <= 0) 
+    m_isDead = true;
+  if (m_pathIterator >= m_path.size()) {
     /**
      * Hit the player
      * if once then 
@@ -70,23 +70,40 @@ void Creep::update(double deltaTime) {
      * 
      * but since we have no player yet
     */
-
-
     m_isDead = true;
   }
   if (m_isDead) return;
-
-  if (CT::vec2Compare(getPosition(), m_path[m_pathIterator], 0.9f))
-    m_pathIterator++;
-
+  
+  
   float &direction = m_direction.value;
   float &speed = m_speed.value;
-  direction =
-    atan2
-    (
-      getPosition().y - m_path[m_pathIterator].y,
-      getPosition().x - m_path[m_pathIterator].x
-    );
+
+  Vector2 &currentPoint = m_path[m_pathIterator];
+
+  if (CT::vec2Compare(getPosition(), currentPoint, 0.9f)) {
+    m_pathIterator++;
+  }    
+  direction = atan2(
+        getPosition().y - currentPoint.y,
+        getPosition().x - currentPoint.x
+      );
+
+  float distance = CT::vec2Length({
+    getPosition().y - currentPoint.y,
+    getPosition().x - currentPoint.x
+  });
+
+  float stepDistance = CT::vec2Length({
+    (float)sin(direction) * speed * (float)deltaTime * 0.001f,
+    (float)cos(direction) * speed * (float)deltaTime * 0.001f
+  });
+
+  if (distance <= stepDistance) {
+    m_body.x = currentPoint.x;
+    m_body.y = currentPoint.y;
+    
+    return;
+  }
 
   // look at how clean it becomes, 
   // no more 
