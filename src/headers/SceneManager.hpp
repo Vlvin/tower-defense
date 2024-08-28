@@ -10,7 +10,7 @@ public:
 
   void PushScene(Scene &scene);
   void PopScene(); 
-  void Update(double deltaTime);
+  bool Update(double deltaTime);
   void Draw();
   Scene &Back();
 private:

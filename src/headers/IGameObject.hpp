@@ -8,7 +8,6 @@
 #include <Node.hpp>
 #include <Components.hpp>
 
-
 class IGameObject {
 public:
 

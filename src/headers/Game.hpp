@@ -1,5 +1,7 @@
+#include <memory>
+
 #include <SceneManager.hpp>
-#include <MyCamera.hpp>
+#include <CameraObject.hpp>
 #include <Player.hpp>
 
 /**
@@ -8,34 +10,30 @@
  * or Singleton
  ```
  ```
- * So I introduce you Game Singleton, 
+ * So I introduce you Game Singleton, (which is not exaclty GoF Singleton)
  * which stores all things that I want to keep in "global access",
  * But want to be able to restart game on every moment
- ```
- ```
- * Here you have 3 instance related methods instead of 1
- ```
- Game::Init() 
- ``` 
- * is used to create new instance, 
- * you can call it before Init or after Shutdown
- ```
- Game::Shutdown() 
- ``` 
- * is used to remove old instance and reset state of Game, 
- * you can call it only after Init
- ```
- Game::Instance() 
- ``` 
- * is used to get instance, 
- * you can call it after Init and before Shutdown
+ * So here you have 3 instance related methods instead of 1
 */
 class Game {
 public:
+  /**
+   * Instance() is used to get instance, 
+   * you can call it after Init and before Shutdown
+  */
   static Game& Instance();
+  /**
+   * Init() is used to create new instance, 
+   * you can call it before Init or after Shutdown
+  */
   static void Init();
-  static void Run();
+  /**
+   * Quit() is used to remove old instance of Game, 
+   * you can call it only after Init
+  */
   static void Quit();
+
+  static void Run();
 
   static SceneManager &GetSceneManager();
   static Player &GetPlayer();
@@ -45,12 +43,13 @@ public:
   Game operator=(Game&) = delete;
 protected:
   Game();
-
   void internRun();
   
-private:
-  inline static Game *s_instance = nullptr;
+protected:
   SceneManager m_sceneManager;
   Player m_player;
   CameraObject m_camera;
+  
+private:
+  inline static std::shared_ptr<Game> s_instance = nullptr;
 };

@@ -14,14 +14,18 @@ void SceneManager::PopScene() {
     CloseWindow();
 }
 
-void SceneManager::Update(double deltaTime) {
-  if (m_scenes.empty()) return;
+bool SceneManager::Update(double deltaTime) {
+  if (m_scenes.empty()) return false;
   m_scenes.back().update(deltaTime);
+  return !m_scenes.empty();
 }
 
 void SceneManager::Draw() {
   if (m_scenes.empty()) return;
-  m_scenes.back().draw();
+  BeginDrawing(); 
+    ClearBackground(BLACK);
+    m_scenes.back().draw();
+  EndDrawing();
 }
 
 Scene &SceneManager::Back() {

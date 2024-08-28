@@ -27,6 +27,7 @@ set(LIB_NAMES
 
 set(SOURCES 
   ${SRC}/SceneManager.cpp
+  ${SRC}/CameraObject.cpp
   ${SRC}/Game.cpp
   ${SRC}/Node.cpp
   ${SRC}/Scene.cpp

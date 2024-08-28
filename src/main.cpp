@@ -5,6 +5,7 @@
 #include <Tourel.hpp>
 #include <Tiler.hpp>
 #include <Map.hpp>
+
 #include <iostream>
 #include <unistd.h>
 
@@ -26,7 +27,7 @@ int main(int argc, char** argv) {
     auto shooter = std::make_shared<Tourel>(
       (Rectangle){10.f, 10.f, 1.f, 1.f},
       4.f,
-      Bullet({1.f, 1.f, .1f, .1f}, 0.f)
+      Bullet({1.f, 1.f, .5f, .5f}, 0.f)
     );
     settings.pushObject(quitScene);
     settings.pushObject(map);

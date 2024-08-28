@@ -188,18 +188,28 @@ void Tourel::draw() {
   float texWidth = s_texture.width;
   float texHeight = s_texture.height;
 
-  float scale = 20.f; // rudimentary
+  float &scale = Game::GetCamera().getScale();
+  Vector2 &camPos = Game::GetCamera().getPosition();
+
+  Vector2 drawPos{
+    (m_body.x - camPos.x),
+    (m_body.y - camPos.y)
+  };
   DrawTexturePro
   (
     s_texture, // texture
     {0.f, 0.f, texWidth, texHeight}, // src
-    {(m_body.x + 0.5f) * scale, (m_body.y + 0.5f) * scale, m_body.width * scale, m_body.height * scale}, // dest
+    {(drawPos.x + 0.5f) * scale, (drawPos.y + 0.5f) * scale, m_body.width * scale, m_body.height * scale}, // dest
     {m_body.width * 0.5f * scale, m_body.height * 0.5f * scale}, // origin
     (direction - M_PI*0.5)/M_PI*180, // rotation
     m_color // color
   ); 
-#ifdef NDEBUG
-  DrawRectangleRec({(predX) * scale, (predY) * scale, m_body.width * scale, m_body.height * scale}, PINK);
+#ifdef NDEBUG  
+  drawPos = {
+    (predX - camPos.x),
+    (predY - camPos.y)
+  };
+  DrawRectangleRec({(drawPos.x) * scale, (drawPos.y) * scale, m_body.width * scale, m_body.height * scale}, PINK);
 #endif
 }
 

@@ -16,7 +16,7 @@ Bullet::Bullet(Rectangle body, float direction)
   : IGameObject(BULLET_DRAW_LAYER) 
 {  
   if (!s_texture.width) {
-    auto image = LoadImage("assets/Tourel.png");
+    auto image = LoadImage("assets/Bullet.png");
     s_texture = LoadTextureFromImage(image);
     UnloadImage(image);
   }
@@ -77,18 +77,26 @@ void Bullet::draw() {
   float texWidth = s_texture.width;
   float texHeight = s_texture.height;
 
-  float scale = 20.f; // rudimentary
+  float &scale = Game::GetCamera().getScale();
+  Vector2 &camPos = Game::GetCamera().getPosition();
+
+  Vector2 drawPos{
+    (m_body.x - camPos.x),
+    (m_body.y - camPos.y)
+  };
+
   DrawTexturePro
   (
     s_texture, // texture
     {0.f, 0.f, texWidth, texHeight}, // src
-    {(m_body.x) * scale, (m_body.y) * scale, m_body.width * scale, m_body.height * scale}, // dest
+    {drawPos.x * scale, drawPos.y * scale, m_body.width * scale, m_body.height * scale}, // dest
     {m_body.width * 0.5f * scale, m_body.height * 0.5f * scale}, // origin
     (direction - M_PI*0.5)/M_PI*180, // rotation
     m_color // color
   ); 
 
-  #ifdef NDEBUG
+
+  #ifdef _NDEBUG
     DrawRectangleRec(
       {(m_body.x) * scale, (m_body.y) * scale, m_body.width * scale, m_body.height * scale}, // dest
       WHITE

@@ -1,19 +1,19 @@
 #include <Game.hpp>
-#include <cassert>
 #include <unistd.h>
+#include <Debug.h>
 
 Game& Game::Instance() {
   // call only after Init
-  assert(s_instance);
+  DASSERT(s_instance.get());
 
   return *s_instance;
 }
 
 void Game::Init() {
   // call only before Init or after Shutdown
-  assert(s_instance == nullptr);
+  DASSERT(s_instance.get() == nullptr);
 
-  s_instance = new Game();
+  s_instance = std::shared_ptr<Game>(new Game());
 }
 
 void Game::Run() {
@@ -22,50 +22,53 @@ void Game::Run() {
 
 void Game::Quit() {
   // call only after Init
-  assert(s_instance);
-
-  delete s_instance;
-  s_instance = nullptr;
+  DASSERT(s_instance.get());
+  
+  s_instance = {nullptr};
 }
 
 
 SceneManager &Game::GetSceneManager() {
- return Instance().m_sceneManager;
+  return Instance().m_sceneManager;
 }
 
 Player &Game::GetPlayer() {
- return Instance().m_player;
+  return Instance().m_player;
 }
 
 CameraObject &Game::GetCamera() {
- return Instance().m_camera;
+  return Instance().m_camera;
 }
 
 void Game::internRun() {
   double delta, time, FPS = 60, desDelta = 1000/FPS;
 
-  InitWindow(640, 480, "Test");
 
+  InitWindow(640, 480, "Test");
+  // raylib setub must go after InitWindow
+  SetExitKey(KEY_NULL);
 
   while(!WindowShouldClose()) 
   {
-    // SceneManager::Update(delta) Is allowed to close window
-    BeginDrawing(); 
-      ClearBackground(BLACK);
-      m_sceneManager.Draw();  
-    EndDrawing();
 
-    delta = (GetTime() - time) * 1000;
+    #pragma region UPDATE
+    m_camera.update(delta);
+    if (!m_sceneManager.Update(delta))
+      break;
+    #pragma endregion UPDATE
     
+    m_sceneManager.Draw();  
+    
+    #pragma region TIME
+    delta = (GetTime() - time) * 1000;    
     time = GetTime();
-
     if (desDelta > delta)
       usleep((desDelta - delta) * 1000);
-
-    m_sceneManager.Update(delta);
+    #pragma endregion TIME
   }
 }
 
-Game::Game() {
+Game::Game() 
+ : m_camera(.01f, .01f) {
 
 }

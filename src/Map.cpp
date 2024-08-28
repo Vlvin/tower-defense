@@ -167,11 +167,13 @@ void Map::draw() {
     (float)GetScreenWidth(),
     (float)GetScreenHeight()
   };
-  uint scale = 20;
+  float &scale = Game::GetCamera().getScale();
+  Vector2 &camPos = Game::GetCamera().getPosition();
+
   for (int i = 0; i < m_height; i++)
     for (int j = 0; j < m_width; j++)
     {
-      DrawRectangle(j*scale, i*scale, scale, scale, m_data[i*m_width+j].color);
+      DrawRectangle((j-camPos.x)*scale, (i-camPos.y)*scale, scale, scale, m_data[i*m_width+j].color);
     }
   if (m_tiler)
     m_tiler->drawMap(*this);

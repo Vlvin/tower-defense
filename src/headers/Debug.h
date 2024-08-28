@@ -10,8 +10,9 @@
 
 #ifdef NDEBUG
   #include <iostream>
+  #include <cassert>
 // assert
-  #define DASSERT(expr) static_assert(expr);
+  #define DASSERT(expr) assert(expr);
 
 // log  
   #define DLOG(message) std::cout << message << '\n';

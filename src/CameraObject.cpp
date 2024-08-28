@@ -1,0 +1,50 @@
+#include <CameraObject.hpp>
+#include <cmath>
+#include <Debug.h>
+
+void CameraObject::update(double deltaTime) {
+  _handleInput(deltaTime);
+  _applyRestrictions();
+
+  DLOG("Camera Position: " << m_camera.target.x << ":" << m_camera.target.y);
+  DLOG("Camera Zoom: " << m_camera.zoom);
+}
+
+void CameraObject::_handleInput(double deltaTime) {
+  if (IsKeyDown(KEY_W))
+    m_camera.target.y -= m_movementSpeed.value * deltaTime;
+  if (IsKeyDown(KEY_S))
+    m_camera.target.y += m_movementSpeed.value * deltaTime;
+  if (IsKeyDown(KEY_A))
+    m_camera.target.x -= m_movementSpeed.value * deltaTime;
+  if (IsKeyDown(KEY_D))
+    m_camera.target.x += m_movementSpeed.value * deltaTime;
+  
+  if (IsKeyDown(KEY_C))
+    m_camera.zoom += m_movementSpeed.value * deltaTime;
+  if (IsKeyDown(KEY_F))
+    m_camera.zoom -= m_movementSpeed.value * deltaTime;
+
+
+}
+
+
+void CameraObject::_applyRestrictions() {
+  m_camera.zoom = std::max(1.f, std::min(m_camera.zoom, 30.f));
+}
+
+CameraObject::CameraObject(float movementSpeed, float scalingSpeed) {
+  m_camera = { 0 };
+  m_camera.target = {2.f, 2.f};
+  m_camera.zoom = 10.f;
+  m_movementSpeed = { movementSpeed };
+  m_scalingSpeed = { scalingSpeed };
+}
+
+Vector2 &CameraObject::getPosition() {
+  return m_camera.target;
+}
+
+float &CameraObject::getScale() {
+  return m_camera.zoom;
+}

@@ -2,6 +2,7 @@
 #include <type_traits>
 #include <tuple>
 #include <raylib.h>
+#include <sys/types.h>
 
 /**
  * REPTILE
