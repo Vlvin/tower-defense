@@ -19,8 +19,11 @@ int main(int argc, char** argv) {
     RED 
   );
 
+  Game::Quit();
+  Game::Init();
+
   auto loadLevel = [&]() {
-    Scene settings;
+    Scene level;
     auto map = Map::loadFromFile("level/demo/map.ppm");
     auto tiler = std::make_shared<Tiler>("assets/tilemap-32.png");
     map->attachTiler(tiler);
@@ -29,10 +32,10 @@ int main(int argc, char** argv) {
       4.f,
       Bullet({1.f, 1.f, .5f, .5f}, 0.f)
     );
-    settings.pushObject(quitScene);
-    settings.pushObject(map);
-    settings.pushObject(shooter);
-    Game::GetSceneManager().PushScene(settings);
+    level.pushObject(quitScene);
+    level.pushObject(map);
+    level.pushObject(shooter);
+    Game::GetSceneManager().PushScene(level);
   };
 
 

@@ -5,9 +5,6 @@
 void CameraObject::update(double deltaTime) {
   _handleInput(deltaTime);
   _applyRestrictions();
-
-  DLOG("Camera Position: " << m_camera.target.x << ":" << m_camera.target.y);
-  DLOG("Camera Zoom: " << m_camera.zoom);
 }
 
 void CameraObject::_handleInput(double deltaTime) {
