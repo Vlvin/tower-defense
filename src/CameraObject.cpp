@@ -2,6 +2,9 @@
 #include <cmath>
 #include <Debug.h>
 
+
+
+
 void CameraObject::update(double deltaTime) {
   _handleInput(deltaTime);
   _applyRestrictions();
@@ -21,13 +24,11 @@ void CameraObject::_handleInput(double deltaTime) {
     m_camera.zoom += m_movementSpeed.value * deltaTime;
   if (IsKeyDown(KEY_F))
     m_camera.zoom -= m_movementSpeed.value * deltaTime;
-
-
 }
 
 
 void CameraObject::_applyRestrictions() {
-  m_camera.zoom = std::max(1.f, std::min(m_camera.zoom, 30.f));
+  m_camera.zoom = std::max(MIN_ZOOM, std::min(m_camera.zoom, MAX_ZOOM));
 }
 
 CameraObject::CameraObject(float movementSpeed, float scalingSpeed) {
@@ -45,3 +46,5 @@ Vector2 &CameraObject::getPosition() {
 float &CameraObject::getScale() {
   return m_camera.zoom;
 }
+
+

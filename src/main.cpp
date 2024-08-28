@@ -19,9 +19,6 @@ int main(int argc, char** argv) {
     RED 
   );
 
-  Game::Quit();
-  Game::Init();
-
   auto loadLevel = [&]() {
     Scene level;
     auto map = Map::loadFromFile("level/demo/map.ppm");
