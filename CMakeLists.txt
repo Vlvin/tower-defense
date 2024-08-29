@@ -9,7 +9,11 @@ FetchContent_Declare(
   GIT_TAG        main
 )
 FetchContent_MakeAvailable(googletest)
-
+set(BUILD_GMOCK OFF CACHE BOOL "" FORCE)
+set(BUILD_GTEST ON CACHE BOOL "" FORCE)
+#googletest_POPULATED
+#googletest_SOURCE_DIR
+#googletest_BUILD_DIR
 
 
 set(CXX_STANDARD 23)
@@ -21,16 +25,18 @@ if (${CMAKE_BUILD_TYPE} STREQUAL "Debug")
 endif(${CMAKE_BUILD_TYPE} STREQUAL "Debug")
 set(SRC ${PROJECT_SOURCE_DIR}/src)
 
-set(TEST ${SRC}/tests)
+set(TEST_SOURCES ${PROJECT_SOURCE_DIR}/tests)
+
+set(HEADERS ${PROJECT_SOURCE_DIR}/include)
 
 set(BUILD ${CMAKE_CURRENT_BINARY_DIR})
 
 set(LIBS ${PROJECT_SOURCE_DIR}/libs)
 
 set(INCLUDE
-  ${SRC}/headers
+  ${HEADERS}
   ${LIBS}/raylib-master/src
-  ${LIBS}/googletest/googletest/include
+  ${googletest_SOURCE_DIR}/GTest::
 )
 
 set(LIB_NAMES
@@ -55,7 +61,7 @@ set(SOURCES
 )
 
 set(TESTS 
-  ${TEST}/CameraObjectTest.cpp
+  ${TEST_SOURCES}/CameraObjectTest.cpp
 )
 
 
@@ -85,7 +91,7 @@ add_custom_target(run_tests
 
 enable_testing()
 
-include(GoogleTest)
+include(GoogleTest) 
 gtest_discover_tests(tests)
 
 
@@ -93,4 +99,19 @@ gtest_discover_tests(tests)
 add_executable(main ${SRC}/main.cpp ${SOURCES})
 target_include_directories(main PUBLIC ${INCLUDE})
 target_link_libraries(main ${LIB_NAMES})
+
+# copy exec
+
+add_custom_command(
+        TARGET main POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy
+                ${BUILD}/main
+                ${CMAKE_CURRENT_SOURCE_DIR}/TowerDefense
+        COMMENT "Running tests: output in ${BUILD}/log.txt")
+add_custom_target(copy_exec 
+  ALL 
+  DEPENDS main
+)
+
+
 
