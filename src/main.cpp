@@ -1,20 +1,24 @@
+#include <GameObjects/Scene.hpp>
+#include <GameObjects/Button.hpp>
+#include <GameObjects/Tourel.hpp>
+#include <GameObjects/Map.hpp>
 #include <SceneManager.hpp>
-#include <Scene.hpp>
 #include <Game.hpp>
-#include <Button.hpp>
-#include <Tourel.hpp>
 #include <Tiler.hpp>
-#include <Map.hpp>
+#include <InputHandler.hpp>
 
 #include <iostream>
 #include <unistd.h>
 
 int main(int argc, char** argv) {
 
-  Game::Init();
+  InputHandler input;
+  Game::Init(input);
+
   // Buttons
   auto quitScene = std::make_shared<Button>(
     Button {
+      input,
       (Rectangle){25., 25., 25., 25.},
       [] {Game::GetSceneManager().PopScene();}
     },
@@ -40,6 +44,7 @@ int main(int argc, char** argv) {
 
   auto enterLevel = std::make_shared<Button>(
     Button {
+      input,
       (Rectangle){100., 200., 440., 50.},
       loadLevel
     },

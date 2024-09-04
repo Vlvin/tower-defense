@@ -2,6 +2,12 @@
 #include <unistd.h>
 #include <Debug.h>
 
+
+Game::Game(InputHandler& input) 
+  : m_input(input), m_camera(input, .01f, .01f)
+{}
+
+
 Game& Game::Instance() {
   // call only after Init
   DASSERT(s_instance.get());
@@ -9,11 +15,11 @@ Game& Game::Instance() {
   return *s_instance;
 }
 
-void Game::Init() {
+void Game::Init(InputHandler& input) {
   // call only before Init or after Shutdown
   DASSERT(s_instance.get() == nullptr);
 
-  s_instance = std::shared_ptr<Game>(new Game());
+  s_instance = std::shared_ptr<Game>(new Game(input));
 }
 
 void Game::Run() {
@@ -66,9 +72,4 @@ void Game::internRun() {
       usleep((desDelta - delta) * 1000);
     #pragma endregion TIME
   }
-}
-
-Game::Game() 
- : m_camera(.01f, .01f) {
-
 }

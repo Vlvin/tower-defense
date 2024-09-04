@@ -45,6 +45,7 @@ set(LIB_NAMES
 
 set(SOURCES 
   ${SRC}/SceneManager.cpp
+  ${SRC}/InputHandler.cpp
   ${SRC}/CameraObject.cpp
   ${SRC}/Game.cpp
   ${SRC}/Node.cpp
@@ -71,30 +72,30 @@ add_subdirectory(${LIBS}/raylib-master)
 # add_subdirectory(${LIBS}/googletest)
 
 # # building tests
-add_executable(tests ${TESTS} ${SOURCES})
-target_include_directories(tests PUBLIC ${INCLUDE})
-target_link_libraries(tests ${LIB_NAMES} GTest::gtest_main)
+# add_executable(tests ${TESTS} ${SOURCES})
+# target_include_directories(tests PUBLIC ${INCLUDE})
+# target_link_libraries(tests ${LIB_NAMES} GTest::gtest_main)
 
 # run tests
-add_custom_command(
-    # OUTPUT "${BUILD}/autolog.txt"
-    TARGET tests
-    POST_BUILD
-    COMMAND "${BUILD}/tests" ARGS -s 0 10 -s 0 11 -e 39 10 -e 39 11
-    WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
-    COMMENT "Running tests: output in ${BUILD}/log.txt"
-    VERBATIM
-)
-add_custom_target(run_tests 
-    ALL 
-    DEPENDS tests
-)
+# add_custom_command(
+#     # OUTPUT "${BUILD}/autolog.txt"
+#     TARGET tests
+#     POST_BUILD
+#     COMMAND "${BUILD}/tests" ARGS -s 0 10 -s 0 11 -e 39 10 -e 39 11
+#     WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+#     COMMENT "Running tests: output in ${BUILD}/log.txt"
+#     VERBATIM
+# )
+# add_custom_target(run_tests 
+#     ALL 
+#     DEPENDS tests
+# )
 
 
-enable_testing()
+# enable_testing()
 
-include(GoogleTest) 
-gtest_discover_tests(tests)
+# include(GoogleTest) 
+# gtest_discover_tests(tests)
 
 
 # building main

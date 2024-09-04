@@ -1,7 +1,7 @@
 #pragma once
 #include <raylib.h>
 
-#include <Map.hpp>
+#include <GameObjects/Map.hpp>
 
 #include <memory>
 #include <vector>

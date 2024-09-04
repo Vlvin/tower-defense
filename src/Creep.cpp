@@ -1,4 +1,4 @@
-#include <Creep.hpp>
+#include <GameObjects/Creep.hpp>
 #include <ColorTools.hpp>
 #include <PathNode.hpp>
 #include <Game.hpp>

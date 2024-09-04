@@ -1,9 +1,9 @@
-#include <Map.hpp>
+#include <GameObjects/Map.hpp>
+#include <GameObjects/Creep.hpp>
+#include <Tiler.hpp>
 #include <ColorTools.hpp>
-#include <Creep.hpp>
 #include <SceneManager.hpp>
 #include <PathNode.hpp>
-#include <Tiler.hpp>
 #include <Game.hpp>
 
 #include <string>

@@ -1,5 +1,5 @@
+#include <GameObjects/Map.hpp>
 #include <Tiler.hpp>
-#include <Map.hpp>
 
 #include <Game.hpp>
 

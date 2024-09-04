@@ -1,8 +1,8 @@
-#include <Scene.hpp>
-#include <IGameObject.hpp>
+#include <GameObjects/Scene.hpp>
+#include <GameObjects/IGameObject.hpp>
 #include <algorithm>
 
-Scene::Scene() 
+Scene::Scene() // for some unknown reason Scene is coupled to be IGameObject
   : IGameObject(SCENE_DRAW_LAYER)
 {
   m_objects = {};

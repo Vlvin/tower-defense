@@ -1,8 +1,9 @@
+#pragma once
 #include <memory>
 
 #include <SceneManager.hpp>
 #include <CameraObject.hpp>
-#include <Player.hpp>
+#include <GameObjects/Player.hpp>
 
 /**
  * Because there are only two solutions to this problem
@@ -26,7 +27,7 @@ public:
    * Init() is used to create new instance, 
    * you can call it before Init or after Shutdown
   */
-  static void Init();
+  static void Init(InputHandler& input);
   /**
    * Quit() is used to remove old instance of Game, 
    * you can call it only after Init
@@ -42,13 +43,14 @@ public:
   Game(Game&) = delete;
   Game operator=(Game&) = delete;
 protected:
-  Game();
+  Game(InputHandler& input);
   void internRun();
   
 protected:
   SceneManager m_sceneManager;
   Player m_player;
   CameraObject m_camera;
+  InputHandler& m_input;
   
 private:
   inline static std::shared_ptr<Game> s_instance = nullptr;

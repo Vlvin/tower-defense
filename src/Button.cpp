@@ -1,8 +1,9 @@
-#include <Button.hpp>
+#include <GameObjects/Button.hpp>
+#include <InputHandler.hpp>
 
 
-Button::Button(Rectangle body, std::function<void(void)> onClick) 
-  : IGameObject(BUTTON_DRAW_LAYER)
+Button::Button(InputHandler& input, Rectangle body, std::function<void(void)> onClick) 
+  : IGameObject(BUTTON_DRAW_LAYER), input(input)
 {
   m_onClick = onClick;
   m_color = m_persistent = WHITE;
@@ -22,7 +23,8 @@ void Button::setColor(Color color) {
 // IGameObject
 void Button::update(double deltaTime, CameraObject &camera) {
   m_color = m_persistent;
-  if (!getMouseCollision()) return;
+  if (!getMouseCollision()) 
+    return;
 
   // when mouse is in button area
   m_color.r = m_persistent.r - 20;
@@ -30,15 +32,15 @@ void Button::update(double deltaTime, CameraObject &camera) {
   m_color.b = m_persistent.b - 20;
   m_color.a = m_persistent.a - 20;
 
-  if (!IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) return;
+  if (!input.isMouseButtonPressed(MOUSE_BUTTON_LEFT)) 
+    return;
 
   // when mouse is in button area and clicking
   onClick();
-
 }
 
 bool Button::getMouseCollision() {
-  Vector2 mousePos = GetMousePosition();
+  Vector2 mousePos = input.getMousePosition();
   return (
     (
       mousePos.x > (m_body.x) && 

@@ -1,4 +1,4 @@
-#include <Tourel.hpp>
+#include <GameObjects/Tourel.hpp>
 #include <SceneManager.hpp>
 #include <ColorTools.hpp>
 #include <Game.hpp>

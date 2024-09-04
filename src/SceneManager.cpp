@@ -1,6 +1,6 @@
+#include <GameObjects/Scene.hpp>
 #include <SceneManager.hpp>
 #include <iostream>
-#include <Scene.hpp>
 
 void SceneManager::PushScene(Scene &scene) {
   m_scenes.push_back(scene);

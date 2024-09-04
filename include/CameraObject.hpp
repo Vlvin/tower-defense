@@ -1,13 +1,17 @@
+#pragma once
 #include <raylib.h>
 #include <Components.hpp>
 
+class InputHandler;
 
 class CameraObject {
 public:
-  CameraObject(float movementSpeed, float scalingSpeed);
+  CameraObject(InputHandler& input, float movementSpeed, float scalingSpeed);
   void update(double deltaTime);
   Vector2 &getPosition();
   float &getScale();
+public:
+  InputHandler &input;
 protected:
   struct _Camera {
     Vector2 target;
