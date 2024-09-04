@@ -37,7 +37,7 @@ public:
 
   static SceneManager &GetSceneManager();
   static Player &GetPlayer();
-  static CameraObject &GetCamera();
+  // static CameraObject &GetCamera();
 
   Game(Game&) = delete;
   Game operator=(Game&) = delete;

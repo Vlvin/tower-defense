@@ -4,9 +4,9 @@
 class Bullet : public IGameObject {
 public:
   Bullet(Rectangle body, float direction);
-  Bullet(Bullet bullet, Color color);
-  virtual void update(double deltaTime) override;
-  virtual void draw() override;
+  Bullet(Bullet&& bullet, Color color);
+  virtual void update(double deltaTime, CameraObject &camera) override;
+  virtual void draw(CameraObject &camera) override;
 
 protected:
   OBJECT_OVERRIDE_COMPONENT_H(Body)

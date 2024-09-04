@@ -9,8 +9,8 @@ Button::Button(Rectangle body, std::function<void(void)> onClick)
   m_body = body;
 }
 
-Button::Button(Rectangle body, std::function<void(void)> onClick, Color color) 
-  : Button(body, onClick)
+Button::Button(Button&& button, Color color) 
+  : Button(button)
 {
   m_color = m_persistent = color;
 }
@@ -20,7 +20,7 @@ void Button::setColor(Color color) {
 } 
 
 // IGameObject
-void Button::update(double deltaTime) {
+void Button::update(double deltaTime, CameraObject &camera) {
   m_color = m_persistent;
   if (!getMouseCollision()) return;
 
@@ -52,7 +52,7 @@ bool Button::getMouseCollision() {
   );
 }
 
-void Button::draw() {
+void Button::draw(CameraObject &camera) {
   DrawRectangleRec(m_body, m_color);
 }
 

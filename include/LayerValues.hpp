@@ -15,3 +15,6 @@ inline const int BULLET_DRAW_LAYER = CREEP_DRAW_LAYER+1;
 
 // 3 layer
 inline const int BUTTON_DRAW_LAYER = BULLET_DRAW_LAYER + 1;
+
+// 4 layer
+inline const int HUD_DRAW_LAYER = BUTTON_DRAW_LAYER + 1;

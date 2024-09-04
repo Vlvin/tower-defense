@@ -161,7 +161,7 @@ Vector2 Tourel::getPosition() {
   return { m_body.x, m_body.y };
 }
 
-void Tourel::update(double deltaTime) {
+void Tourel::update(double deltaTime, CameraObject& camera) {
   bool tooFarToShoot = false;
   auto tourelPos = this->getPosition();
   float radius = this->m_rangeOfAction;
@@ -182,14 +182,14 @@ void Tourel::update(double deltaTime) {
   shoot();
 }
 
-void Tourel::draw() {
+void Tourel::draw(CameraObject& camera) {
   // predefined sugar
   float &direction = m_directionAngle.value;
   float texWidth = s_texture.width;
   float texHeight = s_texture.height;
 
-  float &scale = Game::GetCamera().getScale();
-  Vector2 &camPos = Game::GetCamera().getPosition();
+  float &scale = camera.getScale();
+  Vector2 &camPos = camera.getPosition();
 
   Vector2 drawPos{
     (m_body.x - camPos.x),

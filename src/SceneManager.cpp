@@ -14,17 +14,17 @@ void SceneManager::PopScene() {
     CloseWindow();
 }
 
-bool SceneManager::Update(double deltaTime) {
+bool SceneManager::Update(double deltaTime, CameraObject& camera) {
   if (m_scenes.empty()) return false;
-  m_scenes.back().update(deltaTime);
+  m_scenes.back().update(deltaTime, camera);
   return !m_scenes.empty();
 }
 
-void SceneManager::Draw() {
+void SceneManager::Draw(CameraObject& camera) {
   if (m_scenes.empty()) return;
   BeginDrawing(); 
     ClearBackground(BLACK);
-    m_scenes.back().draw();
+    m_scenes.back().draw(camera);
   EndDrawing();
 }
 

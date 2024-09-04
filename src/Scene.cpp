@@ -17,11 +17,11 @@ void Scene::clear() {
   m_objects.clear();
 }
 
-void Scene::update(double deltaTime) {
+void Scene::update(double deltaTime, CameraObject& camera) {
   for (size_t i = 0; i < m_objects.size(); i++) {
 
     // update
-    m_objects[i]->update(deltaTime);
+    m_objects[i]->update(deltaTime, camera);
 
     // check if we destroyed this scene by clicking exit button
     if (WindowShouldClose()) return;
@@ -35,7 +35,7 @@ void Scene::update(double deltaTime) {
   } //vector
 }
 
-void Scene::draw() {
+void Scene::draw(CameraObject& camera) {
   std::sort (
     m_objects.begin(),
     m_objects.end(),
@@ -47,7 +47,7 @@ void Scene::draw() {
     }
   );
   for (auto &object : m_objects) {
-    object->draw();
+    object->draw(camera);
   }
 }
 

@@ -14,8 +14,10 @@ int main(int argc, char** argv) {
   Game::Init();
   // Buttons
   auto quitScene = std::make_shared<Button>(
-    (Rectangle){25., 25., 25., 25.},
-    [] {Game::GetSceneManager().PopScene();},
+    Button {
+      (Rectangle){25., 25., 25., 25.},
+      [] {Game::GetSceneManager().PopScene();}
+    },
     RED 
   );
 
@@ -37,8 +39,10 @@ int main(int argc, char** argv) {
 
 
   auto enterLevel = std::make_shared<Button>(
-    (Rectangle){100., 200., 440., 50.},
-    loadLevel,
+    Button {
+      (Rectangle){100., 200., 440., 50.},
+      loadLevel
+    },
     GREEN
   );
 

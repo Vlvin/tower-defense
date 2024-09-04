@@ -10,8 +10,8 @@ public:
   Scene();
   void pushObject(std::shared_ptr<IGameObject> object);
   void clear();
-  virtual void update(double deltaTime) override;
-  virtual void draw() override;
+  virtual void update(double deltaTime, CameraObject& camera) override;
+  virtual void draw(CameraObject& camera) override;
 protected:
   std::vector<std::shared_ptr<IGameObject>> m_objects;
 public:

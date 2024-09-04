@@ -10,8 +10,8 @@ public:
 
   void PushScene(Scene &scene);
   void PopScene(); 
-  bool Update(double deltaTime);
-  void Draw();
+  bool Update(double deltaTime, CameraObject& camera);
+  void Draw(CameraObject& camera);
   Scene &Back();
 private:
 

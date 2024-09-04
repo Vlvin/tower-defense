@@ -42,7 +42,7 @@ Creep::Creep(Rectangle body, std::vector<Vector2> path)
   };
 }
 
-Creep::Creep(const Creep &creep, Color color)
+Creep::Creep(Creep &&creep, Color color)
   : Creep(creep)
 {
   m_color = m_persistent = color;
@@ -58,7 +58,7 @@ void Creep::hit(uint damage) {
   m_healthPoints.value -= damage;
 }
 
-void Creep::update(double deltaTime) {
+void Creep::update(double deltaTime, CameraObject &camera) {
   if (m_healthPoints.value <= 0) 
     m_isDead = true;
   if (m_pathIterator >= m_path.size()) {
@@ -118,7 +118,7 @@ void Creep::update(double deltaTime) {
 
 }
 
-void Creep::draw() {
+void Creep::draw(CameraObject &camera) {
 
 
   float &direction = m_direction.value;
@@ -126,8 +126,8 @@ void Creep::draw() {
   float texHeight = s_texture.height;
 
 
-  float &scale = Game::GetCamera().getScale();
-  Vector2 &camPos = Game::GetCamera().getPosition();
+  float &scale = camera.getScale();
+  Vector2 &camPos = camera.getPosition();
 
   Vector2 drawPos{
     (m_body.x - camPos.x),

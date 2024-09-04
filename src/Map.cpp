@@ -157,18 +157,18 @@ void Map::attachTiler(std::shared_ptr<Tiler> tiler) {
 }
 
 
-void Map::update(double deltaTime) {
+void Map::update(double deltaTime, CameraObject& camera) {
   spawnCreeps();
 }
 
-void Map::draw() {
+void Map::draw(CameraObject& camera) {
   Vector2 winSize = (Vector2)
   {
     (float)GetScreenWidth(),
     (float)GetScreenHeight()
   };
-  float &scale = Game::GetCamera().getScale();
-  Vector2 &camPos = Game::GetCamera().getPosition();
+  float &scale = camera.getScale();
+  Vector2 &camPos = camera.getPosition();
 
   for (int i = 0; i < m_height; i++)
     for (int j = 0; j < m_width; j++)
@@ -176,7 +176,7 @@ void Map::draw() {
       DrawRectangle((j-camPos.x)*scale, (i-camPos.y)*scale, scale, scale, m_data[i*m_width+j].color);
     }
   if (m_tiler)
-    m_tiler->drawMap(*this);
+    m_tiler->drawMap(*this, camera);
 }
 
 void Map::spawnCreeps() {

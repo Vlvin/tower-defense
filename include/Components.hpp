@@ -62,6 +62,10 @@ namespace components {
       uint value;
     };
 
+    struct Money {
+      uint value;
+    };
+
     struct Speed {
       float value;
     };
@@ -74,5 +78,6 @@ namespace components {
     typedef Rectangle Body; // cause Rectangle is struct already
     
     struct EnemyTag { };
+    struct PlayerTag { };
 }
 

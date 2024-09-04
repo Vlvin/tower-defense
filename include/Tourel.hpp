@@ -7,8 +7,8 @@ class Tourel : public IGameObject {
 public:
   Tourel(Rectangle body, float rangeOfAction, Bullet bullet);
   Tourel(const Tourel &tourel, Color color);
-  virtual void update(double deltaTime) override;
-  virtual void draw() override;
+  virtual void update(double deltaTime, CameraObject& camera) override;
+  virtual void draw(CameraObject& camera) override;
 protected:
   inline void shoot();
   inline void predictTargetPosition();

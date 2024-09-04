@@ -32,7 +32,6 @@ void CameraObject::_applyRestrictions() {
 }
 
 CameraObject::CameraObject(float movementSpeed, float scalingSpeed) {
-  m_camera = { 0 };
   m_camera.target = {2.f, 2.f};
   m_camera.zoom = 10.f;
   m_movementSpeed = { movementSpeed };

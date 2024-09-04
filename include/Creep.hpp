@@ -9,10 +9,10 @@ class PathNode;
 class Creep : public IGameObject {
 public:
   Creep(Rectangle body, std::vector<Vector2> path);
-  Creep(const Creep &creep, Color color);
+  Creep(Creep&& creep, Color color);
   
-  virtual void update(double deltaTime);
-  virtual void draw();
+  virtual void update(double deltaTime, CameraObject &camera) override;
+  virtual void draw(CameraObject &camera) override;
   
   void hit(uint damage);
 protected:

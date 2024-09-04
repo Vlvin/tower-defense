@@ -32,8 +32,8 @@ public:
   MapUnit getUnit(uint x, uint y);
   Vector2 getSize();
 
-  virtual void update(double deltaTime);
-  virtual void draw();
+  virtual void update(double deltaTime, CameraObject& camera);
+  virtual void draw(CameraObject& camera);
 
   std::vector<MapUnit>::iterator begin();
   std::vector<MapUnit>::iterator end();

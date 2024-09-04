@@ -57,6 +57,8 @@ set(SOURCES
   ${SRC}/PathNode.cpp
   ${SRC}/Tourel.cpp
   ${SRC}/Tiler.cpp
+  ${SRC}/Player.cpp
+  ${SRC}/PlayerHUD.cpp
 
 )
 

@@ -27,14 +27,14 @@ Bullet::Bullet(Rectangle body, float direction)
 }
 
 
-Bullet::Bullet(Bullet bullet, Color color) 
+Bullet::Bullet(Bullet&& bullet, Color color) 
   : Bullet(bullet)
 {
   m_color = m_persistens = color;
 }
 
 
-void Bullet::update(double deltaTime) {
+void Bullet::update(double deltaTime, CameraObject &object) {
   if (isDead()) 
     return;
   
@@ -69,7 +69,7 @@ void Bullet::update(double deltaTime) {
   }
 }
 
-void Bullet::draw() {
+void Bullet::draw(CameraObject &camera) {
   if (isDead()) 
     return;
   // predefined sugar
@@ -77,8 +77,8 @@ void Bullet::draw() {
   float texWidth = s_texture.width;
   float texHeight = s_texture.height;
 
-  float &scale = Game::GetCamera().getScale();
-  Vector2 &camPos = Game::GetCamera().getPosition();
+  float &scale = camera.getScale();
+  Vector2 &camPos = camera.getPosition();
 
   Vector2 drawPos{
     (m_body.x - camPos.x),

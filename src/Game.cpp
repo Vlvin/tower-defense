@@ -36,9 +36,9 @@ Player &Game::GetPlayer() {
   return Instance().m_player;
 }
 
-CameraObject &Game::GetCamera() {
-  return Instance().m_camera;
-}
+// CameraObject &Game::GetCamera() {
+//   return Instance().m_camera;
+// }
 
 void Game::internRun() {
   double delta, time, FPS = 60, desDelta = 1000/FPS;
@@ -53,11 +53,11 @@ void Game::internRun() {
 
     #pragma region UPDATE
     m_camera.update(delta);
-    if (!m_sceneManager.Update(delta))
+    if (!m_sceneManager.Update(delta, m_camera))
       break;
     #pragma endregion UPDATE
     
-    m_sceneManager.Draw();  
+    m_sceneManager.Draw(m_camera);  
     
     #pragma region TIME
     delta = (GetTime() - time) * 1000;    

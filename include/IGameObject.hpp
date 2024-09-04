@@ -8,6 +8,8 @@
 #include <Node.hpp>
 #include <Components.hpp>
 
+class CameraObject;
+
 class IGameObject {
 public:
   inline IGameObject(uint8_t layer) 
@@ -37,19 +39,21 @@ public:
   bool isDead() { return m_isDead; }
   uint8_t getLayer() { return m_node.getLayer(); }
 
-  virtual void update(double deltaTime) = 0;
-  virtual void draw() = 0;
+  virtual void update(double deltaTime, CameraObject &camera) = 0;
+  virtual void draw(CameraObject &camera) = 0;
   
 protected:
 
 #define OBJECT_DECLARE_COMPONENT(CompType) \
   virtual ::components::CompType *get_(tag<::components::CompType>) { return nullptr; }
   
+  OBJECT_DECLARE_COMPONENT(Money)
   OBJECT_DECLARE_COMPONENT(Health)
   OBJECT_DECLARE_COMPONENT(Speed)
   OBJECT_DECLARE_COMPONENT(Direction)
   OBJECT_DECLARE_COMPONENT(Body)
   OBJECT_DECLARE_COMPONENT(EnemyTag)
+  OBJECT_DECLARE_COMPONENT(PlayerTag)
 
 #undef OBJECT_DECLARE_COMPONENT
 

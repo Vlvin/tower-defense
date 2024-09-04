@@ -10,12 +10,12 @@
 class Button : public IGameObject {
 public:
   Button(Rectangle body, std::function<void(void)> onClick);
-  Button(Rectangle body, std::function<void(void)> onClick, Color color);
+  Button(Button&& button, Color color);
 
   void setColor(Color color);
 // IGameObject
-  virtual void update(double deltaTime) override;
-  virtual void draw() override;
+  virtual void update(double deltaTime, CameraObject &camera) override;
+  virtual void draw(CameraObject &camera) override;
 protected:
   virtual void onClick();
   virtual bool getMouseCollision();

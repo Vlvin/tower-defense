@@ -12,8 +12,8 @@ Tiler::Tiler(const char* filename) {
   }
   // format of texture is one column
   Vector2 tileSize{
-    1.f*image.width,
-    floor(image.height / 14)
+    (float)image.width,
+    (float)floor(image.height / 14)
   };
   for (char i = 0; i < 14; i++) {
     Image temp = ImageFromImage(
@@ -32,14 +32,14 @@ Tiler::Tiler(const char* filename) {
 }
 
 
-void Tiler::drawMap(Map& map) {
-  float &scale = Game::GetCamera().getScale();
-  Vector2 &camPos = Game::GetCamera().getPosition();
+void Tiler::drawMap(Map& map, CameraObject& camera) {
+  float &scale = camera.getScale();
+  Vector2 &camPos = camera.getPosition();
   for (const MapUnit& unit : map) {
     auto tile = getTile(map, unit.position.x, unit.position.y);  
     DrawTexturePro(
       tile,
-      (Rectangle){0.f, 0.f, tile.width, tile.height},
+      (Rectangle){0.f, 0.f, (float)tile.width, (float)tile.height},
       {(unit.position.x + 0.5f - camPos.x) * scale, (unit.position.y + 0.5f - camPos.y) * scale, scale, scale},    
       {0.5f * scale, 0.5f * scale}, // origin
       0.f, // rotation
