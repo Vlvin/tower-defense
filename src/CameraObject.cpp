@@ -11,14 +11,18 @@ void CameraObject::update(double deltaTime) {
 }
 
 void CameraObject::_handleInput(double deltaTime) {
-  if (input.isKeyDown(KEY_W))
+  if (input.isKeyDown(KEY_W)){
     m_camera.target.y -= m_movementSpeed.value * deltaTime;
-  if (input.isKeyDown(KEY_S))
+  }
+  if (input.isKeyDown(KEY_S)){
     m_camera.target.y += m_movementSpeed.value * deltaTime;
-  if (input.isKeyDown(KEY_A))
+  }
+  if (input.isKeyDown(KEY_A)){
     m_camera.target.x -= m_movementSpeed.value * deltaTime;
-  if (input.isKeyDown(KEY_D))
+  }
+  if (input.isKeyDown(KEY_D)){
     m_camera.target.x += m_movementSpeed.value * deltaTime;
+  }
   
   if (input.isKeyDown(KEY_C))
     m_camera.zoom += m_movementSpeed.value * deltaTime;

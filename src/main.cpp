@@ -5,14 +5,14 @@
 #include <SceneManager.hpp>
 #include <Game.hpp>
 #include <Tiler.hpp>
-#include <InputHandler.hpp>
+#include <PhysicalInput.hpp>
 
 #include <iostream>
 #include <unistd.h>
 
 int main(int argc, char** argv) {
 
-  InputHandler input;
+  PhysicalInput input;
   Game::Init(input);
 
   // Buttons

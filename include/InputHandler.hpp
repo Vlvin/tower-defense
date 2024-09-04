@@ -8,7 +8,7 @@ struct Vector2;
 
 class InputHandler {
 public:
-  bool isKeyDown(int key);
-  bool isMouseButtonPressed(int key);
-  Vector2 getMousePosition();
+  virtual bool isKeyDown(int key) const = 0;
+  virtual bool isMouseButtonPressed(int key) const = 0;
+  virtual Vector2 getMousePosition() const = 0;
 };
