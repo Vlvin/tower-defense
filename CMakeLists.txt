@@ -70,6 +70,7 @@ set(SOURCES
 
 set(TESTS 
   ${TEST_SOURCES}/CameraObjectTest.cpp
+  ${TEST_SOURCES}/ButtonTest.cpp
 )
 
 

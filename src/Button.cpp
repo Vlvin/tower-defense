@@ -1,6 +1,6 @@
 #include <GameObjects/Button.hpp>
 #include <InputHandler.hpp>
-
+#include <cmath>
 
 Button::Button(InputHandler& input, Rectangle body, std::function<void(void)> onClick) 
   : IGameObject(BUTTON_DRAW_LAYER), input(input)
@@ -20,22 +20,33 @@ void Button::setColor(Color color) {
   m_persistent = color;
 } 
 
-// IGameObject
+Color Button::getColor() {
+  return m_color;
+}
+
+Rectangle Button::getBody() {
+  return m_body;
+}
+
 void Button::update(double deltaTime, CameraObject &camera) {
   m_color = m_persistent;
   if (!getMouseCollision()) 
     return;
 
   // when mouse is in button area
-  m_color.r = m_persistent.r - 20;
-  m_color.g = m_persistent.g - 20;
-  m_color.b = m_persistent.b - 20;
-  m_color.a = m_persistent.a - 20;
+  m_color.r = std::min(std::max(m_persistent.r - 20, 0), 255);
+  m_color.g = std::min(std::max(m_persistent.g - 20, 0), 255);
+  m_color.b = std::min(std::max(m_persistent.b - 20, 0), 255);
+  m_color.a = std::min(std::max(m_persistent.a - 20, 0), 255);
 
   if (!input.isMouseButtonPressed(MOUSE_BUTTON_LEFT)) 
     return;
 
   // when mouse is in button area and clicking
+  m_color.r = std::min(std::max(m_persistent.r - 40, 0), 255);
+  m_color.g = std::min(std::max(m_persistent.g - 40, 0), 255);
+  m_color.b = std::min(std::max(m_persistent.b - 40, 0), 255);
+  m_color.a = std::min(std::max(m_persistent.a - 40, 0), 255);
   onClick();
 }
 
@@ -57,8 +68,6 @@ bool Button::getMouseCollision() {
 void Button::draw(CameraObject &camera) {
   DrawRectangleRec(m_body, m_color);
 }
-
-// private
 
 void Button::onClick() {
   m_onClick();

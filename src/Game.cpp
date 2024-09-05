@@ -38,9 +38,9 @@ SceneManager &Game::GetSceneManager() {
   return Instance().m_sceneManager;
 }
 
-Player &Game::GetPlayer() {
-  return Instance().m_player;
-}
+// Player &Game::GetPlayer() {
+//   return Instance().m_player;
+// }
 
 // CameraObject &Game::GetCamera() {
 //   return Instance().m_camera;

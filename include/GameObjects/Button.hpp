@@ -13,6 +13,10 @@ public:
   Button(Button&& button, Color color);
 
   void setColor(Color color);
+  Color getColor();
+
+
+  Rectangle getBody();
 // IGameObject
   virtual void update(double deltaTime, CameraObject &camera) override;
   virtual void draw(CameraObject &camera) override;

@@ -1,5 +1,4 @@
 #include <gtest/gtest.h>
-#include <gmock/gmock.h>
 #include <Debug.h>
 #include <CameraObject.hpp>
 #include <Mock/InputHandler.hpp>

@@ -6,6 +6,9 @@ Player::Player()
 : IGameObject(HUD_DRAW_LAYER) {
 
   m_playerHUD = new PlayerHUD();
+
+  m_health = {20};
+  m_money = {20};
 }
 
 Player::~Player() {

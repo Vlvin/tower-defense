@@ -37,7 +37,7 @@ public:
   static void Run();
 
   static SceneManager &GetSceneManager();
-  static Player &GetPlayer();
+  // static Player &GetPlayer();
   // static CameraObject &GetCamera();
 
   Game(Game&) = delete;
@@ -48,7 +48,7 @@ protected:
   
 protected:
   SceneManager m_sceneManager;
-  Player m_player;
+  // Player m_player;
   CameraObject m_camera;
   InputHandler& m_input;
   

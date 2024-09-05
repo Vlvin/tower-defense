@@ -26,7 +26,6 @@ Bullet::Bullet(Rectangle body, float direction)
   m_color = m_persistens = WHITE;
 }
 
-
 Bullet::Bullet(Bullet&& bullet, Color color) 
   : Bullet(bullet)
 {

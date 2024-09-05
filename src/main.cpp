@@ -2,6 +2,7 @@
 #include <GameObjects/Button.hpp>
 #include <GameObjects/Tourel.hpp>
 #include <GameObjects/Map.hpp>
+#include <GameObjects/Player.hpp>
 #include <SceneManager.hpp>
 #include <Game.hpp>
 #include <Tiler.hpp>
@@ -19,7 +20,7 @@ int main(int argc, char** argv) {
   auto quitScene = std::make_shared<Button>(
     Button {
       input,
-      (Rectangle){25., 25., 25., 25.},
+      (Rectangle){640 - 50.f, 25.f, 25.f, 25.f},
       [] {Game::GetSceneManager().PopScene();}
     },
     RED 
@@ -35,9 +36,12 @@ int main(int argc, char** argv) {
       4.f,
       Bullet({1.f, 1.f, .5f, .5f}, 0.f)
     );
+    auto player = std::make_shared<Player>();
     level.pushObject(quitScene);
+
     level.pushObject(map);
     level.pushObject(shooter);
+    level.pushObject(player);
     Game::GetSceneManager().PushScene(level);
   };
 
