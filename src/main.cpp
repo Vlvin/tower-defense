@@ -3,6 +3,7 @@
 #include <GameObjects/Tourel.hpp>
 #include <GameObjects/Map.hpp>
 #include <GameObjects/Player.hpp>
+#include <GameObjects/Placeholder.hpp>
 #include <SceneManager.hpp>
 #include <Game.hpp>
 #include <Tiler.hpp>
@@ -31,10 +32,9 @@ int main(int argc, char** argv) {
     auto map = Map::loadFromFile("level/demo/map.ppm");
     auto tiler = std::make_shared<Tiler>("assets/tilemap-32.png");
     map->attachTiler(tiler);
-    auto shooter = std::make_shared<Tourel>(
-      (Rectangle){10.f, 10.f, 1.f, 1.f},
-      4.f,
-      Bullet({1.f, 1.f, .5f, .5f}, 0.f)
+    auto shooter = std::make_shared<PlaceHolder>(
+      input,
+      (Vector2){10.f, 10.f}
     );
     auto player = std::make_shared<Player>();
     level.pushObject(quitScene);

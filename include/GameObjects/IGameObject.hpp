@@ -43,6 +43,7 @@ public:
   virtual void draw(CameraObject &camera) = 0;
   
 protected:
+  void setLayer(uint8_t layer) { m_node.setLayer(layer); }
 
 #define OBJECT_DECLARE_COMPONENT(CompType) \
   virtual ::components::CompType *get_(tag<::components::CompType>) { return nullptr; }

@@ -30,7 +30,7 @@ Rectangle Button::getBody() {
 
 void Button::update(double deltaTime, CameraObject &camera) {
   m_color = m_persistent;
-  if (!getMouseCollision()) 
+  if (!getMouseCollision(camera)) 
     return;
 
   // when mouse is in button area
@@ -50,7 +50,7 @@ void Button::update(double deltaTime, CameraObject &camera) {
   onClick();
 }
 
-bool Button::getMouseCollision() {
+bool Button::getMouseCollision(CameraObject& camera) {
   Vector2 mousePos = input.getMousePosition();
   return (
     (

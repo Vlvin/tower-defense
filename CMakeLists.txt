@@ -59,6 +59,7 @@ set(SOURCES
   ${SRC}/Map.cpp
   ${SRC}/ColorTools.cpp
   ${SRC}/Creep.cpp
+  ${SRC}/Placeholder.cpp
   ${SRC}/Bullet.cpp
   ${SRC}/PathNode.cpp
   ${SRC}/Tourel.cpp

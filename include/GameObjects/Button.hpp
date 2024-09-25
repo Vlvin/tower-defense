@@ -24,7 +24,7 @@ public:
   InputHandler& input;
 protected:
   virtual void onClick();
-  virtual bool getMouseCollision();
+  virtual bool getMouseCollision(CameraObject& camera);
 private:
   Color m_color, m_persistent;
   Rectangle m_body;

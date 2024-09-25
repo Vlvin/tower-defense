@@ -18,6 +18,6 @@ void PlayerHUD::draw(Player& player) {
   ); // health
   player.dispatch([] (::components::Health& health, ::components::Money& money) {
     DrawText(std::to_string(money.value).c_str(), 27, 1, 25, WHITE);
-    DrawText(std::to_string(money.value).c_str(), 27, 27, 25, WHITE);
+    DrawText(std::to_string(health.value).c_str(), 27, 27, 25, WHITE);
   });
 }
