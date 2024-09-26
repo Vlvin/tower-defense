@@ -20,6 +20,7 @@ protected:
   Vector2 getPosition();
 
   OBJECT_OVERRIDE_COMPONENT_H(Body)
+  OBJECT_OVERRIDE_COMPONENT_H(Money)
   OBJECT_OVERRIDE_COMPONENT_H(Direction)
   OBJECT_OVERRIDE_COMPONENT_H(Speed)
   OBJECT_OVERRIDE_COMPONENT_H(Health)
@@ -30,6 +31,7 @@ protected:
 
   components::Health m_healthPoints;
   components::Body m_body;
+  components::Money m_money;
   components::EnemyTag m_enemyTag;
   components::Direction m_direction;
   components::Speed m_speed;

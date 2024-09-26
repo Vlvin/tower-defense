@@ -30,7 +30,8 @@ Creep::Creep(Rectangle body, std::vector<Vector2> path)
     node.y += 0.5f;
   }
   m_pathIterator = 0;
-  m_healthPoints = {1000};
+  m_healthPoints = {10};
+  m_money = {2};
   m_color = m_persistent = WHITE;
   
   
@@ -54,8 +55,16 @@ std::shared_ptr<IGameObject> Creep::clone() {
 }
 
 void Creep::hit(uint damage) {
-  if (m_healthPoints.value <= damage)
+  if (isDead()) // already dead
+    return;
+  if (m_healthPoints.value <= damage) // death
   {
+    auto& parent = Game::GetSceneManager().Back();
+    for (auto& object : parent) {
+      if (object->dispatch([](::components::PlayerTag&){})) {
+        std::dynamic_pointer_cast<Player>(object)->topUp(m_money.value);
+      };
+    }
     m_healthPoints.value = 0;
     m_isDead = true;
     return;
@@ -162,3 +171,4 @@ OBJECT_OVERRIDE_COMPONENT_CPP(Creep, Health, m_healthPoints)
 OBJECT_OVERRIDE_COMPONENT_CPP(Creep, EnemyTag, m_enemyTag)
 OBJECT_OVERRIDE_COMPONENT_CPP(Creep, Direction, m_direction)
 OBJECT_OVERRIDE_COMPONENT_CPP(Creep, Speed, m_speed)
+OBJECT_OVERRIDE_COMPONENT_CPP(Creep, Money, m_money)

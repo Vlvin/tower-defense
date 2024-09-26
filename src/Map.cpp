@@ -180,7 +180,7 @@ void Map::draw(CameraObject& camera) {
 }
 
 void Map::spawnCreeps() {
-  if (GetTime() - m_lastSpawned < 100) return;
+  if (GetTime() - m_lastSpawned < 5) return;
   m_lastSpawned = GetTime();
   srand(GetTime());
   int index = rand() % m_spawns.size();
