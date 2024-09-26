@@ -54,17 +54,18 @@ void Tourel::shoot() {
   auto &parent = Game::GetSceneManager().Back();
   auto &tourelDir = m_directionAngle.value;
   // summon new bullet which moves to target with m_bullet speed and body
-  m_bullet.dispatch(
-    [&] (components::Direction& dir, components::Body& body) {
-
-      auto bullet = std::make_shared<Bullet>(
-        body, 
-        tourelDir
-      );
-      parent.pushObject(bullet);
-    }
-  );
+  auto bullet = m_bullet.clone();
+  bullet->dispatch([&tourelDir] (::components::Direction& dir) {
+    dir.value = tourelDir;
+  });
+  parent.pushObject(bullet);
+  
+  
   m_lastShot = GetTime();
+}
+
+std::shared_ptr<IGameObject> Tourel::clone() {
+  return std::shared_ptr<IGameObject>(new Tourel(*this));
 }
 
 void Tourel::predictTargetPosition() {float &direction = m_directionAngle.value;
@@ -204,7 +205,7 @@ void Tourel::draw(CameraObject& camera) {
     (direction - M_PI*0.5)/M_PI*180, // rotation
     m_color // color
   ); 
-#ifdef NDEBUG  
+#ifdef _NDEBUG  
   drawPos = {
     (predX - camPos.x),
     (predY - camPos.y)

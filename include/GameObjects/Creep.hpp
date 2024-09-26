@@ -13,7 +13,7 @@ public:
   
   virtual void update(double deltaTime, CameraObject &camera) override;
   virtual void draw(CameraObject &camera) override;
-  
+  virtual std::shared_ptr<IGameObject> clone() override;
   void hit(uint damage);
 protected:
 

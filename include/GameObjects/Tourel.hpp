@@ -9,6 +9,7 @@ public:
   Tourel(const Tourel &tourel, Color color);
   virtual void update(double deltaTime, CameraObject& camera) override;
   virtual void draw(CameraObject& camera) override;
+  virtual std::shared_ptr<IGameObject> clone() override;
 protected:
   inline void shoot();
   inline void predictTargetPosition();

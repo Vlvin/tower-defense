@@ -7,7 +7,7 @@ public:
   Bullet(Bullet&& bullet, Color color);
   virtual void update(double deltaTime, CameraObject &camera) override;
   virtual void draw(CameraObject &camera) override;
-
+  virtual std::shared_ptr<IGameObject> clone() override;
 protected:
   OBJECT_OVERRIDE_COMPONENT_H(Body)
   OBJECT_OVERRIDE_COMPONENT_H(Direction)

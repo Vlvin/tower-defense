@@ -8,4 +8,6 @@ public:
   // virtual void update(double deltaTime, CameraObject &camera) override;
   virtual void draw(CameraObject &camera) override;
   virtual bool getMouseCollision(CameraObject& camera) override;
+private:
+  static Texture s_texture;
 };

@@ -3,6 +3,7 @@
 #include <iostream>
 #include <random>
 #include <stdexcept>
+#include <memory>
 
 #include <raylib.h>
 #include <Node.hpp>
@@ -41,6 +42,7 @@ public:
 
   virtual void update(double deltaTime, CameraObject &camera) = 0;
   virtual void draw(CameraObject &camera) = 0;
+  virtual std::shared_ptr<IGameObject> clone() { return nullptr; }
   
 protected:
   void setLayer(uint8_t layer) { m_node.setLayer(layer); }

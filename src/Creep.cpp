@@ -48,6 +48,11 @@ Creep::Creep(Creep &&creep, Color color)
   m_color = m_persistent = color;
 }
 
+
+std::shared_ptr<IGameObject> Creep::clone() {
+  return std::shared_ptr<IGameObject>(new Creep(*this));
+}
+
 void Creep::hit(uint damage) {
   if (m_healthPoints.value <= damage)
   {

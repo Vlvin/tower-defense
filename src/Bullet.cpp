@@ -68,6 +68,10 @@ void Bullet::update(double deltaTime, CameraObject &object) {
   }
 }
 
+std::shared_ptr<IGameObject> Bullet::clone() {
+  return std::shared_ptr<IGameObject>(new Bullet(*this));
+}
+
 void Bullet::draw(CameraObject &camera) {
   if (isDead()) 
     return;

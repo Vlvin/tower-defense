@@ -13,11 +13,14 @@ inline const int PLACEHOLDER_DRAW_LAYER = MAP_DRAW_LAYER+1;
 
 // 3
 inline const int CREEP_DRAW_LAYER = PLACEHOLDER_DRAW_LAYER + 1;
-inline const int TOUREL_DRAW_LAYER = CREEP_DRAW_LAYER;
+
+
 inline const int BULLET_DRAW_LAYER = CREEP_DRAW_LAYER+1;
 
 // 4 
-inline const int BUTTON_DRAW_LAYER = BULLET_DRAW_LAYER + 1;
+inline const int TOUREL_DRAW_LAYER = BULLET_DRAW_LAYER+1;
+
+inline const int BUTTON_DRAW_LAYER = TOUREL_DRAW_LAYER + 1;
 
 // 5 
 inline const int HUD_DRAW_LAYER = BUTTON_DRAW_LAYER + 1;
