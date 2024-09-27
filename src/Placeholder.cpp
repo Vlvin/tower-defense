@@ -62,8 +62,8 @@ PlaceHolder::PlaceHolder(InputHandler& input, Vector2 position)
 bool PlaceHolder::getMouseCollision(CameraObject& camera) {
   auto body = getBody();
   auto renderBody = Rectangle{
-    (body.x - camera.getPosition().x) * camera.getScale(),
-    (body.y - camera.getPosition().y) * camera.getScale(),
+    (body.x - camera.getPosition().x - 0.5f) * camera.getScale(),
+    (body.y - camera.getPosition().y - 0.5f) * camera.getScale(),
     body.width * camera.getScale(),
     body.height * camera.getScale()
   };
@@ -83,20 +83,22 @@ bool PlaceHolder::getMouseCollision(CameraObject& camera) {
 
 void PlaceHolder::draw(CameraObject &camera) {
   auto body = getBody();
-  auto renderBody = Rectangle{
-    (body.x - camera.getPosition().x + 0.5f) * camera.getScale(),
-    (body.y - camera.getPosition().y + 0.5f) * camera.getScale(),
-    body.width * camera.getScale(),
-    body.height * camera.getScale()
-  };
   // DrawRectangleRec(renderBody, getColor());
   float texWidth = s_texture.width;
   float texHeight = s_texture.height;
+  float &scale = camera.getScale();
+  Vector2 &camPos = camera.getPosition();
+  auto renderBody = Rectangle{
+    (body.x - camPos.x) * scale,
+    (body.y - camPos.y) * scale,
+    body.width * scale,
+    body.height * scale
+  };
   DrawTexturePro
   (
     s_texture, // texture
     {0.f, 0.f, texWidth, texHeight}, // src
-    {renderBody.x, renderBody.y, renderBody.width, renderBody.height}, // dest
+    renderBody, // dest
     {renderBody.width * 0.5f, renderBody.height * 0.5f}, // origin
     0.f, // rotation
     getColor() // color

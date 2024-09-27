@@ -34,7 +34,7 @@ int main(int argc, char** argv) {
     map->attachTiler(tiler);
     auto shooter = std::make_shared<PlaceHolder>(
       input,
-      (Vector2){10.f, 10.f}
+      (Vector2){12.f, 10.f}
     );
     auto player = std::make_shared<Player>();
     level.pushObject(quitScene);

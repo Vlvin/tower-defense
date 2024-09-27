@@ -26,8 +26,8 @@ Tourel::Tourel(Rectangle body, float rangeOfAction, Bullet bullet)
 
 
   m_bullet.dispatch([&] (components::Body& bulletBody) {
-    bulletBody.x = body.x+0.5f;
-    bulletBody.y = body.y+0.5f;
+    bulletBody.x = body.x;
+    bulletBody.y = body.y;
     DLOG("bulletBody.x" << bulletBody.x)
     DLOG("bulletBody.y" << bulletBody.y)
   });
@@ -56,7 +56,7 @@ void Tourel::shoot() {
   auto &tourelDir = m_directionAngle.value;
   // summon new bullet which moves to target with m_bullet speed and body
   auto bullet = m_bullet.clone();
-  bullet->dispatch([&tourelDir] (::components::Direction& dir) {
+  bullet->dispatch([&tourelDir] (::components::Direction& dir, ::components::Body& body) {
     dir.value = tourelDir;
   });
   parent.pushObject(bullet);
@@ -189,20 +189,21 @@ void Tourel::draw(CameraObject& camera) {
   float &direction = m_directionAngle.value;
   float texWidth = s_texture.width;
   float texHeight = s_texture.height;
-
   float &scale = camera.getScale();
   Vector2 &camPos = camera.getPosition();
-
-  Vector2 drawPos{
-    (m_body.x - camPos.x),
-    (m_body.y - camPos.y)
+  auto renderBody = Rectangle{
+    (m_body.x - camPos.x) * scale,
+    (m_body.y - camPos.y) * scale,
+    m_body.width * scale,
+    m_body.height * scale
   };
+
   DrawTexturePro
   (
     s_texture, // texture
     {0.f, 0.f, texWidth, texHeight}, // src
-    {(drawPos.x + 0.5f) * scale, (drawPos.y + 0.5f) * scale, m_body.width * scale, m_body.height * scale}, // dest
-    {m_body.width * 0.5f * scale, m_body.height * 0.5f * scale}, // origin
+    renderBody,
+    {renderBody.width * 0.5f, renderBody.height * 0.5f}, // origin
     (direction - M_PI*0.5)/M_PI*180, // rotation
     m_color // color
   ); 

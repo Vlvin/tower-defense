@@ -83,7 +83,12 @@ void Bullet::draw(CameraObject &camera) {
 
   float &scale = camera.getScale();
   Vector2 &camPos = camera.getPosition();
-
+  auto renderBody = Rectangle{
+    (m_body.x - camPos.x) * scale,
+    (m_body.y - camPos.y) * scale,
+    m_body.width * scale,
+    m_body.height * scale
+  };
   Vector2 drawPos{
     (m_body.x - camPos.x),
     (m_body.y - camPos.y)
@@ -93,8 +98,8 @@ void Bullet::draw(CameraObject &camera) {
   (
     s_texture, // texture
     {0.f, 0.f, texWidth, texHeight}, // src
-    {drawPos.x * scale, drawPos.y * scale, m_body.width * scale, m_body.height * scale}, // dest
-    {m_body.width * 0.5f * scale, m_body.height * 0.5f * scale}, // origin
+    renderBody,
+    {renderBody.width * 0.5f, renderBody.height * 0.5f}, // origin
     (direction - M_PI*0.5)/M_PI*180, // rotation
     m_color // color
   ); 
