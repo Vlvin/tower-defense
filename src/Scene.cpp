@@ -1,6 +1,7 @@
 #include <GameObjects/Scene.hpp>
 #include <GameObjects/IGameObject.hpp>
 #include <algorithm>
+#include <LayerValues.hpp>
 
 Scene::Scene() // for some unknown reason Scene is coupled to be IGameObject
   : IGameObject(SCENE_DRAW_LAYER)

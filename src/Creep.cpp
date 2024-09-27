@@ -2,6 +2,7 @@
 #include <ColorTools.hpp>
 #include <PathNode.hpp>
 #include <Game.hpp>
+#include <LayerValues.hpp>
 
 
 

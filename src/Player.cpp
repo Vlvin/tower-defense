@@ -1,6 +1,7 @@
 #include <GameObjects/Player.hpp>
 #include <PlayerHUD.hpp>
 #include <Game.hpp>
+#include <LayerValues.hpp>
 
 Player::Player()
 : IGameObject(HUD_DRAW_LAYER) {

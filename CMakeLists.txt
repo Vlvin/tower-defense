@@ -52,6 +52,7 @@ set(SOURCES
   ${SRC}/SceneManager.cpp
   ${SRC}/PhysicalInput.cpp
   ${SRC}/CameraObject.cpp
+  ${SRC}/Spawner.cpp
   ${SRC}/Game.cpp
   ${SRC}/Node.cpp
   ${SRC}/Scene.cpp

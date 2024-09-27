@@ -5,6 +5,8 @@
 #include <SceneManager.hpp>
 #include <PathNode.hpp>
 #include <Game.hpp>
+#include <GameObjects/Spawner.hpp>
+#include <LayerValues.hpp>
 
 #include <string>
 #include <map>

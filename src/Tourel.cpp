@@ -3,6 +3,7 @@
 #include <ColorTools.hpp>
 #include <Game.hpp>
 #include <cmath>
+#include <LayerValues.hpp>
 
 Texture Tourel::s_texture = {
   0,

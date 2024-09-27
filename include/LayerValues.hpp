@@ -10,6 +10,7 @@ inline const int MAP_DRAW_LAYER = SCENE_DRAW_LAYER + 1;
 
 // 2
 inline const int PLACEHOLDER_DRAW_LAYER = MAP_DRAW_LAYER+1;
+inline const int SPAWNER_DRAW_LAYER = PLACEHOLDER_DRAW_LAYER;
 
 // 3
 inline const int CREEP_DRAW_LAYER = PLACEHOLDER_DRAW_LAYER + 1;

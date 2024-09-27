@@ -1,6 +1,7 @@
 #include <GameObjects/Button.hpp>
 #include <InputHandler.hpp>
 #include <cmath>
+#include <LayerValues.hpp>
 
 Button::Button(InputHandler& input, Rectangle body, std::function<void(void)> onClick) 
   : IGameObject(BUTTON_DRAW_LAYER), input(input)

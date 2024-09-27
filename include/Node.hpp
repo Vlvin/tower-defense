@@ -1,7 +1,6 @@
 #pragma once
 
 #include <stdint.h>
-#include <LayerValues.hpp>
 #include <Debug.h>
 
 class Node {

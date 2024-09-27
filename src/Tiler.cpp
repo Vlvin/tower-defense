@@ -1,5 +1,6 @@
 #include <GameObjects/Map.hpp>
 #include <Tiler.hpp>
+#include <LayerValues.hpp>
 
 #include <Game.hpp>
 
