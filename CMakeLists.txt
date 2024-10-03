@@ -36,6 +36,7 @@ set(LIBS ${PROJECT_SOURCE_DIR}/libs)
 set(INCLUDE
   ${HEADERS}
   ${LIBS}/raylib-master/src
+  ${LIBS}/json-develop/include
 )
 
 set(TEST_INCLUDE
@@ -46,6 +47,7 @@ set(TEST_INCLUDE
 
 set(LIB_NAMES
   raylib
+  nlohmann_json::nlohmann_json
 )
 
 set(SOURCES 
@@ -77,6 +79,7 @@ set(TESTS
 
 
 add_subdirectory(${LIBS}/raylib-master)
+add_subdirectory(${LIBS}/json-develop)
 # add_subdirectory(${LIBS}/googletest)
 
 # # building tests

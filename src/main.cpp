@@ -8,9 +8,13 @@
 #include <Game.hpp>
 #include <Tiler.hpp>
 #include <PhysicalInput.hpp>
+#include <nlohmann/json.hpp>
 
 #include <iostream>
+#include <fstream>
 #include <unistd.h>
+
+using nlohmann::json;
 
 int main(int argc, char** argv) {
 
@@ -26,6 +30,9 @@ int main(int argc, char** argv) {
     },
     RED 
   );
+
+
+
 
   auto loadLevel = [&]() {
     Scene level;
@@ -53,6 +60,11 @@ int main(int argc, char** argv) {
       loadLevel
     },
     GREEN
+  );
+
+  auto place = std::make_shared<PlaceHolder>(
+    input,
+    (Vector2){12.f, 10.f}
   );
 
   // MainScene

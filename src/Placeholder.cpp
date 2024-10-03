@@ -3,6 +3,8 @@
 #include <GameObjects/Tourel.hpp>
 #include <InputHandler.hpp>
 #include <LayerValues.hpp>
+#include <nlohmann/json.hpp>
+#include <fstream>
 
 
 Texture PlaceHolder::s_texture{
@@ -51,7 +53,16 @@ PlaceHolder::PlaceHolder(InputHandler& input, Vector2 position)
   )
 {
   if (!s_texture.width) {
-    auto im = LoadImage("assets/PlaceHolder.png");
+    nlohmann::json config;
+
+    std::fstream configFile("config.json", std::ios::in);
+
+    configFile >> config; 
+
+    std::string texPath = config["installPath"].get<std::string>() + "assets/PlaceHolder.png";
+    configFile.close();
+    const char* tPCS = texPath.c_str();
+    auto im = LoadImage(tPCS);
     s_texture = LoadTextureFromImage(im);
     UnloadImage(im);
   }
