@@ -53,18 +53,19 @@ PlaceHolder::PlaceHolder(InputHandler& input, Vector2 position)
   )
 {
   if (!s_texture.width) {
-    nlohmann::json config;
+    // nlohmann::json config;
 
-    std::fstream configFile("config.json", std::ios::in);
+    // std::fstream configFile("config.json", std::ios::in);
 
-    configFile >> config; 
+    // configFile >> config; 
 
-    std::string texPath = config["installPath"].get<std::string>() + "assets/PlaceHolder.png";
-    configFile.close();
-    const char* tPCS = texPath.c_str();
-    auto im = LoadImage(tPCS);
-    s_texture = LoadTextureFromImage(im);
-    UnloadImage(im);
+    // std::string texPath = /*config["installPath"].get<std::string>() +*/ "assets/PlaceHolder.png";
+    // configFile.close();
+    // const char* tPCS = "assets/PlaceHolder.png";
+    auto image = LoadImage("assets/PlaceHolder.png");
+    LoadTextureFromImage(image);
+    s_texture = LoadTextureFromImage(image);
+    UnloadImage(image);
   }
   setLayer(PLACEHOLDER_DRAW_LAYER);
   setColor(WHITE);

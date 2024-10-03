@@ -41,7 +41,7 @@ void Tiler::drawMap(Map& map, CameraObject& camera) {
     DrawTexturePro(
       tile,
       (Rectangle){0.f, 0.f, (float)tile.width, (float)tile.height},
-      {(unit.position.x + 0.5f - camPos.x) * scale, (unit.position.y + 0.5f - camPos.y) * scale, scale, scale},    
+      {(unit.position.x - camPos.x) * scale, (unit.position.y - camPos.y) * scale, scale, scale},    
       {0.5f * scale, 0.5f * scale}, // origin
       0.f, // rotation
       WHITE // color
@@ -57,7 +57,7 @@ Texture2D Tiler::getTile(Map& map, int x, int y) {
         current = 9;
     } else if (map.getUnit(x, y).type == Tile::ROAD) {
         current = 4;
-    } else return Texture2D{0, 0, 0, 0, 0};
+    }
     /** map (number is number of shifts to get value)
      * 7 - north
      * 6 - south

@@ -1,11 +1,13 @@
 #include <GameObjects/Map.hpp>
 #include <GameObjects/Creep.hpp>
+#include <GameObjects/Spawner.hpp>
+#include <GameObjects/Placeholder.hpp>
+#include <InputHandler.hpp>
 #include <Tiler.hpp>
 #include <ColorTools.hpp>
 #include <SceneManager.hpp>
 #include <PathNode.hpp>
 #include <Game.hpp>
-#include <GameObjects/Spawner.hpp>
 #include <LayerValues.hpp>
 
 #include <string>
@@ -13,7 +15,9 @@
 #include <cmath>
 
 
-std::shared_ptr<Map> Map::loadFromFile(const char *filename)
+using _Map = std::shared_ptr<Map>;
+using _Object = std::shared_ptr<IGameObject>;
+std::pair<_Map, std::vector<_Object>> Map::loadFromFile(const char *filename, InputHandler& input)
 {
   // fileData
   char *c_rawData = LoadFileText(filename);
@@ -23,8 +27,8 @@ std::shared_ptr<Map> Map::loadFromFile(const char *filename)
   int width, height;
   int previous_pos, channels = 3, nowChannel = 0, actual_size = 0;
   std::vector<uint8_t> colorByte;
-  // Image im;
-  std::vector<Color> map;
+
+  std::vector<Color> mapImage;
   char current;
 
   for (int i = 0; rawMapData[i] != '\0'; i++) {
@@ -41,7 +45,7 @@ std::shared_ptr<Map> Map::loadFromFile(const char *filename)
         height = stod(rawMapData.substr(previous_pos, i - previous_pos));
         while (rawMapData[++i] != '\n');
         previous_pos = ++i;
-        map.reserve(width*height);
+        mapImage.reserve(width*height);
         break;
       case 'P':
         previous_pos = ++i;
@@ -59,22 +63,22 @@ std::shared_ptr<Map> Map::loadFromFile(const char *filename)
         if (++nowChannel >= channels) {
           switch(channels) {
             case 1:
-              map[actual_size].r 
-              = map[actual_size].g 
-              = map[actual_size].b = colorByte[0];
-              map[actual_size].a = 255;
+              mapImage[actual_size].r 
+              = mapImage[actual_size].g 
+              = mapImage[actual_size].b = colorByte[0];
+              mapImage[actual_size].a = 255;
               break;
             case 3:
-              map[actual_size].r = colorByte[0];
-              map[actual_size].g = colorByte[1];
-              map[actual_size].b = colorByte[2];
-              map[actual_size].a = 255;
+              mapImage[actual_size].r = colorByte[0];
+              mapImage[actual_size].g = colorByte[1];
+              mapImage[actual_size].b = colorByte[2];
+              mapImage[actual_size].a = 255;
               break;
             case 4:
-              map[actual_size].r = colorByte[0];
-              map[actual_size].g = colorByte[1];
-              map[actual_size].b = colorByte[2];
-              map[actual_size].a = colorByte[3];
+              mapImage[actual_size].r = colorByte[0];
+              mapImage[actual_size].g = colorByte[1];
+              mapImage[actual_size].b = colorByte[2];
+              mapImage[actual_size].a = colorByte[3];
               break;
           }
           actual_size+=1;
@@ -87,7 +91,23 @@ std::shared_ptr<Map> Map::loadFromFile(const char *filename)
     }
   }
   colorByte.clear();
-  return std::make_shared<Map>(map, width, height);
+  auto map = std::make_shared<Map>(mapImage, width, height);
+  std::vector<_Object> objects;
+  for (int i = 0; i < map->getSize().y; i++) {
+    for (int j = 0; j < map->getSize().x; j++) {
+      switch (map->getUnit(j, i).type) {
+        case Tile::PLACEHOLDER:
+          objects.emplace_back(
+            new PlaceHolder(
+              input,
+              (Vector2){(float)j, (float)i}
+            )
+          );
+          break;
+      }
+    }
+  }
+  return std::make_pair(map, objects);
 }
 
 
@@ -104,7 +124,7 @@ Map::Map(std::vector<Color> &data, uint width, uint height)
     {Tile::ROAD, 1},
     {Tile::START, 1},
     {Tile::FINISH, 1},
-    {Tile::TOUREL, INT32_MAX},
+    {Tile::PLACEHOLDER, INT32_MAX},
     {Tile::GRASS, INT32_MAX}
   };
 
@@ -115,7 +135,7 @@ Map::Map(std::vector<Color> &data, uint width, uint height)
     if (CT::colorCompare(data[i], Color{255, 255, 0, 255})) {
         current = Tile::ROAD;
     } else if (CT::colorCompare(data[i], Color{255, 255, 255, 255})) {
-        current = Tile::TOUREL;
+        current = Tile::PLACEHOLDER;
     } else if (CT::colorCompare(data[i], Color{0, 0, 255, 255})) {
         current = Tile::START;
     } else if (CT::colorCompare(data[i], Color{255, 0, 0, 255})) {
@@ -140,7 +160,7 @@ Map::Map(std::vector<Color> &data, uint width, uint height)
     
     // fill concrete vectors with with references
     switch (current) {
-      case TOUREL:
+      case PLACEHOLDER:
         m_placeholders.push_back(&m_data[i]);
         break;
       case START:
@@ -175,7 +195,11 @@ void Map::draw(CameraObject& camera) {
   for (int i = 0; i < m_height; i++)
     for (int j = 0; j < m_width; j++)
     {
-      DrawRectangle((j-camPos.x)*scale, (i-camPos.y)*scale, scale, scale, m_data[i*m_width+j].color);
+      DrawRectanglePro(
+        {(j-camPos.x)*scale, (i-camPos.y)*scale, scale, scale}, 
+        {scale*0.5f, scale*0.5f},
+        0.0f,
+        m_data[i*m_width+j].color);
     }
   if (m_tiler)
     m_tiler->drawMap(*this, camera);

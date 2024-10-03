@@ -50,7 +50,7 @@ void Game::internRun() {
   double delta, time, FPS = 60, desDelta = 1000/FPS;
 
 
-  InitWindow(640, 480, "Test");
+  InitWindow(640, 480, "TowerDefense");
   // raylib setub must go after InitWindow
   SetExitKey(KEY_NULL);
 

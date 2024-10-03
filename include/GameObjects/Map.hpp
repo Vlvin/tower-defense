@@ -5,12 +5,13 @@
 #include <GameObjects/IGameObject.hpp>
 #include <limits>
 class Tiler;
+class InputHandler;
 
 
 typedef enum {
     GRASS,
     ROAD,
-    TOUREL,
+    PLACEHOLDER,
     START,
     FINISH
 } Tile;
@@ -23,9 +24,14 @@ typedef struct {
     Tile type;
 } MapUnit;
 
+
+
 class Map : public IGameObject {
+
 public:
-  static std::shared_ptr<Map> loadFromFile(const char *filename);
+  using _Map = std::shared_ptr<Map>;
+  using _Object = std::shared_ptr<IGameObject>;
+  static std::pair<_Map, std::vector<_Object>> loadFromFile(const char *filename, InputHandler& input);
   Map(std::vector<Color> &data, uint width, uint height);
   void attachTiler(std::shared_ptr<Tiler> tiler);
 
