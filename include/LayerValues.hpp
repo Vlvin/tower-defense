@@ -4,7 +4,7 @@
 
 // 0 layer
 inline const int SCENE_DRAW_LAYER = 0;
-
+ 
 // 1 layer
 inline const int MAP_DRAW_LAYER = SCENE_DRAW_LAYER + 1;
 

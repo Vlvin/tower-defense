@@ -45,11 +45,6 @@ set(TEST_INCLUDE
   ${TEST_SOURCES}/include
 )
 
-set(LIB_NAMES
-  raylib
-  nlohmann_json::nlohmann_json
-)
-
 set(SOURCES 
   ${SRC}/SceneManager.cpp
   ${SRC}/PhysicalInput.cpp
@@ -69,12 +64,15 @@ set(SOURCES
   ${SRC}/Tiler.cpp
   ${SRC}/Player.cpp
   ${SRC}/PlayerHUD.cpp
-
 )
 
 set(TESTS 
   ${TEST_SOURCES}/CameraObjectTest.cpp
   ${TEST_SOURCES}/ButtonTest.cpp
+)
+set(LIB_NAMES
+  raylib
+  nlohmann_json::nlohmann_json
 )
 
 
@@ -82,8 +80,18 @@ add_subdirectory(${LIBS}/raylib-master)
 add_subdirectory(${LIBS}/json-develop)
 # add_subdirectory(${LIBS}/googletest)
 
+add_library("${PROJECT_NAME}_SRC" STATIC ${SOURCES})
+target_include_directories("${PROJECT_NAME}_SRC" PUBLIC ${INCLUDE})
+target_link_libraries("${PROJECT_NAME}_SRC" ${LIB_NAMES})
+
+
+set(LIB_NAMES
+  ${LIB_NAMES}
+  "${PROJECT_NAME}_SRC"
+)
+
 # # building tests
-add_executable(tests ${TESTS} ${SOURCES})
+add_executable(tests ${TESTS})
 target_include_directories(tests PUBLIC ${INCLUDE} ${TEST_INCLUDE})
 target_link_libraries(tests ${LIB_NAMES} GTest::gtest_main GTest::gmock_main)
 
@@ -110,7 +118,7 @@ gtest_discover_tests(tests)
 
 
 # building main
-add_executable(main ${SRC}/main.cpp ${SOURCES})
+add_executable(main ${SRC}/main.cpp)
 target_include_directories(main PUBLIC ${INCLUDE})
 target_link_libraries(main ${LIB_NAMES})
 

@@ -17,7 +17,7 @@
 
 using _Map = std::shared_ptr<Map>;
 using _Object = std::shared_ptr<IGameObject>;
-std::pair<_Map, std::vector<_Object>> Map::loadFromFile(const char *filename, InputHandler& input)
+Map::LevelInfo Map::loadLevelFromFile(const char *filename, InputHandler& input)
 {
   // fileData
   char *c_rawData = LoadFileText(filename);
@@ -107,7 +107,7 @@ std::pair<_Map, std::vector<_Object>> Map::loadFromFile(const char *filename, In
       }
     }
   }
-  return std::make_pair(map, objects);
+  return (LevelInfo){map, objects};
 }
 
 

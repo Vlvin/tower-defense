@@ -36,24 +36,16 @@ int main(int argc, char** argv) {
 
   auto loadLevel = [&]() {
     Scene level;
-    auto mapWithObjects = Map::loadFromFile("level/demo/map.ppm", input);
+    auto levelInfo = Map::loadLevelFromFile("level/demo/map.ppm", input);
     auto tiler = std::make_shared<Tiler>("assets/tilemap-32.png");
 
-    auto map = mapWithObjects.first;
-    auto &mapObjects = mapWithObjects.second;
-    map->attachTiler(tiler);
-    auto shooter = std::make_shared<PlaceHolder>(
-      input,
-      (Vector2){12.f, 10.f}
-    );
-    std::dynamic_pointer_cast<PlaceHolder>(shooter);
+    levelInfo.map->attachTiler(tiler);
     auto player = std::make_shared<Player>();
     level.pushObject(quitScene);
 
-    level.pushObject(map);
-    level.pushObject(shooter);
+    level.pushObject(levelInfo.map);
     level.pushObject(player);
-    for (auto& object : mapObjects)
+    for (auto& object : levelInfo.staticObjects)
       level.pushObject(object);
     Game::GetSceneManager().PushScene(level);
   };

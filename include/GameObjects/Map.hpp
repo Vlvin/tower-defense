@@ -31,7 +31,11 @@ class Map : public IGameObject {
 public:
   using _Map = std::shared_ptr<Map>;
   using _Object = std::shared_ptr<IGameObject>;
-  static std::pair<_Map, std::vector<_Object>> loadFromFile(const char *filename, InputHandler& input);
+  typedef struct {
+    _Map map;
+    std::vector<_Object> staticObjects;
+  } LevelInfo;
+  static LevelInfo loadLevelFromFile(const char *filename, InputHandler& input);
   Map(std::vector<Color> &data, uint width, uint height);
   void attachTiler(std::shared_ptr<Tiler> tiler);
 
