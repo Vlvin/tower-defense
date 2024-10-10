@@ -14,7 +14,7 @@ Texture Bullet::s_texture = {
 };
 
 Bullet::Bullet(Rectangle body, float direction) 
-  : IGameObject(BULLET_DRAW_LAYER) 
+  : GameObject(BULLET_DRAW_LAYER) 
 {  
   if (!s_texture.width) {
     auto image = LoadImage("assets/Bullet.png");
@@ -69,8 +69,8 @@ void Bullet::update(double deltaTime, CameraObject &object) {
   }
 }
 
-std::shared_ptr<IGameObject> Bullet::clone() {
-  return std::shared_ptr<IGameObject>(new Bullet(*this));
+std::shared_ptr<ICloneable> Bullet::clone() {
+  return std::shared_ptr<ICloneable>(new Bullet(*this));
 }
 
 void Bullet::draw(CameraObject &camera) {

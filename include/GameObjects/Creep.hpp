@@ -1,19 +1,24 @@
 #pragma once
 
-#include <GameObjects/IGameObject.hpp>
 #include <GameObjects/Map.hpp>
+#include <GameObjects/GameObject.hpp>
+#include <GameObjects/ICloneable.hpp>
+#include <GameObjects/IUpdatable.hpp>
+#include <GameObjects/IDrawable.hpp>
 
 class PathNode;
 
 
-class Creep : public IGameObject {
+class Creep : public GameObject, public IUpdatable, public IDrawable, public ICloneable {
 public:
   Creep(Rectangle body, std::vector<Vector2> path);
   Creep(Creep&& creep, Color color);
   
   virtual void update(double deltaTime, CameraObject &camera) override;
+
   virtual void draw(CameraObject &camera) override;
-  virtual std::shared_ptr<IGameObject> clone() override;
+
+  virtual std::shared_ptr<ICloneable> clone() override;
   void hit(uint damage);
 protected:
 

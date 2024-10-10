@@ -1,15 +1,21 @@
 #pragma once
-#include <GameObjects/IGameObject.hpp>
+#include <GameObjects/GameObject.hpp>
+#include <GameObjects/ICloneable.hpp>
+#include <GameObjects/IUpdatable.hpp>
+#include <GameObjects/IDrawable.hpp>
 #include <GameObjects/Creep.hpp>
 #include <GameObjects/Bullet.hpp>
 
-class Tourel : public IGameObject {
+class Tourel : public GameObject, public IUpdatable, public IDrawable, public ICloneable {
 public:
   Tourel(Rectangle body, float rangeOfAction, Bullet bullet);
   Tourel(const Tourel &tourel, Color color);
+
   virtual void update(double deltaTime, CameraObject& camera) override;
+
   virtual void draw(CameraObject& camera) override;
-  virtual std::shared_ptr<IGameObject> clone() override;
+
+  virtual std::shared_ptr<ICloneable> clone() override;
 protected:
   inline void shoot();
   inline void predictTargetPosition();
@@ -24,7 +30,7 @@ protected:
 #ifdef NDEBUG
   float predX, predY;
 #endif
-  std::shared_ptr<IGameObject> m_target;
+  std::shared_ptr<GameObject> m_target;
 
   components::Body m_body;
   components::Direction m_directionAngle;

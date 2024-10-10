@@ -4,7 +4,7 @@
 #include <LayerValues.hpp>
 
 Button::Button(InputHandler& input, Rectangle body, std::function<void(void)> onClick) 
-  : IGameObject(BUTTON_DRAW_LAYER), input(input)
+  : GameObject(BUTTON_DRAW_LAYER), input(input)
 {
   m_onClick = onClick;
   m_color = m_persistent = WHITE;

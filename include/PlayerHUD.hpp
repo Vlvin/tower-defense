@@ -1,5 +1,4 @@
 #pragma once
-class CameraObject;
 class Player;
 
 class PlayerHUD {

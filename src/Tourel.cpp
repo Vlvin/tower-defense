@@ -15,7 +15,7 @@ Texture Tourel::s_texture = {
 
 
 Tourel::Tourel(Rectangle body, float rangeOfAction, Bullet bullet)
-  : IGameObject(TOUREL_DRAW_LAYER), m_bullet(std::move(bullet))
+  : GameObject(TOUREL_DRAW_LAYER), m_bullet(std::move(bullet))
 {
   if (!s_texture.width) {
     auto image = LoadImage("assets/Tourel.png");
@@ -55,18 +55,20 @@ void Tourel::shoot() {
   auto &parent = Game::GetSceneManager().Back();
   auto &tourelDir = m_directionAngle.value;
   // summon new bullet which moves to target with m_bullet speed and body
-  auto bullet = m_bullet.clone();
-  bullet->dispatch([&tourelDir] (::components::Direction& dir, ::components::Body& body) {
-    dir.value = tourelDir;
-  });
-  parent.pushObject(bullet);
+  auto bullet = std::dynamic_pointer_cast<GameObject>(m_bullet.clone());
+  if (bullet) {
+    bullet->dispatch([&tourelDir] (::components::Direction& dir, ::components::Body& body) {
+      dir.value = tourelDir;
+    });
+    parent.pushObject(bullet);
+  }
   
   
   m_lastShot = GetTime();
 }
 
-std::shared_ptr<IGameObject> Tourel::clone() {
-  return std::shared_ptr<IGameObject>(new Tourel(*this));
+std::shared_ptr<ICloneable> Tourel::clone() {
+  return std::shared_ptr<ICloneable>(new Tourel(*this));
 }
 
 void Tourel::predictTargetPosition() {float &direction = m_directionAngle.value;

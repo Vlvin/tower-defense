@@ -4,7 +4,7 @@
 #include <LayerValues.hpp>
 
 Player::Player()
-: IGameObject(HUD_DRAW_LAYER) {
+: GameObject(HUD_DRAW_LAYER) {
 
   m_playerHUD = new PlayerHUD();
 

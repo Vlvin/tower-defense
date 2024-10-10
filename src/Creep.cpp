@@ -15,7 +15,7 @@ Texture Creep::s_texture = {
 };
 
 Creep::Creep(Rectangle body, std::vector<Vector2> path)
-  : IGameObject(CREEP_DRAW_LAYER)
+  : GameObject(CREEP_DRAW_LAYER)
 {
   if (!s_texture.width) {
     auto image = LoadImage("assets/Zombie.png");
@@ -51,8 +51,8 @@ Creep::Creep(Creep &&creep, Color color)
 }
 
 
-std::shared_ptr<IGameObject> Creep::clone() {
-  return std::shared_ptr<IGameObject>(new Creep(*this));
+std::shared_ptr<ICloneable> Creep::clone() {
+  return std::shared_ptr<ICloneable>(new Creep(*this));
 }
 
 void Creep::hit(uint damage) {

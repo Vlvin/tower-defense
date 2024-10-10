@@ -1,16 +1,16 @@
 #include <GameObjects/Scene.hpp>
-#include <GameObjects/IGameObject.hpp>
+#include <GameObjects/GameObject.hpp>
 #include <algorithm>
 #include <LayerValues.hpp>
 
-Scene::Scene() // for some unknown reason Scene is coupled to be IGameObject
-  : IGameObject(SCENE_DRAW_LAYER)
+Scene::Scene() // for some unknown reason Scene is coupled to be GameObject
+  : GameObject(SCENE_DRAW_LAYER)
 {
   m_objects = {};
 }
 
 
-void Scene::pushObject(std::shared_ptr<IGameObject> object) {
+void Scene::pushObject(std::shared_ptr<GameObject> object) {
   m_objects.push_back(object);
 }
 
@@ -20,9 +20,11 @@ void Scene::clear() {
 
 void Scene::update(double deltaTime, CameraObject& camera) {
   for (size_t i = 0; i < m_objects.size(); i++) {
-
+    auto updatable = std::dynamic_pointer_cast<IUpdatable>(m_objects[i]);
+    if (!updatable.get())
+      continue;
     // update
-    m_objects[i]->update(deltaTime, camera);
+    updatable->update(deltaTime, camera);
 
     // check if we destroyed this scene by clicking exit button
     if (WindowShouldClose()) return;
@@ -41,14 +43,17 @@ void Scene::draw(CameraObject& camera) {
     m_objects.begin(),
     m_objects.end(),
     [] (
-      std::shared_ptr<IGameObject> &left,
-      std::shared_ptr<IGameObject> &right
+      std::shared_ptr<GameObject> &left,
+      std::shared_ptr<GameObject> &right
     ) {
       return left->getLayer() < right->getLayer();
     }
   );
   for (auto &object : m_objects) {
-    object->draw(camera);
+    auto drawable = std::dynamic_pointer_cast<IDrawable>(object);
+    if (!drawable.get())
+      continue;
+    drawable->draw(camera);
   }
 }
 

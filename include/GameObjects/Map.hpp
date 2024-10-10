@@ -2,7 +2,9 @@
 #include <vector>
 #include <memory>
 
-#include <GameObjects/IGameObject.hpp>
+#include <GameObjects/GameObject.hpp>
+#include <GameObjects/IUpdatable.hpp>
+#include <GameObjects/IDrawable.hpp>
 #include <limits>
 class Tiler;
 class InputHandler;
@@ -26,11 +28,11 @@ typedef struct {
 
 
 
-class Map : public IGameObject {
+class Map : public GameObject, public IUpdatable, public IDrawable {
 
 public:
   using _Map = std::shared_ptr<Map>;
-  using _Object = std::shared_ptr<IGameObject>;
+  using _Object = std::shared_ptr<GameObject>;
   typedef struct {
     _Map map;
     std::vector<_Object> staticObjects;
@@ -42,8 +44,9 @@ public:
   MapUnit getUnit(uint x, uint y);
   Vector2 getSize();
 
-  virtual void update(double deltaTime, CameraObject& camera);
-  virtual void draw(CameraObject& camera);
+  virtual void update(double deltaTime, CameraObject& camera) override;
+
+  virtual void draw(CameraObject& camera) override;
 
   std::vector<MapUnit>::iterator begin();
   std::vector<MapUnit>::iterator end();

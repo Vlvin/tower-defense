@@ -1,10 +1,12 @@
-// here you must have IGameObject with update delegation to PlayerBehaviour
+// here you must have GameObject with update delegation to PlayerBehaviour
 #pragma once
-#include <GameObjects/IGameObject.hpp>
+#include <GameObjects/GameObject.hpp>
+#include <GameObjects/IUpdatable.hpp>
+#include <GameObjects/IDrawable.hpp>
 
 class PlayerHUD;
 
-class Player : public IGameObject {
+class Player : public GameObject, public IUpdatable, public IDrawable {
 public:
   Player();
   ~Player();

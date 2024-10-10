@@ -25,7 +25,7 @@ PlaceHolder::PlaceHolder(InputHandler& input, Vector2 position)
       DLOG(position.x << ":" << position.y);
       int tourelCost = 5;
 
-      std::shared_ptr<IGameObject> player{nullptr};
+      std::shared_ptr<GameObject> player{nullptr};
       for (auto object : parent) {
         if (object->dispatch([] (::components::PlayerTag&) {})) {
           player = object;

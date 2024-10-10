@@ -1,13 +1,19 @@
 #pragma once
-#include <GameObjects/IGameObject.hpp>
+#include <GameObjects/GameObject.hpp>
+#include <GameObjects/ICloneable.hpp>
+#include <GameObjects/IUpdatable.hpp>
+#include <GameObjects/IDrawable.hpp>
 
-class Bullet : public IGameObject {
+class Bullet : public GameObject, public IUpdatable, public IDrawable, public ICloneable {
 public:
   Bullet(Rectangle body, float direction);
   Bullet(Bullet&& bullet, Color color);
+
   virtual void update(double deltaTime, CameraObject &camera) override;
+
   virtual void draw(CameraObject &camera) override;
-  virtual std::shared_ptr<IGameObject> clone() override;
+  
+  virtual std::shared_ptr<ICloneable> clone() override;
 protected:
   OBJECT_OVERRIDE_COMPONENT_H(Body)
   OBJECT_OVERRIDE_COMPONENT_H(Direction)

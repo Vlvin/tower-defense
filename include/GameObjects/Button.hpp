@@ -2,23 +2,26 @@
 
 #include <functional>
 
-#include <GameObjects/IGameObject.hpp>
+#include <GameObjects/GameObject.hpp>
+#include <GameObjects/ICloneable.hpp>
+#include <GameObjects/IUpdatable.hpp>
+#include <GameObjects/IDrawable.hpp>
 
 class InputHandler;
 
 
-class Button : public IGameObject {
+class Button : public GameObject, public IUpdatable, public IDrawable {
 public:
   Button(InputHandler& input, Rectangle body, std::function<void(void)> onClick);
   Button(Button&& button, Color color);
 
   void setColor(Color color);
   Color getColor();
-
-
   Rectangle getBody();
-// IGameObject
+
+
   virtual void update(double deltaTime, CameraObject &camera) override;
+
   virtual void draw(CameraObject &camera) override;
 public:
   InputHandler& input;

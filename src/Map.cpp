@@ -16,7 +16,7 @@
 
 
 using _Map = std::shared_ptr<Map>;
-using _Object = std::shared_ptr<IGameObject>;
+using _Object = std::shared_ptr<GameObject>;
 Map::LevelInfo Map::loadLevelFromFile(const char *filename, InputHandler& input)
 {
   // fileData
@@ -112,7 +112,7 @@ Map::LevelInfo Map::loadLevelFromFile(const char *filename, InputHandler& input)
 
 
 Map::Map(std::vector<Color> &data, uint width, uint height) 
-  : IGameObject(MAP_DRAW_LAYER)
+  : GameObject(MAP_DRAW_LAYER)
 {
   m_tiler = nullptr;
   m_lastSpawned = GetTime() - 99;
