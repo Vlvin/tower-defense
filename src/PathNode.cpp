@@ -2,6 +2,7 @@
 #include <stdint.h>
 #include <ColorTools.hpp>
 #include <queue>
+#include <cmath>
 
 PathNode::PathNode(Vector2 position, int cost)
 {
@@ -134,9 +135,9 @@ std::vector<Vector2> PathNode::findPath (
 
 int PathNode::manhattenDistance(Vector2 goal) {
   return 
-  (
-    abs(m_position.x - goal.x) +
-    abs(m_position.y - goal.y)
+  (int)(
+    std::abs(m_position.x - goal.x) +
+    std::abs(m_position.y - goal.y)
   );
 }
 std::vector<PathNode*> PathNode::getNeighbours(Map* map) {

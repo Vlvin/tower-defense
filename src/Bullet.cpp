@@ -3,6 +3,7 @@
 #include <SceneManager.hpp>
 #include <ColorTools.hpp>
 #include <Game.hpp>
+#include <cmath>
 #include <LayerValues.hpp>
 
 Texture Bullet::s_texture = {

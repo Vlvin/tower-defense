@@ -1,6 +1,7 @@
 
 #include <GameObjects/GameObject.hpp>
 #include <GameObjects/IUpdatable.hpp>
+#include <memory>
 class ICloneable;
 
 

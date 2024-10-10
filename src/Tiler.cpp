@@ -1,6 +1,7 @@
 #include <GameObjects/Map.hpp>
 #include <Tiler.hpp>
 #include <LayerValues.hpp>
+#include <cmath>
 
 #include <Game.hpp>
 
@@ -14,7 +15,7 @@ Tiler::Tiler(const char* filename) {
   // format of texture is one column
   Vector2 tileSize{
     (float)image.width,
-    (float)floor(image.height / 14)
+    (float)std::floor(image.height / 14)
   };
   for (char i = 0; i < 14; i++) {
     Image temp = ImageFromImage(
