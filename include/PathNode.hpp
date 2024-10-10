@@ -7,6 +7,8 @@
 #include <vector>
 #include <sys/types.h>
 
+
+
 class PathNode {
 public:
   PathNode(Vector2 position, int cost);
@@ -24,13 +26,17 @@ public:
   );
   
 private:
+
   std::vector<PathNode*> getNeighbours(Map* map);
   std::vector<Vector2> getNeighboursPositions(Map* map);
+
   int manhattenDistance(Vector2 goal);
   int getFullCost();
   void buildPath();
+
   bool isAlreadyPassed(int depth);
   bool isAlreadyPassed(Vector2 position, int depth);
+private:
   PathNode *m_prev, *m_next;
   Vector2 m_position;
   int m_cost;

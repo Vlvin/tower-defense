@@ -49,11 +49,11 @@ std::vector<Vector2> PathNode::findPath (
     );
   };
 
-  typedef struct 
+  using shortcut = struct 
   {
     int cost;
     PathNode* point;
-  } shortcut;
+  };
   shortcut nodeMap[width*height];
   for (int i = 0; i < width*height; i++) 
     nodeMap[i] = {0x7fffffff, nullptr};
@@ -139,35 +139,13 @@ int PathNode::manhattenDistance(Vector2 goal) {
     abs(m_position.y - goal.y)
   );
 }
-
 std::vector<PathNode*> PathNode::getNeighbours(Map* map) {
-    Vector2 size = map->getSize();
-    float x = m_position.x, y = m_position.y;
-    std::vector<Vector2> neighbourCells = {
-        {x + 1, y    },
-        {x    , y + 1},
-        {x - 1, y    },
-        {x    , y - 1}
-    };
     std::vector<PathNode*> neighbours;
-    if (m_position.y <= 0) neighbourCells.pop_back();
-    if (m_position.x <= 0) {
-        neighbourCells[2] = neighbourCells[neighbourCells.size() - 1];
-        neighbourCells.pop_back();
-    }
-    if (m_position.y >= (size.y - 1)) {
-        neighbourCells[1] = neighbourCells[neighbourCells.size() - 1];
-        neighbourCells.pop_back();
-    }
-    if (m_position.x >= (size.x - 1)) {
-        neighbourCells[0] = neighbourCells[neighbourCells.size() - 1];
-        neighbourCells.pop_back();
-    }
-    for (char i = 0; i < neighbourCells.size(); i++) {
-        int x = neighbourCells[i].x, y = neighbourCells[i].y;
+    for (auto& neighbourCell : getNeighboursPositions(map)) {
+        int x = neighbourCell.x, y = neighbourCell.y;
         neighbours.push_back
         (
-          new PathNode(neighbourCells[i], (map->getUnit(x, y).cost), this)
+          new PathNode(neighbourCell, (map->getUnit(x, y).cost), this)
         );
     }
     return neighbours;
@@ -176,25 +154,19 @@ std::vector<PathNode*> PathNode::getNeighbours(Map* map) {
 std::vector<Vector2> PathNode::getNeighboursPositions(Map* map) {
     Vector2 size = map->getSize();
     float x = m_position.x, y = m_position.y;
-    std::vector<Vector2> neighbourCells = {
-        {x + 1, y    },
-        {x    , y + 1},
-        {x - 1, y    },
-        {x    , y - 1}
-    };
-    if (m_position.y <= 0) neighbourCells.pop_back();
-    if (m_position.x <= 0) {
-        neighbourCells[2] = neighbourCells[neighbourCells.size() - 1];
-        neighbourCells.pop_back();
-    }
-    if (m_position.y >= (size.y - 1)) {
-        neighbourCells[1] = neighbourCells[neighbourCells.size() - 1];
-        neighbourCells.pop_back();
-    }
-    if (m_position.x >= (size.x - 1)) {
-        neighbourCells[0] = neighbourCells[neighbourCells.size() - 1];
-        neighbourCells.pop_back();
-    }
+    std::vector<Vector2> neighbourCells;
+
+    if (m_position.x < (size.x - 1))
+      neighbourCells.push_back({x + 1, y    });
+
+    if (m_position.y < (size.y - 1))
+      neighbourCells.push_back({x    , y + 1});
+
+    if (m_position.x > 0)
+      neighbourCells.push_back({x - 1, y    });
+
+    if (m_position.y > 0)
+      neighbourCells.push_back({x    , y - 1});
 
     return neighbourCells;
 }
@@ -219,7 +191,6 @@ int PathNode::getFullCost()
   int cost = m_cost;
 
   for (PathNode* current = m_prev; current; current = current->m_prev){
-    // std::cout << current << '\n';
     cost += current->m_cost;
   }
 

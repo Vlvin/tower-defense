@@ -6,4 +6,7 @@ libs/
 MapLoader/
 SmartTiles/
 creational/
+include/GameObjects/ICloneable.hpp
+include/GameObjects/IUpdatable.hpp
+include/GameObjects/IDrawable.hpp
 .vim/
