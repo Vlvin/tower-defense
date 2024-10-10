@@ -49,6 +49,7 @@ set(TEST_INCLUDE
 
 set(SOURCES 
   ${SRC}/SceneManager.cpp
+  ${SRC}/GameObject.cpp
   ${SRC}/PhysicalInput.cpp
   ${SRC}/CameraObject.cpp
   ${SRC}/Spawner.cpp
