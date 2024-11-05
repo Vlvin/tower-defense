@@ -15,42 +15,14 @@ Texture PlaceHolder::s_texture{
   0
 };
 
+
 PlaceHolder::PlaceHolder(InputHandler& input, Vector2 position)
   : Button(
     input, 
     Rectangle{position.x, position.y, 1.f, 1.f},
-    [position] {
-      auto& parent = Game::GetSceneManager().Back(); 
-      //temp
-      DLOG(position.x << ":" << position.y);
-      int tourelCost = 5;
-
-      std::shared_ptr<GameObject> player{nullptr};
-      for (auto object : parent) {
-        if (object->dispatch([] (::components::PlayerTag&) {})) {
-          player = object;
-          break;
-        }
-      }
-
-      if (!player.get())
-        return;
-
-      DLOG("Player " << player.get());
-
-      if (!std::dynamic_pointer_cast<Player>(player)->withdraw(tourelCost))
-        return;
-
-      
-      auto tourel = std::make_shared<Tourel>(
-        Rectangle{position.x, position.y, 1.f, 1.f},
-        3.f,
-        Bullet({1.f, 1.f, .5f, .5f}, 0.f)
-      );
-
-      parent.pushObject(tourel);
-    }
-  )
+    nullptr
+  ),
+  hasTourel(false)
 {
   if (!s_texture.width) {
     // nlohmann::json config;
@@ -115,4 +87,38 @@ void PlaceHolder::draw(CameraObject &camera) {
     0.f, // rotation
     getColor() // color
   ); 
+}
+
+void PlaceHolder::onClick() {
+  if (hasTourel)
+    return;
+  auto& parent = Game::GetSceneManager().Back(); 
+  //temp
+  DLOG(getBody().x << ":" << getBody().y);
+  int tourelCost = 5;
+
+  std::shared_ptr<GameObject> player{nullptr};
+  for (auto object : parent) {
+    if (object->dispatch([] (::components::PlayerTag&) {})) {
+      player = object;
+      break;
+    }
+  }
+
+  if (!player.get())
+    return;
+
+  DLOG("Player " << player.get());
+
+  if (!std::dynamic_pointer_cast<Player>(player)->withdraw(tourelCost))
+    return;
+  
+  auto tourel = std::make_shared<Tourel>(
+    Rectangle{getBody().x, getBody().y, 1.f, 1.f},
+    3.f,
+    Bullet({1.f, 1.f, .5f, .5f}, 0.f)
+  );
+  hasTourel = true;
+
+  parent.pushObject(tourel);
 }

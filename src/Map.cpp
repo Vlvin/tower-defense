@@ -15,6 +15,15 @@
 #include <cmath>
 
 
+WrongUnitRequest::WrongUnitRequest(const char* message) 
+  : m_message(std::string(message).c_str())
+{}
+
+const char* WrongUnitRequest::what() const noexcept {
+  return m_message;
+}
+
+
 using _Map = std::shared_ptr<Map>;
 using _Object = std::shared_ptr<GameObject>;
 Map::LevelInfo Map::loadLevelFromFile(const char *filename, InputHandler& input)
@@ -104,6 +113,25 @@ Map::LevelInfo Map::loadLevelFromFile(const char *filename, InputHandler& input)
             )
           );
           break;
+        case Tile::START: {
+          #define SPAWN_INTERVAL 0.5
+          auto goal = map->getUnit(0, 0);
+          auto spawnObject = std::shared_ptr<ICloneable>(
+            new Creep(
+              (Rectangle){ j*1.f, i*1.f, 1.f, 1.f },
+              *map,
+              map->getUnit(j, i)
+            )
+          );
+          objects.push_back(
+            std::dynamic_pointer_cast<GameObject>(std::make_shared<Spawner>(
+              SPAWN_INTERVAL, 
+              1,
+              spawnObject
+            )
+          ));
+        }
+
       }
     }
   }
@@ -180,7 +208,7 @@ void Map::attachTiler(std::shared_ptr<Tiler> tiler) {
 
 
 void Map::update(double deltaTime, CameraObject& camera) {
-  spawnCreeps();
+  // spawnCreeps();
 }
 
 void Map::draw(CameraObject& camera) {
@@ -205,26 +233,6 @@ void Map::draw(CameraObject& camera) {
     m_tiler->drawMap(*this, camera);
 }
 
-void Map::spawnCreeps() {
-  if (GetTime() - m_lastSpawned < 5) return;
-  m_lastSpawned = GetTime();
-  srand(GetTime());
-  int index = rand() % m_spawns.size();
-
-  Vector2 position = m_spawns.at(index)->position;
-  srand(GetTime());
-  index = rand() % m_goals.size();
-
-  Vector2 goal = m_goals.at(index)->position;
-  
-  auto creep = std::make_shared<Creep>
-  (
-    (Rectangle){ position.x, position.y, 1.f, 1.f },
-    PathNode(getUnit(int(position.x), int(position.y))).findPath(this, goal)
-  );
-  Game::GetSceneManager().Back().pushObject(creep);
-}
-
 MapUnit Map::getUnit(uint x, uint y) {
 
   return m_data.at(x+y*m_width);
@@ -232,10 +240,10 @@ MapUnit Map::getUnit(uint x, uint y) {
 
 Vector2 Map::getSize() {
   return (Vector2)
-        {
-          (float)m_width,
-          (float)m_height
-        };
+    {
+      (float)m_width,
+      (float)m_height
+    };
 }
 
 std::vector<MapUnit>::iterator Map::begin() {
@@ -244,4 +252,28 @@ std::vector<MapUnit>::iterator Map::begin() {
 
 std::vector<MapUnit>::iterator Map::end() {
   return m_data.end();
+}
+
+
+MapUnit Map::getRandomUnit(Tile type) {
+  srand(GetTime());
+  switch (type) {
+    case Tile::START: {
+      int index = rand() % m_spawns.size();
+      Vector2 point = m_spawns[index]->position;
+      return getUnit(point.x, point.y);
+    }
+    case Tile::FINISH:{
+      int index = rand() % m_goals.size();
+      Vector2 point = m_goals[index]->position;
+      return getUnit(point.x, point.y);
+    }
+    case Tile::PLACEHOLDER:{
+      int index = rand() % m_placeholders.size();
+      Vector2 point = m_placeholders[index]->position;
+      return getUnit(point.x, point.y);
+    }
+    default:
+      throw WrongUnitRequest("Wrong Tile Type requested");
+  }
 }

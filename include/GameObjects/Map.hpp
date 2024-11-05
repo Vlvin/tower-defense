@@ -26,7 +26,13 @@ typedef struct {
     Tile type;
 } MapUnit;
 
-
+class WrongUnitRequest : std::exception {
+public:
+  WrongUnitRequest(const char* message);
+  virtual const char* what() const noexcept;
+private:
+  const char *m_message;
+};
 
 class Map : public GameObject, public IUpdatable, public IDrawable {
 
@@ -42,6 +48,7 @@ public:
   void attachTiler(std::shared_ptr<Tiler> tiler);
 
   MapUnit getUnit(uint x, uint y);
+  MapUnit getRandomUnit(Tile type);
   Vector2 getSize();
 
   virtual void update(double deltaTime, CameraObject& camera) override;
@@ -50,8 +57,6 @@ public:
 
   std::vector<MapUnit>::iterator begin();
   std::vector<MapUnit>::iterator end();
-protected:
-  void spawnCreeps();
 protected:
   double m_lastSpawned;
   std::vector<MapUnit> m_data;

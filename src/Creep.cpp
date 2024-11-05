@@ -15,8 +15,8 @@ Texture Creep::s_texture = {
   0
 };
 
-Creep::Creep(Rectangle body, std::vector<Vector2> path)
-  : GameObject(CREEP_DRAW_LAYER)
+Creep::Creep(Rectangle body, Map& map, std::vector<Vector2> path)
+  : GameObject(CREEP_DRAW_LAYER), m_map(map)
 {
   if (!s_texture.width) {
     auto image = LoadImage("assets/Zombie.png");
@@ -45,6 +45,37 @@ Creep::Creep(Rectangle body, std::vector<Vector2> path)
   };
 }
 
+Creep::Creep(Rectangle body, Map& map, MapUnit goal)
+  : GameObject(CREEP_DRAW_LAYER), m_map(map)
+{
+    if (!s_texture.width) {
+    auto image = LoadImage("assets/Zombie.png");
+    s_texture = LoadTextureFromImage(image);
+    UnloadImage(image);
+  }
+  m_body = body;
+  m_speed = {2.5f};
+
+  MapUnit start = map.getUnit(body.x, body.y);  
+  m_path = PathNode(start).findPath(map, goal);
+  for (auto & node : m_path) {
+    node.x += 0.5f;
+    node.y += 0.5f;
+  }
+  m_pathIterator = 0;
+  m_healthPoints = {10};
+  m_money = {2};
+  m_color = m_persistent = WHITE;
+  
+  
+  m_direction = {
+    (float)atan2(
+      getPosition().y - m_path[m_pathIterator+1].y,
+      getPosition().x - m_path[m_pathIterator+1].x
+    )
+  };
+}
+
 Creep::Creep(Creep &&creep, Color color)
   : Creep(creep)
 {
@@ -53,7 +84,31 @@ Creep::Creep(Creep &&creep, Color color)
 
 
 std::shared_ptr<ICloneable> Creep::clone() {
-  return std::shared_ptr<ICloneable>(new Creep(*this));
+  auto obj = new Creep(*this);
+  auto goal = m_map.getRandomUnit(Tile::FINISH);
+  obj->setPath(goal.position);
+  return std::shared_ptr<ICloneable>(obj);
+}
+
+
+void Creep::setPath(Vector2 goalPos) {
+  DLOG("Here's Johny" << goalPos.x << ":" << goalPos.y);
+  DLOG("OK")
+  MapUnit start = m_map.getUnit(m_body.x, m_body.y);
+  DLOG(start.cost)
+  DLOG(start.position.x << ":" << start.position.y)
+  DLOG("OK")
+  MapUnit goal = m_map.getUnit(goalPos.x, goalPos.y);
+  DLOG(goal.cost)
+  DLOG(goal.position.x << ":" << goal.position.y)
+  DLOG("OK")
+  auto path = PathNode(start).findPath(m_map, goal);
+  DLOG("OK")
+  this->m_path.swap(path);
+  for (auto & node : m_path) {
+    node.x += 0.5f;
+    node.y += 0.5f;
+  }
 }
 
 void Creep::hit(uint damage) {

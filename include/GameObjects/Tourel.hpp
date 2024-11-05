@@ -6,6 +6,7 @@
 #include <GameObjects/Creep.hpp>
 #include <GameObjects/Bullet.hpp>
 
+
 class Tourel : public GameObject, public IUpdatable, public IDrawable, public ICloneable {
 public:
   Tourel(Rectangle body, float rangeOfAction, Bullet bullet);

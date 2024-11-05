@@ -2,6 +2,7 @@
 #include <Tiler.hpp>
 #include <LayerValues.hpp>
 #include <cmath>
+#include <iostream>
 
 #include <Game.hpp>
 

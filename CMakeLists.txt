@@ -19,12 +19,6 @@ set(BUILD_GTEST ON CACHE BOOL "" FORCE)
 set(CXX_STANDARD 23)
 set(CXX_STANDARD_REQUIRED ON)
 
-if ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
-  add_definitions(-DNDEBUG)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O1")
-else()
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
-endif("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
 set(SRC ${PROJECT_SOURCE_DIR}/src)
 
 set(TEST_SOURCES ${PROJECT_SOURCE_DIR}/tests)
@@ -119,6 +113,14 @@ enable_testing()
 include(GoogleTest) 
 gtest_discover_tests(tests)
 
+
+if ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+  message("${CMAKE_BUILD_TYPE} is Debug")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O1 -DNDEBUG")
+else()
+  message("${CMAKE_BUILD_TYPE} is Release")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
+endif("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
 
 # building main
 add_executable(main ${SRC}/main.cpp)

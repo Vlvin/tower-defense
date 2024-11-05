@@ -8,13 +8,9 @@
 #include <Game.hpp>
 #include <Tiler.hpp>
 #include <PhysicalInput.hpp>
-#include <nlohmann/json.hpp>
 
-#include <iostream>
-#include <fstream>
 #include <unistd.h>
 
-using nlohmann::json;
 
 int main(int argc, char** argv) {
 
@@ -32,7 +28,10 @@ int main(int argc, char** argv) {
   );
 
 
-  
+  #ifdef NDEBUG
+    #include <iostream>
+    std::cout << "Fuck\n";
+  #endif
 
   auto loadLevel = [&]() {
     Scene level;

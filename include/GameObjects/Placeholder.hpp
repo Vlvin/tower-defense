@@ -8,6 +8,8 @@ public:
   // virtual void update(double deltaTime, CameraObject &camera) override;
   virtual void draw(CameraObject &camera) override;
   virtual bool getMouseCollision(CameraObject& camera) override;
-private:
+protected:
+  bool hasTourel;
+  virtual void onClick() override;
   static Texture s_texture;
 };

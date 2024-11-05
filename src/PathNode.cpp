@@ -25,7 +25,7 @@ PathNode::PathNode(Vector2 position, int cost, PathNode* prev)
 
 std::vector<Vector2> PathNode::findPath
 (
-  Map* map, 
+  Map& map, 
   MapUnit goal
 ) 
 {
@@ -33,11 +33,11 @@ std::vector<Vector2> PathNode::findPath
 }
 
 std::vector<Vector2> PathNode::findPath (
-  Map* map, 
+  Map& map, 
   Vector2 goal
 )
 {
-  Vector2 size = map->getSize();
+  Vector2 size = map.getSize();
   int width = size.x, height = size.y;
 
   
@@ -86,7 +86,7 @@ std::vector<Vector2> PathNode::findPath (
     {
       x = neighbour.x, y = neighbour.y;
       
-      int cellCost = current->getFullCost() + map->getUnit(x, y).cost;
+      int cellCost = current->getFullCost() + map.getUnit(x, y).cost;
       if 
       (
         (!(current->isAlreadyPassed(neighbour, 5))) && 
@@ -97,7 +97,7 @@ std::vector<Vector2> PathNode::findPath (
         (shortcut)
         { 
           cellCost,
-          new PathNode(neighbour, map->getUnit(x, y).cost, current)
+          new PathNode(neighbour, map.getUnit(x, y).cost, current)
         };
         paths.push(nodeMap[y*width+x].point);
         temporaryStorage.push_back(nodeMap[y*width+x].point);
@@ -140,20 +140,20 @@ int PathNode::manhattenDistance(Vector2 goal) {
     std::abs(m_position.y - goal.y)
   );
 }
-std::vector<PathNode*> PathNode::getNeighbours(Map* map) {
+std::vector<PathNode*> PathNode::getNeighbours(Map& map) {
     std::vector<PathNode*> neighbours;
     for (auto& neighbourCell : getNeighboursPositions(map)) {
         int x = neighbourCell.x, y = neighbourCell.y;
         neighbours.push_back
         (
-          new PathNode(neighbourCell, (map->getUnit(x, y).cost), this)
+          new PathNode(neighbourCell, (map.getUnit(x, y).cost), this)
         );
     }
     return neighbours;
 }
 
-std::vector<Vector2> PathNode::getNeighboursPositions(Map* map) {
-    Vector2 size = map->getSize();
+std::vector<Vector2> PathNode::getNeighboursPositions(Map& map) {
+    Vector2 size = map.getSize();
     float x = m_position.x, y = m_position.y;
     std::vector<Vector2> neighbourCells;
 

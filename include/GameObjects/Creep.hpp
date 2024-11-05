@@ -11,7 +11,8 @@ class PathNode;
 
 class Creep : public GameObject, public IUpdatable, public IDrawable, public ICloneable {
 public:
-  Creep(Rectangle body, std::vector<Vector2> path);
+  Creep(Rectangle body, Map& map, std::vector<Vector2> path);
+  Creep(Rectangle body, Map& map, MapUnit goal);
   Creep(Creep&& creep, Color color);
   
   virtual void update(double deltaTime, CameraObject &camera) override;
@@ -19,6 +20,8 @@ public:
   virtual void draw(CameraObject &camera) override;
 
   virtual std::shared_ptr<ICloneable> clone() override;
+
+  void setPath(Vector2 goalPos);
   void hit(uint damage);
 protected:
 
@@ -33,6 +36,7 @@ protected:
   
   std::vector<Vector2> m_path;
   uint m_pathIterator;
+  Map& m_map;
 
   components::Health m_healthPoints;
   components::Body m_body;

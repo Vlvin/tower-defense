@@ -16,19 +16,19 @@ public:
   PathNode(Vector2 position, int cost, PathNode* prev);
   std::vector<Vector2> findPath
   (
-    Map* map, 
+    Map& map, 
     MapUnit goal
   );
   std::vector<Vector2> findPath
   (
-    Map* map, 
+    Map& map, 
     Vector2 goal
   );
   
 private:
 
-  std::vector<PathNode*> getNeighbours(Map* map);
-  std::vector<Vector2> getNeighboursPositions(Map* map);
+  std::vector<PathNode*> getNeighbours(Map& map);
+  std::vector<Vector2> getNeighboursPositions(Map& map);
 
   int manhattenDistance(Vector2 goal);
   int getFullCost();
